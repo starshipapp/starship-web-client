@@ -1,17 +1,28 @@
+import { Switch, Route, Router } from 'react-router-dom';
 import React from 'react';
 import './css/App.css';
-import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { createBrowserHistory } from "history";
+import Home from './home/Home';
+import MainSidebar from './sidebar/MainSidebar';
+import Login from './login/Login';
 
-const client = new ApolloClient({
-  uri: 'https://localhost:3000/graphql',
-  cache: new InMemoryCache()
-});
+const history = createBrowserHistory();
 
 function App(): JSX.Element {
   return (
-    <div className="App">
-      <h1>test</h1>
-    </div>
+    <Router history={history}>
+      <div className="App bp3-dark">
+        <MainSidebar />
+        <Switch>
+          <Route path="/login">
+            <Login/>
+          </Route>
+          <Route path="/">
+            <Home/>
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   );
 }
 

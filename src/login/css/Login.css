@@ -1,0 +1,30 @@
+.Login {
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  margin-right: auto;
+  margin-left: auto;
+  height: 100vh;
+}
+
+.Login-container {
+  margin-bottom: auto;
+  margin-top: auto;
+  display: flex;
+}
+
+.Login-input {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.Login-left {
+  margin-left: 0.5rem;
+  margin-right: 0.35rem;
+}
+
+.Login-right {
+  margin-left: 0.35rem;
+  margin-right: 0.5rem;
+}
