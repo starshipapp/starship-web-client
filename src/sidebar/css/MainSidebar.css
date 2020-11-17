@@ -32,3 +32,36 @@
   margin-left: 0.25rem;
   margin-bottom: 0.25rem;
 }
+
+.MainSidebar-insert-planet-popover {
+  width: 100%;
+  display: inline-block;
+}
+
+.MainSidebar-insert-planet-popover .bp3-popover-target {
+  width: 100%;
+  display: inline-block;
+}
+
+.MainSidebar-insert-planet-button {
+  width: 100%;
+}
+
+.MainSidebar-insert-planet-box {
+  padding: 0.5rem;
+}
+
+.MainSidebar-insert-planet-bottom {
+  display: flex;
+  margin-top: 0.5rem;
+}
+
+.MainSidebar-insert-planet-checkbox {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.MainSidebar-insert-planet-submit {
+  margin-left: auto;
+  width: max-content;
+}

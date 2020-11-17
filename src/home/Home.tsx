@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 
 
 function Home(): JSX.Element {
-  const { loading, data } = useQuery<IGetFeaturedPlanetsData>(getFeaturedPlanets);
+  const { loading, data } = useQuery<IGetFeaturedPlanetsData>(getFeaturedPlanets, { errorPolicy: 'all' });
 
   return (
     <div className="Home">

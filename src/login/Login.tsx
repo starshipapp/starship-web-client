@@ -81,6 +81,7 @@ function Login(): JSX.Element {
           description={`You're already logged in as ${data.currentUser?.username?.toString() as string}. Would you like to logout?`}
           action={<Button text="Logout" onClick={() => {
             localStorage.removeItem("token");
+            void client.cache.gc();
             void client.resetStore();
           }}/>}
         /> : <><div className="Login-left">
