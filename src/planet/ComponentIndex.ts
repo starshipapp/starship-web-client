@@ -1,8 +1,14 @@
+import IComponentProps from "./components/IComponentProps";
+import PageComponent from "./components/PageComponent";
+import React from "react";
+import IPlanet from "../types/IPlanet";
+
 export interface IComponentDataType {
   name: string,
   // really dumb work around to allow icon rendering
   icon: "document" | "applications" | "folder-open" | "comment",
-  friendlyName: string
+  friendlyName: string,
+  component?: (props: IComponentProps) => JSX.Element
 }
 
 export default class ComponentIndex {
@@ -10,7 +16,8 @@ export default class ComponentIndex {
     "page": {
       name: "page",
       icon: "document",
-      friendlyName: "Page"
+      friendlyName: "Page",
+      component: PageComponent
     },
     "wiki": {
       name: "wiki",
@@ -28,4 +35,11 @@ export default class ComponentIndex {
       friendlyName: "Forum"
     }
   };
+
+  static getComponent = function(id: string, type: string, planet: IPlanet, name: string): JSX.Element | undefined {
+    const Component = ComponentIndex.ComponentDataTypes[type].component;
+    if(Component) {
+      return React.createElement(Component, {id, planet, name});
+    }
+  }
 }

@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Checkbox, Classes, Icon, Intent, Menu, MenuDivider, MenuItem, Popover, Position, Tooltip } from '@blueprintjs/core';
-import { show } from '@blueprintjs/core/lib/esm/components/context-menu/contextMenu';
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import insertPlanetMutation, { IInsertPlanetMutationData } from '../graphql/mutations/planets/insertPlanetMutation';

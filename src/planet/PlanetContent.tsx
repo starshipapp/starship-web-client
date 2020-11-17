@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Alignment, Button, Menu, MenuItem, Navbar, Popover } from "@blueprintjs/core";
+import { Alignment, Button, Menu, MenuItem, Navbar, NonIdealState, Popover } from "@blueprintjs/core";
 import React from "react";
 import { Link, useParams } from "react-router-dom";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
@@ -11,7 +11,7 @@ import "./css/Planet.css";
 
 interface IPlanetContentParams {
   planet: string,
-  component?: string
+  component?: string,
 }
 
 interface IPlanetContentProps {
@@ -21,9 +21,43 @@ interface IPlanetContentProps {
 
 function PlanetContent(props: IPlanetContentProps): JSX.Element {
   const {planet, component} = useParams<IPlanetContentParams>();
-  console.log("planet: " + (planet as unknown as string));
-  console.log("component: " + (planet as unknown as string));
   const {data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+
+  //
+  // really long component determining thing
+  //
+  let currentComponent = <NonIdealState
+    icon="error"
+    title="404"
+    description="We couldn't find that page in this planet."
+  />;
+
+  if(component && props.planet.components) {
+    const filteredComponents = props.planet.components.filter(value => value.componentId === component);
+    if(filteredComponents.length === 1) {
+      const thisComponent = ComponentIndex.getComponent(component, filteredComponents[0].type, props.planet, filteredComponents[0].name);
+      if(thisComponent) {
+        currentComponent = thisComponent;
+      }
+    }
+  }
+
+  /* if(props.admin && this.props.planet[0]) {
+    if(this.props.planet[0].createdAt) {
+      currentComponent = <Admin planet={this.props.planet[0]}/>;
+    }
+  }*/
+
+  if(props.home) {
+    if(props.planet) {
+      if(props.planet.homeComponent) {
+        const thisComponent = ComponentIndex.getComponent(props.planet.homeComponent.componentId, props.planet.homeComponent.type, props.planet, "Home");
+        if(thisComponent) {
+          currentComponent = thisComponent;
+        }
+      }
+    }
+  }
 
   return (
     <>
@@ -52,6 +86,9 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
           </Navbar.Group>
         </div>
       </Navbar>
+      {props.planet.components && <div className="Planet-contentcontainer">
+        {currentComponent}
+      </div>}
     </>
   );
 }
