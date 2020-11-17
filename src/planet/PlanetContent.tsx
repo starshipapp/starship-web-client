@@ -1,10 +1,12 @@
-import { useQuery } from "@apollo/client";
-import { Alignment, Button, Menu, MenuItem, Navbar, NonIdealState, Popover } from "@blueprintjs/core";
-import React from "react";
-import { Link, useParams } from "react-router-dom";
+import { useMutation, useQuery } from "@apollo/client";
+import { Alignment, Button, Intent, Menu, MenuItem, Navbar, NonIdealState, Popover } from "@blueprintjs/core";
+import React, { useState } from "react";
+import { Link, useHistory, useParams } from "react-router-dom";
+import addComponentMutation, { IAddComponentMutationData } from "../graphql/mutations/planets/addComponentMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import IPlanet from "../types/IPlanet";
 import IUser from "../types/IUser";
+import { GlobalToaster } from "../util/GlobalToaster";
 import permissions from "../util/permissions";
 import ComponentIndex from "./ComponentIndex";
 import "./css/Planet.css";
@@ -22,6 +24,9 @@ interface IPlanetContentProps {
 function PlanetContent(props: IPlanetContentProps): JSX.Element {
   const {planet, component} = useParams<IPlanetContentParams>();
   const {data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+  const [componentName, setComponentName] = useState<string>("");
+  const [addComponent] = useMutation<IAddComponentMutationData>(addComponentMutation);
+  const history = useHistory();
 
   //
   // really long component determining thing
@@ -77,9 +82,17 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
             {!userLoading && props.planet.owner && permissions.checkFullWritePermission(userData?.currentUser as IUser, props.planet) && <Popover>
               <Button className="bp3-minimal" icon="plus"/>
               <div className="Planet-navbar-add-content">
-                <input className="bp3-input" placeholder="name"/>
+                <input className="bp3-input" placeholder="name" value={componentName} onChange={(e) => setComponentName(e.target.value)}/>
                 <Menu>
-                  {Object.values(ComponentIndex.ComponentDataTypes).map((value) => (<MenuItem text={"Create new " + value.friendlyName} key={value.name} icon={value.icon}/>))}
+                  {Object.values(ComponentIndex.ComponentDataTypes).map((value) => (<MenuItem text={"Create new " + value.friendlyName} key={value.name} icon={value.icon} onClick={() => {
+                    addComponent({variables: {planetId: planet, name: componentName, type: value.name}}).then((value) => {
+                      if(value.data?.addComponent.id) {
+                        GlobalToaster.show({message: `Successfully added ${componentName}.`, intent: Intent.SUCCESS});
+                      }
+                    }).catch((error: Error) => {
+                      GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+                    });
+                  }}/>))}
                 </Menu>
               </div>
             </Popover>}

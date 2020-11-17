@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { Button, Intent, NonIdealState } from "@blueprintjs/core";
 import React, { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -14,7 +14,7 @@ import updatePageMutation, { IUpdatePageMutationData } from "../../graphql/mutat
 import { GlobalToaster } from "../../util/GlobalToaster";
 
 function PageComponent(props: IComponentProps): JSX.Element {
-  const { client, data, loading } = useQuery<IGetPageData>(getPage, {variables: {page: props.id}});
+  const {data, loading } = useQuery<IGetPageData>(getPage, {variables: {page: props.id}});
   const [isEditing, setEditing] = useState<boolean>(false);
   const [editorState, setEditorState] = useState<string>("");
   const {data: userData} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
