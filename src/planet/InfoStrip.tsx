@@ -1,6 +1,7 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { Button, Divider, Icon, Tooltip } from '@blueprintjs/core';
 import React from 'react';
+import followMutation, { IFollowMutationData } from '../graphql/mutations/planets/followMutation';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
 import IPlanet from '../types/IPlanet';
 import permissions from '../util/permissions';
@@ -11,7 +12,8 @@ interface IInfoStripProps {
 }
 
 function InfoStrip(props: IInfoStripProps): JSX.Element {
-  const {data, loading} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+  const {data, loading, refetch} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+  const [follow] = useMutation<IFollowMutationData>(followMutation);
 
   return (
     <div className={`InfoStrip`}>
@@ -25,7 +27,13 @@ function InfoStrip(props: IInfoStripProps): JSX.Element {
       {!loading && data?.currentUser && <>
         <div className="InfoStrip">
           <Divider/>
-          <Button text={(data?.currentUser.following && data?.currentUser.following.includes({id: props.planet.id, name: props.planet.name}) ) ? "Unfollow" : "Follow"}/>
+          <Button text={(data?.currentUser.following && data?.currentUser.following.some(e => e.id === props.planet.id) ) ? "Unfollow" : "Follow"} onClick={() => {
+            follow({variables: {planetId: props.planet.id}}).then(() => {
+              void refetch();
+            }).catch((error) => {
+              console.log(error);
+            });
+          }}/>
           <Tooltip content="Report">
             <Button icon="flag" minimal={true}/>
           </Tooltip>
