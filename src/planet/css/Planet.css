@@ -1,0 +1,63 @@
+.Planet {
+  background-color: #293742;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.Planet-header {
+  padding-right: calc(50% - 37.5vw);
+  padding-left: calc(50% - 37.5vw);
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  font-size: 3rem;
+  font-weight: bold;
+  min-height: 9rem;
+  max-height: 9rem;
+  background-color: #30404d;
+}
+
+.Planet-contentcontainer {
+  width: 75vw;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  height: 100%;
+  overflow-x: visible;
+}
+
+.Planet-navbar {
+  margin-top: 0.5rem;
+  box-shadow: none !important;
+  background-color: #293742 !important;
+}
+
+.Planet-navbar-content {
+  width: 75vw;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Planet-navbar-add-content {
+  padding: 0.5rem;
+}
+
+.Planet-navbar-add-content .bp3-menu {
+  padding: 0;
+  padding-top: 0.5rem;
+}
+
+.Planet-header-name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Planet-textarea {
+  width: 100%;
+  resize: none;
+}

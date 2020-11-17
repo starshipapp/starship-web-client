@@ -78,7 +78,7 @@ function Login(): JSX.Element {
         {loading ? <div>Loading...</div> : (data?.currentUser ? <NonIdealState
           icon="user"
           title="You're already logged in."
-          description={"You're already logged in as " + data.currentUser.username + ". Would you like to logout?"}
+          description={`You're already logged in as ${data.currentUser?.username?.toString() as string}. Would you like to logout?`}
           action={<Button text="Logout" onClick={() => {
             localStorage.removeItem("token");
             void client.resetStore();

@@ -5,6 +5,7 @@ import { createBrowserHistory } from "history";
 import Home from './home/Home';
 import MainSidebar from './sidebar/MainSidebar';
 import Login from './login/Login';
+import Planet from './planet/Planet';
 
 const history = createBrowserHistory();
 
@@ -16,6 +17,12 @@ function App(): JSX.Element {
         <Switch>
           <Route path="/login">
             <Login/>
+          </Route>
+          <Route path="/planet/:planet">
+            <Planet home={true}/>
+          </Route>
+          <Route path="/planet/:planet/:component">
+            <Planet home={false}/>
           </Route>
           <Route path="/">
             <Home/>

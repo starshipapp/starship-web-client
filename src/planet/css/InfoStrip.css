@@ -1,0 +1,23 @@
+.InfoStrip {
+  font-size: 0.9rem;
+  font-weight: normal;
+  display: flex;
+  flex-direction: row;
+  min-height: 30px;
+}
+
+.InfoStrip-username {
+  margin-top: auto;
+  margin-bottom: auto;
+  cursor: pointer;
+}
+
+.InfoStrip-followers {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.InfoStrip-icon {
+  margin-top: auto;
+  margin-bottom: auto;
+}

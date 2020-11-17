@@ -14,6 +14,14 @@ const getCurrentUser = gql`
       profilePicture
       banned
       createdAt
+      following {
+        id
+        name
+      }
+      memberOf {
+        id
+        name
+      }
     }
   }
 `;
