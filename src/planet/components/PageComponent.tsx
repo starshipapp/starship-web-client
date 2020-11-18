@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Intent, NonIdealState } from "@blueprintjs/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
 import SimpleMDEEditor from "react-simplemde-editor";
 import getPage, { IGetPageData } from "../../graphql/queries/components/getPage";
@@ -20,12 +20,6 @@ function PageComponent(props: IComponentProps): JSX.Element {
   const {data: userData} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [updatePage] = useMutation<IUpdatePageMutationData>(updatePageMutation);
 
-  useEffect(() => {
-    if(!loading && data?.page && editorState === "") {
-      setEditorState(data?.page.content);
-    }
-  }, [loading, data?.page, editorState]);
-
   return (
     <div className="bp3-dark PageComponent">
       {loading ? <div></div> : (data?.page ? <>
@@ -33,7 +27,10 @@ function PageComponent(props: IComponentProps): JSX.Element {
         {isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={editorOptions}/>}
         {(userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <Button
           icon="edit"
-          onClick={() => setEditing(true)}
+          onClick={() => {
+            setEditing(true);
+            setEditorState(data?.page.content);
+          }}
           minimal={true}
           className="PageComponent-edit PageComponent-edit-button"
         /> : <Button
