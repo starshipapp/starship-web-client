@@ -6,8 +6,8 @@ export interface ISignUpMutationData {
 }
 
 const signUpMutation = gql`
-  mutation SignUp($username: String!, $password: String!, $email: String!) {
-    insertUser(username: $username, password: $password, email: $email, recaptcha: "") {
+  mutation SignUp($username: String!, $password: String!, $email: String!, $recaptcha: String!) {
+    insertUser(username: $username, password: $password, email: $email, recaptcha: $recaptcha) {
       id,
       username
     }

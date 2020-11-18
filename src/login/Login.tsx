@@ -46,7 +46,7 @@ function Login(): JSX.Element {
       return;
     }
 
-    signUp({ variables: { registerUsername, password: sha256(registerPasword).toString(), email } }).then((value) => {
+    signUp({ variables: { username: registerUsername, password: sha256(registerPasword).toString(), email, recaptcha: "" } }).then((value) => {
       if (value.data) {
         if (value.data.insertUser.id) {
           GlobalToaster.show({ intent: "success", message: "Sucessfully registered! Check your email to verify." });
