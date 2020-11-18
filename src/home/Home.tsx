@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './css/Home.css';
 import { useQuery } from '@apollo/client';
 import getFeaturedPlanets, { IGetFeaturedPlanetsData } from '../graphql/queries/planets/getFeaturedPlanets';
@@ -8,6 +8,10 @@ import { Link } from 'react-router-dom';
 
 function Home(): JSX.Element {
   const { loading, data } = useQuery<IGetFeaturedPlanetsData>(getFeaturedPlanets, { errorPolicy: 'all' });
+
+  useEffect(() => {
+    document.title = "starship";
+  });
 
   return (
     <div className="Home">

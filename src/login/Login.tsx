@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Classes, Divider, H1, NonIdealState } from "@blueprintjs/core";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import signInMutation, { ISignInMutationData } from "../graphql/mutations/users/signInMutation";
 import "./css/Login.css";
 import sha256 from 'crypto-js/sha256';
@@ -23,6 +23,10 @@ function Login(): JSX.Element {
   const { client, loading, data } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
 
   const history = useHistory();
+
+  useEffect(() => {
+    document.title = "Login | starship";
+  });
 
   const register = function() {
     if (registerUsername === "") {

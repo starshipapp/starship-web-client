@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Alignment, Button, Intent, Menu, MenuItem, Navbar, NonIdealState, Popover } from "@blueprintjs/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory, useParams } from "react-router-dom";
 import addComponentMutation, { IAddComponentMutationData } from "../graphql/mutations/planets/addComponentMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
@@ -26,7 +26,15 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
   const {data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [componentName, setComponentName] = useState<string>("");
   const [addComponent] = useMutation<IAddComponentMutationData>(addComponentMutation);
-  const history = useHistory();
+
+  useEffect(() => {
+    if(component && props.planet.components) {
+      const filteredComponents = props.planet.components.filter(value => value.componentId === component);
+      document.title = `${filteredComponents[0].name} - ${props.planet.name} | starship`;
+    } else {
+      document.title = `${props.planet.name} | starship`;
+    }
+  });
 
   //
   // really long component determining thing
@@ -43,6 +51,12 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
       const thisComponent = ComponentIndex.getComponent(component, filteredComponents[0].type, props.planet, filteredComponents[0].name);
       if(thisComponent) {
         currentComponent = thisComponent;
+      } else {
+        currentComponent = <NonIdealState
+          icon="error"
+          title="Not Implemented"
+          description="This component has no client implementation and cannot be rendered."
+        />;
       }
     }
   }
@@ -59,6 +73,12 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
         const thisComponent = ComponentIndex.getComponent(props.planet.homeComponent.componentId, props.planet.homeComponent.type, props.planet, "Home");
         if(thisComponent) {
           currentComponent = thisComponent;
+        } else {
+          currentComponent = <NonIdealState
+            icon="error"
+            title="Not Implemented"
+            description="This component has no client implementation and cannot be rendered."
+          />;
         }
       }
     }
