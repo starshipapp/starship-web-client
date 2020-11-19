@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import insertPlanetMutation, { IInsertPlanetMutationData } from '../graphql/mutations/planets/insertPlanetMutation';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
+import Profile from '../profile/Profile';
 import { GlobalToaster } from '../util/GlobalToaster';
 import './css/MainSidebar.css';
 
@@ -13,6 +14,7 @@ function MainSidebar(): JSX.Element {
   const [planetName, setPlanetName] = useState<string>("");
   const [privatePlanet, setPrivate] = useState<boolean>(false);
   const [showPopout, setPopout] = useState<boolean>(false);
+  const [showProfile, setProfile] = useState<boolean>(false);
 
   const history = useHistory();
 
@@ -39,6 +41,7 @@ function MainSidebar(): JSX.Element {
 
   return (
     <div className="MainSidebar">
+      {data?.currentUser && <Profile isOpen={showProfile} onClose={() => setProfile(false)} userId={data.currentUser.id}/>}
       <Menu className="MainSidebar-menu">
         <div className="MainSidebar-menu-logo">
           <Link to="/">starship</Link>
@@ -71,7 +74,7 @@ function MainSidebar(): JSX.Element {
             <Link to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>
           ))}
           <MenuDivider/>
-          <MenuItem icon="user" text={data.currentUser.username}/>
+          <MenuItem icon="user" text={data.currentUser.username} onClick={() => setProfile(true)}/>
           <MenuItem icon="settings" text="Settings"/>
           <MenuItem icon="log-out" text="Logout" onClick={() => {
             localStorage.removeItem("token");

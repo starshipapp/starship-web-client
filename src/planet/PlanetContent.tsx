@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Alignment, Button, Intent, Menu, MenuItem, Navbar, NonIdealState, Popover } from "@blueprintjs/core";
 import React, { useEffect, useState } from "react";
-import { Link, useHistory, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import addComponentMutation, { IAddComponentMutationData } from "../graphql/mutations/planets/addComponentMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import IPlanet from "../types/IPlanet";

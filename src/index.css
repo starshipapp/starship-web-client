@@ -16,3 +16,33 @@ a {
   text-decoration: none !important;
   color: #ffffff !important;
 }
+
+h1 {
+  margin: 0;
+  margin-bottom: 0.25rem;
+}
+
+h2 {
+  margin: 0;
+  margin-bottom: 0.15rem;
+}
+
+h3 {
+  margin: 0;
+  margin-bottom: 0.1rem;
+}
+
+img {
+  max-height: 50vh;
+  max-width: 75vw;
+}
+
+.editor-preview-full {
+  background-color: #30404d !important;
+}
+
+blockquote {
+  border-left: 5px #18202655 solid;
+  padding-left: 0.4rem;
+  margin: 0;
+}

@@ -6,8 +6,8 @@ export interface IGetUserData {
 }
 
 const getUser = gql`
-  query getUser {
-    user {
+  query getUser($id: ID!) {
+    user(id: $id) {
       id
       username
       admin
