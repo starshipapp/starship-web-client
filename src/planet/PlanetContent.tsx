@@ -93,6 +93,7 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
 
   return (
     <>
+      {props.planet.css && component !== "admin" && <style>{props.planet.css}</style>}
       <Navbar className="Planet-navbar">
         <div className="Planet-navbar-content">
           <Navbar.Group align={Alignment.LEFT}>

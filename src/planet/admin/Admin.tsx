@@ -7,6 +7,7 @@ import { Menu, MenuItem, NonIdealState } from "@blueprintjs/core";
 import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
 import AdminGeneral from "./AdminGeneral";
 import "./css/Admin.css";
+import AdminComponent from "./AdminComponents";
 
 interface IAdminProps {
   planet: IPlanet
@@ -31,6 +32,9 @@ function Admin(props: IAdminProps): JSX.Element {
             </div>
             <div className="Admin-main">
               <Switch>
+                <Route path={`${match.path}/components`}>
+                  <AdminComponent planet={props.planet}/>
+                </Route>
                 <Route path={`${match.path}`}>
                   <AdminGeneral planet={props.planet}/>
                 </Route>

@@ -54,3 +54,20 @@ blockquote {
 .dumb-workaround-fcg-padding {
   margin-top: 5px !important;
 }
+
+.menu-input {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.menu-button {
+  margin-right: 0.5rem;
+}
+
+.menu-override {
+  width: 100% !important;
+}
+
+.menu-form {
+  padding: 0.5rem;
+}

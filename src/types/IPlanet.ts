@@ -15,5 +15,6 @@ export default interface IPlanet {
   partnered?: boolean,
   featuredDescription?: string,
   members?: [IUser],
-  banned?: [IUser]
+  banned?: [IUser],
+  css?: string
 }
