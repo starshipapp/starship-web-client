@@ -1,0 +1,18 @@
+.Admin {
+  margin-top: -1.15rem;
+}
+
+.Admin-container {
+  margin-top: 2rem;
+  display: flex;
+}
+
+.Admin-sidebar {
+  margin-top: -1rem;
+  width: 12.5rem;
+}
+
+.Admin-main {
+  margin-left: 1rem;
+  width: 100%;
+}

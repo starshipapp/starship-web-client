@@ -46,3 +46,11 @@ blockquote {
   padding-left: 0.4rem;
   margin: 0;
 }
+
+.dumb-workaround-for-control-group {
+  margin-top: 0px !important;
+}
+
+.dumb-workaround-fcg-padding {
+  margin-top: 5px !important;
+}

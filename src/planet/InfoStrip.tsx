@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Divider, Icon, Tooltip } from '@blueprintjs/core';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import followMutation, { IFollowMutationData } from '../graphql/mutations/planets/followMutation';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
 import Profile from '../profile/Profile';
@@ -43,7 +44,7 @@ function InfoStrip(props: IInfoStripProps): JSX.Element {
         </div>
         {permissions.checkFullWritePermission(data?.currentUser, props.planet) && <div className="InfoStrip">
           <Divider/>
-          <Button text="Admin" icon="wrench" intent="danger" minimal={true}/>  
+          <Link to={`/planet/${props.planet.id}/admin`}><Button text="Admin" icon="wrench" intent="danger" minimal={true}/></Link>
         </div>}
         {permissions.checkAdminPermission(data?.currentUser) && <div className="InfoStrip">
           <Divider/>

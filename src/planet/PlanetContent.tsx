@@ -8,6 +8,7 @@ import IPlanet from "../types/IPlanet";
 import IUser from "../types/IUser";
 import { GlobalToaster } from "../util/GlobalToaster";
 import permissions from "../util/permissions";
+import Admin from "./admin/Admin";
 import ComponentIndex from "./ComponentIndex";
 import "./css/Planet.css";
 
@@ -30,7 +31,13 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
   useEffect(() => {
     if(component && props.planet.components) {
       const filteredComponents = props.planet.components.filter(value => value.componentId === component);
-      document.title = `${filteredComponents[0].name} - ${props.planet.name} | starship`;
+      if(filteredComponents[0]) {
+        document.title = `${filteredComponents[0].name} - ${props.planet.name} | starship`;
+      } else if(component === "admin") {
+        document.title = `Admin - ${props.planet.name} | starship`;
+      } else {
+        document.title = `404 - ${props.planet.name} | starship`;
+      }
     } else {
       document.title = `${props.planet.name} | starship`;
     }
@@ -61,11 +68,11 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
     }
   }
 
-  /* if(props.admin && this.props.planet[0]) {
-    if(this.props.planet[0].createdAt) {
-      currentComponent = <Admin planet={this.props.planet[0]}/>;
+  if(component === "admin" && props.planet) {
+    if(props.planet.createdAt) {
+      currentComponent = <Admin planet={props.planet}/>;
     }
-  }*/
+  }
 
   if(props.home) {
     if(props.planet) {
