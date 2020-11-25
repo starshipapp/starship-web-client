@@ -34,6 +34,7 @@ const getPlanet = gql`
       banned {
         id
       }
+      css
     }
   }
 `;

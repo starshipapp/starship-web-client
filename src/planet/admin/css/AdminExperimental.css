@@ -1,0 +1,26 @@
+.AdminExperimental-callout {
+  margin-bottom: 0.5rem;
+  display: flex;
+}
+
+.AdminExperimental-callout-span {
+  display: inline-block;
+  margin-top: 0.25rem;
+}
+
+.AdminExperimental-callout-button {
+  margin-left: auto;
+  margin-top: -0.1rem;
+  margin-bottom: -0.1rem;
+  margin-right: -0.1rem;
+}
+
+.AdminExperimental-css-save {
+  margin-top: 0.5rem;
+}
+
+.AdminExperimental-textarea {
+  height: 40vh !important;
+  resize: none;
+  
+}

@@ -8,9 +8,12 @@ import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
 import AdminGeneral from "./AdminGeneral";
 import "./css/Admin.css";
 import AdminComponent from "./AdminComponents";
+import AdminExperimental from "./AdminExperimental";
 
 interface IAdminProps {
-  planet: IPlanet
+  planet: IPlanet,
+  forceStyling: boolean,
+  enableStyling: (value: boolean) => void
 }
 
 function Admin(props: IAdminProps): JSX.Element {
@@ -28,10 +31,14 @@ function Admin(props: IAdminProps): JSX.Element {
                 <Link to={`/planet/${props.planet.id}/admin`}><MenuItem icon="wrench" text="General"/></Link>
                 <Link to={`/planet/${props.planet.id}/admin/components`}><MenuItem icon="document" text="Components"/></Link>
                 <Link to={`/planet/${props.planet.id}/admin/members`}><MenuItem icon="people" text="Members"/></Link>
+                <Link to={`/planet/${props.planet.id}/admin/experimental`}><MenuItem icon="lab-test" text="Experimental"/></Link>
               </Menu>
             </div>
             <div className="Admin-main">
               <Switch>
+                <Route path={`${match.path}/experimental`}>
+                  <AdminExperimental planet={props.planet} forceStyling={props.forceStyling} enableStyling={props.enableStyling}/>
+                </Route>
                 <Route path={`${match.path}/components`}>
                   <AdminComponent planet={props.planet}/>
                 </Route>

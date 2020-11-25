@@ -27,6 +27,7 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
   const {data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [componentName, setComponentName] = useState<string>("");
   const [addComponent] = useMutation<IAddComponentMutationData>(addComponentMutation);
+  const [forceStyling, enableStyling] = useState<boolean>(false);
 
   useEffect(() => {
     if(component && props.planet.components) {
@@ -70,7 +71,7 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
 
   if(component === "admin" && props.planet) {
     if(props.planet.createdAt) {
-      currentComponent = <Admin planet={props.planet}/>;
+      currentComponent = <Admin planet={props.planet} forceStyling={forceStyling} enableStyling={enableStyling}/>;
     }
   }
 
@@ -93,7 +94,7 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
 
   return (
     <>
-      {props.planet.css && component !== "admin" && <style>{props.planet.css}</style>}
+      {props.planet.css && (component !== "admin" || forceStyling === true) && <style>{props.planet.css}</style>}
       <Navbar className="Planet-navbar">
         <div className="Planet-navbar-content">
           <Navbar.Group align={Alignment.LEFT}>
