@@ -34,6 +34,9 @@ const getPlanet = gql`
       banned {
         id
       }
+      invites {
+        id
+      }
       css
     }
   }

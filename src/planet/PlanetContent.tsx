@@ -98,8 +98,8 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
       <Navbar className="Planet-navbar">
         <div className="Planet-navbar-content">
           <Navbar.Group align={Alignment.LEFT}>
-            <Link to={`/planet/${planet}`}> <Button className="bp3-minimal" outlined={props.home} icon="home" text="Home"/> </Link>
-            {props.planet.components && props.planet.components.map((value) => (<Link to={`/planet/${planet}/${value.componentId}`}>
+            <Link className="link-button" to={`/planet/${planet}`}> <Button className="bp3-minimal" outlined={props.home} icon="home" text="Home"/> </Link>
+            {props.planet.components && props.planet.components.map((value) => (<Link className="link-button" to={`/planet/${planet}/${value.componentId}`}>
               <Button
                 className="bp3-minimal"
                 icon={ComponentIndex.ComponentDataTypes[value.type].icon}

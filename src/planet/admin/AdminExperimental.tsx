@@ -35,7 +35,9 @@ function AdminExperimental(props: IAdminExperimentalProps): JSX.Element {
           </Callout>
           <TextArea className={Classes.FILL + " AdminExperimental-textarea"} value={cssTextboxContents} onChange={(e) => updateCSSTextbox(e.target.value)}/>
           <Button text="Save" className="AdminExperimental-css-save" onClick={() => {
-            setCSS({variables: {planetId: props.planet.id, css: cssTextboxContents}}).then(() => console.log("b")).catch((e: Error) => {
+            setCSS({variables: {planetId: props.planet.id, css: cssTextboxContents}}).then(() => {
+              GlobalToaster.show({message: "Sucessfully updated CSS stylesheet.", intent: Intent.DANGER});
+            }).catch((e: Error) => {
               GlobalToaster.show({message: e.message, intent: Intent.DANGER});
             });
           }}/>

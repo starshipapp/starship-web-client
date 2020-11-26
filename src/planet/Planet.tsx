@@ -18,7 +18,6 @@ interface IPlanetProps {
 function Planet(props: IPlanetProps): JSX.Element {
   const match = useRouteMatch();
   const {planet} = useParams<IPlanetParams>();
-  console.log("planet: " + planet);
   const {loading, data} = useQuery<IGetPlanetData>(getPlanet, {variables: {planet}, errorPolicy: 'all'});
 
   return (

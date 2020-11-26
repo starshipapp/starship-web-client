@@ -18,8 +18,6 @@ function Profile(props: IProfileProps): JSX.Element {
   const { data, loading } = useQuery<IGetUserData>(getUser, {variables: {id: props.userId}});
   const { data: currentData, loading: currentLoading } = useQuery<IGetCurrentUserData>(getCurrentUser, {errorPolicy: "all"});
   const creationDateText = (!loading && data?.user && data?.user.createdAt) ? new Date(Number(data.user.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : "loading";
-  
-  console.log(data);
 
   return (
     <Dialog className="bp3-dark" title={data?.user && data.user.username} onClose={props.onClose} isOpen={props.isOpen}>

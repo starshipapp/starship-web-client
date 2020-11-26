@@ -1,9 +1,10 @@
+import IInvite from "./IInvite";
 import IUser from "./IUser";
 
 /* eslint-disable semi */
 export default interface IPlanet {
   id: string,
-  name: string,
+  name?: string,
   createdAt?: Date,
   owner?: IUser,
   private?: boolean,
@@ -16,5 +17,6 @@ export default interface IPlanet {
   featuredDescription?: string,
   members?: [IUser],
   banned?: [IUser],
-  css?: string
+  css?: string,
+  invites?: [IInvite]
 }

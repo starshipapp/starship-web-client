@@ -35,7 +35,6 @@ function MainSidebar(): JSX.Element {
       }
     }).catch((error) => {
       GlobalToaster.show({message: "An unknown server error occured.", intent: Intent.DANGER});
-      console.log(error);
     });
   };
 
@@ -44,7 +43,7 @@ function MainSidebar(): JSX.Element {
       {data?.currentUser && <Profile isOpen={showProfile} onClose={() => setProfile(false)} userId={data.currentUser.id}/>}
       <Menu className="MainSidebar-menu">
         <div className="MainSidebar-menu-logo">
-          <Link to="/">starship</Link>
+          <Link className="link-button" to="/">starship</Link>
           <Tooltip content="EXPERIMENTAL NON-PRODUCTION BUILD" position={Position.RIGHT}>
             <Icon className="version-warning-icon" icon="warning-sign"/>
           </Tooltip>
@@ -53,7 +52,7 @@ function MainSidebar(): JSX.Element {
           {data.currentUser.admin && <MenuItem icon="warning-sign" text="Admin"/>}
           <MenuDivider title="MY PLANETS"/>
           {data.currentUser.memberOf?.map((value) => (
-            <Link to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>
+            <Link className="link-button" to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>
           ))}
           <Popover className="MainSidebar-insert-planet-popover" position={Position.RIGHT} isOpen={showPopout}>
             <MenuItem icon="new-object" text="New Planet" className="MainSidebar-insert-planet-button" onClick={() => setPopout(!showPopout)}/>
@@ -71,7 +70,7 @@ function MainSidebar(): JSX.Element {
           </Popover>
           {data.currentUser.following && data.currentUser.following.length > 0 && <MenuDivider title="FOLLOWING"/>}
           {data.currentUser.following?.map((value) => (
-            <Link to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>
+            <Link className="link-button" to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>
           ))}
           <MenuDivider/>
           <MenuItem icon="user" text={data.currentUser.username} onClick={() => setProfile(true)}/>
@@ -81,7 +80,7 @@ function MainSidebar(): JSX.Element {
             void client.cache.gc();
             void client.resetStore();
           }}/>
-        </> : <Link to="/login"><MenuItem icon="log-in" text="Login"/></Link>)}
+        </> : <Link className="link-button" to="/login"><MenuItem icon="log-in" text="Login"/></Link>)}
       </Menu>
     </div>
   );

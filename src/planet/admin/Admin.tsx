@@ -9,6 +9,7 @@ import AdminGeneral from "./AdminGeneral";
 import "./css/Admin.css";
 import AdminComponent from "./AdminComponents";
 import AdminExperimental from "./AdminExperimental";
+import AdminMembers from "./AdminMembers";
 
 interface IAdminProps {
   planet: IPlanet,
@@ -28,10 +29,10 @@ function Admin(props: IAdminProps): JSX.Element {
           <div className="Admin-container">
             <div className="Admin-sidebar">
               <Menu>
-                <Link to={`/planet/${props.planet.id}/admin`}><MenuItem icon="wrench" text="General"/></Link>
-                <Link to={`/planet/${props.planet.id}/admin/components`}><MenuItem icon="document" text="Components"/></Link>
-                <Link to={`/planet/${props.planet.id}/admin/members`}><MenuItem icon="people" text="Members"/></Link>
-                <Link to={`/planet/${props.planet.id}/admin/experimental`}><MenuItem icon="lab-test" text="Experimental"/></Link>
+                <Link className="link-button" to={`/planet/${props.planet.id}/admin`}><MenuItem icon="wrench" text="General"/></Link>
+                <Link className="link-button" to={`/planet/${props.planet.id}/admin/components`}><MenuItem icon="document" text="Components"/></Link>
+                <Link className="link-button" to={`/planet/${props.planet.id}/admin/members`}><MenuItem icon="people" text="Members"/></Link>
+                <Link className="link-button" to={`/planet/${props.planet.id}/admin/experimental`}><MenuItem icon="lab-test" text="Experimental"/></Link>
               </Menu>
             </div>
             <div className="Admin-main">
@@ -41,6 +42,9 @@ function Admin(props: IAdminProps): JSX.Element {
                 </Route>
                 <Route path={`${match.path}/components`}>
                   <AdminComponent planet={props.planet}/>
+                </Route>
+                <Route path={`${match.path}/members`}>
+                  <AdminMembers planet={props.planet}/>
                 </Route>
                 <Route path={`${match.path}`}>
                   <AdminGeneral planet={props.planet}/>

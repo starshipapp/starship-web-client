@@ -12,9 +12,9 @@ code {
     monospace;
 }
 
-a {
-  text-decoration: none !important;
-  color: #ffffff !important;
+a.link-button {
+  color: inherit !important;
+  text-decoration: inherit !important;
 }
 
 h1 {
@@ -70,4 +70,10 @@ blockquote {
 
 .menu-form {
   padding: 0.5rem;
+}
+
+.spinner-inline {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
 }

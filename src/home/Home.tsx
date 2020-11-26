@@ -33,7 +33,7 @@ function Home(): JSX.Element {
         <div className="Home-featured">
           <div className="Home-featured-header">Featured Planets</div>
           {!loading && <div className="Home-featured-list">
-            {data && data.featuredPlanets.map((value) => (<Link to={`/planet/` + value.id} key={value.id}>
+            {data && data.featuredPlanets.map((value) => (<Link className="link-button" to={`/planet/` + value.id} key={value.id}>
               <div className="Home-featured-item">
                 <Text className="Home-featured-name">{value.name}</Text>
                 <Text className="Home-featured-description">{value.featuredDescription && value.featuredDescription} </Text>

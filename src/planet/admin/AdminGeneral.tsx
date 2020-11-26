@@ -12,7 +12,7 @@ interface IAdminGeneralProps {
 }
 
 function AdminGeneral(props: IAdminGeneralProps): JSX.Element {
-  const [nameTextboxContents, updateNameTextbox] = useState<string>(props.planet.name);
+  const [nameTextboxContents, updateNameTextbox] = useState<string>(props.planet.name as unknown as string);
   const [setName] = useMutation<IUpdateNameMutationData>(updateNameMutation);
   const [togglePrivate] = useMutation<ITogglePrivateMutationData>(togglePrivateMutation);
 
@@ -40,7 +40,7 @@ function AdminGeneral(props: IAdminGeneralProps): JSX.Element {
             className="AdminGeneral-margin-button"
             onClick={() => {
               togglePrivate({variables: {planetId: props.planet.id}}).then((data) => {
-                GlobalToaster.show({message: `${props.planet.name} is now ${data.data?.togglePrivate.private ? "private" : "public"}.`, intent: Intent.SUCCESS});
+                GlobalToaster.show({message: `${props.planet.name as unknown as string} is now ${data.data?.togglePrivate.private ? "private" : "public"}.`, intent: Intent.SUCCESS});
               }).catch((err: Error) => {
                 GlobalToaster.show({message: err.message, intent: Intent.DANGER});
               });
