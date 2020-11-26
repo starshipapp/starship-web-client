@@ -21,7 +21,7 @@ function checkReadPermission(user: IUser, planet: IPlanet): boolean {
 
     return false;
   } else {
-    throw new Error("missing-id");
+    return false;
   }
 }
 
@@ -53,7 +53,7 @@ function checkPublicWritePermission(user: IUser, planet: IPlanet): boolean {
 
     return false;
   } else {
-    throw new Error("missing-id");
+    return false;
   }
 }
 
@@ -81,7 +81,7 @@ function checkFullWritePermission(user: IUser, planet: IPlanet): boolean {
 
     return false;
   } else {
-    throw new Error("missing-id");
+    return false;
   }
 }
 
