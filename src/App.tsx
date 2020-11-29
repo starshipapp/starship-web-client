@@ -6,6 +6,7 @@ import Home from './home/Home';
 import MainSidebar from './sidebar/MainSidebar';
 import Login from './login/Login';
 import Planet from './planet/Planet';
+import Invite from './invites/Invite';
 
 const history = createBrowserHistory();
 
@@ -23,6 +24,9 @@ function App(): JSX.Element {
           </Route>
           <Route path="/planet/:planet/:component">
             <Planet home={false}/>
+          </Route>
+          <Route path="/invite/:inviteId">
+            <Invite/>
           </Route>
           <Route path="/">
             <Home/>

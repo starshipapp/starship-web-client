@@ -33,14 +33,14 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
     if(component && props.planet.components) {
       const filteredComponents = props.planet.components.filter(value => value.componentId === component);
       if(filteredComponents[0]) {
-        document.title = `${filteredComponents[0].name} - ${props.planet.name} | starship`;
+        document.title = `${filteredComponents[0].name} - ${props.planet.name as unknown as string} | starship`;
       } else if(component === "admin") {
-        document.title = `Admin - ${props.planet.name} | starship`;
+        document.title = `Admin - ${props.planet.name as unknown as string} | starship`;
       } else {
-        document.title = `404 - ${props.planet.name} | starship`;
+        document.title = `404 - ${props.planet.name as unknown as string} | starship`;
       }
     } else {
-      document.title = `${props.planet.name} | starship`;
+      document.title = `${props.planet.name as unknown as string} | starship`;
     }
   });
 
