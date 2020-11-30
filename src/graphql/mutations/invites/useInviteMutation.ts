@@ -9,7 +9,9 @@ const useInviteMutation = gql`
   mutation UseInvite($id: ID!) {
     useInvite(inviteId: $id) {
       id
-      members
+      members {
+        id
+      }
     }
   }
 `;
