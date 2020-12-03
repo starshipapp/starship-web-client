@@ -45,9 +45,9 @@ function Home(): JSX.Element {
         <div className="Home-footer">
           <span className="Home-footer-copyright">© Starship 2020. All rights reserved.</span>
           <span className="Home-footer-links">
-            <a className="Home-footer-link" href="/terms">Terms</a> 
-            <a className="Home-footer-link" href="/privacy">Privacy Policy</a> 
-            <a className="Home-footer-link" href="/rules">Rules</a>
+            <Link className="Home-footer-link" to="/terms">Terms</Link>
+            <Link className="Home-footer-link" to="/privacy">Privacy Policy</Link> 
+            <Link className="Home-footer-link" to="/rules">Rules</Link>
           </span>
         </div>
       </div>

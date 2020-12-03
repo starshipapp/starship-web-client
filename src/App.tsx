@@ -7,6 +7,9 @@ import MainSidebar from './sidebar/MainSidebar';
 import Login from './login/Login';
 import Planet from './planet/Planet';
 import Invite from './invites/Invite';
+import Terms from './legal/Terms';
+import Privacy from './legal/Privacy';
+import Rules from './legal/Rules';
 
 const history = createBrowserHistory();
 
@@ -27,6 +30,15 @@ function App(): JSX.Element {
           </Route>
           <Route path="/invite/:inviteId">
             <Invite/>
+          </Route>
+          <Route path="/terms">
+            <Terms/>
+          </Route>
+          <Route path="/privacy">
+            <Privacy/>
+          </Route>
+          <Route path="/rules">
+            <Rules/>
           </Route>
           <Route path="/">
             <Home/>

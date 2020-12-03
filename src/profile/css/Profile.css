@@ -33,6 +33,10 @@
   margin-top: 0.5rem;
 }
 
+.Profile-tags, .bp3-tag {
+  margin-right: 0.35rem;
+}
+
 .Profile-date {
   margin-top: 0.25rem;
   font-size: 0.85rem;

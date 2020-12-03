@@ -20,7 +20,6 @@ function Invite(): JSX.Element {
   const history = useHistory();
 
   const use = function() {
-    console.log("a");
     // it thinks this is a hook
     // it is not
     // this is very annoying

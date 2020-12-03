@@ -15,6 +15,7 @@ interface IProfileProps {
 }
 
 function Profile(props: IProfileProps): JSX.Element {
+  console.log();
   const { data, loading } = useQuery<IGetUserData>(getUser, {variables: {id: props.userId}});
   const { data: currentData, loading: currentLoading } = useQuery<IGetCurrentUserData>(getCurrentUser, {errorPolicy: "all"});
   const creationDateText = (!loading && data?.user && data?.user.createdAt) ? new Date(Number(data.user.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : "loading";
@@ -34,6 +35,7 @@ function Profile(props: IProfileProps): JSX.Element {
             <div className="Profile-tags">
               {data.user.admin && <Tag intent={Intent.DANGER}>Global Admin</Tag>}
               {data.user.banned && <Tag intent={Intent.DANGER}>Globally Banned</Tag>}
+              {data.user.id.length === 17 && <Tag>Early Alpha Tester</Tag>}
             </div>
           </div>
         </div>
