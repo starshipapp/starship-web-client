@@ -8,7 +8,9 @@ import Profile from '../profile/Profile';
 import IPlanet from '../types/IPlanet';
 import { GlobalToaster } from '../util/GlobalToaster';
 import permissions from '../util/permissions';
+import { reportObjectType } from '../util/reportTypes';
 import './css/InfoStrip.css';
+import ReportDialog from './ReportDialog';
 
 interface IInfoStripProps {
   planet: IPlanet
@@ -16,12 +18,20 @@ interface IInfoStripProps {
 
 function InfoStrip(props: IInfoStripProps): JSX.Element {
   const {data, loading, refetch} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const [follow] = useMutation<IFollowMutationData>(followMutation);
+  const [follow] = useMutation<IFollowMutationData>(followMutation); 
+  const [showReport, setReport] = useState<boolean>(false);
   const [showProfile, setProfile] = useState<boolean>(false);
 
   return (
     <div className={`InfoStrip`}>
       <Profile isOpen={showProfile} onClose={() => setProfile(false)} userId={props.planet.owner?.id as string}/>
+      <ReportDialog 
+        isOpen={showReport} 
+        onClose={() => setReport(false)}
+        objectId={props.planet.id}
+        objectType={reportObjectType.PLANET}
+        userId={props.planet.owner?.id ?? ""}
+      />
       {props.planet.verified && <Tooltip content="Verified" className="InfoStrip-icon bp3-dark"><Icon icon="tick-circle"/></Tooltip>}
       {props.planet.partnered && <Tooltip content="Partnered" className="InfoStrip-icon bp3-dark"><Icon icon="unresolve"/></Tooltip>}
       {(props.planet.verified || props.planet.partnered) && <Divider/>}
@@ -40,7 +50,7 @@ function InfoStrip(props: IInfoStripProps): JSX.Element {
             });
           }}/>
           <Tooltip content="Report">
-            <Button icon="flag" minimal={true}/>
+            <Button icon="flag" minimal={true} onClick={() => setReport(true)}/>
           </Tooltip>
         </div>
         {permissions.checkFullWritePermission(data?.currentUser, props.planet) && <div className="InfoStrip">
