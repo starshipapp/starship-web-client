@@ -28,6 +28,8 @@ const getPlanet = gql`
       }
       verified
       partnered
+      featured
+      featuredDescription
       members {
         id
       }

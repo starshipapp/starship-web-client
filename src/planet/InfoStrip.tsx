@@ -10,6 +10,7 @@ import { GlobalToaster } from '../util/GlobalToaster';
 import permissions from '../util/permissions';
 import { reportObjectType } from '../util/reportTypes';
 import './css/InfoStrip.css';
+import ModTools from './ModTools';
 import ReportDialog from './ReportDialog';
 
 interface IInfoStripProps {
@@ -21,10 +22,16 @@ function InfoStrip(props: IInfoStripProps): JSX.Element {
   const [follow] = useMutation<IFollowMutationData>(followMutation); 
   const [showReport, setReport] = useState<boolean>(false);
   const [showProfile, setProfile] = useState<boolean>(false);
+  const [showTools, setTools] = useState<boolean>(false);
 
   return (
     <div className={`InfoStrip`}>
-      <Profile isOpen={showProfile} onClose={() => setProfile(false)} userId={props.planet.owner?.id as string}/>
+      <ModTools
+        isOpen={showTools}
+        onClose={() => setTools(false)}
+        planet={props.planet}
+      />
+      <Profile isOpen={showProfile} onClose={() => setProfile(false)} userId={props.planet.owner?.id ?? ""}/>
       <ReportDialog 
         isOpen={showReport} 
         onClose={() => setReport(false)}
@@ -59,7 +66,7 @@ function InfoStrip(props: IInfoStripProps): JSX.Element {
         </div>}
         {permissions.checkAdminPermission(data?.currentUser) && <div className="InfoStrip">
           <Divider/>
-          <Button text="Mod Tools" icon="wrench" minimal={true}/>  
+          <Button text="Mod Tools" icon="wrench" minimal={true} onClick={() => setTools(true)}/>  
         </div>}
       </>}
     </div>
