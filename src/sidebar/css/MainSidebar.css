@@ -29,8 +29,9 @@
 }
 
 .version-warning-icon {
-  margin-left: 0.25rem;
-  margin-bottom: 0.25rem;
+  display: inline-block;
+  margin-left: 0.4rem;
+  margin-bottom: 0.6rem;
 }
 
 .MainSidebar-insert-planet-popover {
@@ -64,4 +65,13 @@
 .MainSidebar-insert-planet-submit {
   margin-left: auto;
   width: max-content;
+}
+
+.MainSidebar-logo {
+  width: 7rem;
+  height: 2rem;
+  display: inline-block;
+  margin-top: -0.15rem;
+  background-image: url("../../assets/images/logo.png");
+  background-size: cover;
 }

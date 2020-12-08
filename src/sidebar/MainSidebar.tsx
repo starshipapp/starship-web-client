@@ -43,7 +43,7 @@ function MainSidebar(): JSX.Element {
       {data?.currentUser && <Profile isOpen={showProfile} onClose={() => setProfile(false)} userId={data.currentUser.id}/>}
       <Menu className="MainSidebar-menu">
         <div className="MainSidebar-menu-logo">
-          <Link className="link-button" to="/">starship</Link>
+          <Link className="link-button" to="/"><div className="MainSidebar-logo"/></Link>
           <Tooltip content="EXPERIMENTAL NON-PRODUCTION BUILD" position={Position.RIGHT}>
             <Icon className="version-warning-icon" icon="warning-sign"/>
           </Tooltip>
