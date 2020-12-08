@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Intent, Menu, NonIdealState, Popover } from "@blueprintjs/core";
+import { show } from "@blueprintjs/core/lib/esm/components/context-menu/contextMenu";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import insertWikiPageMutation, { IInsertWikiPageData } from "../../../graphql/mutations/components/wikis/insertWikiPageMutation";
@@ -17,11 +18,13 @@ function WikiComponent(props: IComponentProps): JSX.Element {
   const hasWritePermission = userData?.currentUser && permissions.checkFullWritePermission(userData.currentUser, props.planet);
   const [insertPage] = useMutation<IInsertWikiPageData>(insertWikiPageMutation);
   const [pageTextbox, setPageTextbox] = useState<string>("");
+  const [showNewPage, setNewPage] = useState<boolean>(false);
 
   const createPage = function() {
     insertPage({variables: {wikiId: props.id, content: "This is a Page. Click the Edit icon in the top right corner to get started.", name: pageTextbox}}).then(() => {
       GlobalToaster.show({message: `Sucessfully created ${pageTextbox}.`, intent: Intent.SUCCESS});
       setPageTextbox("");
+      setNewPage(false);
       void refetch();
     }).catch((err: Error) => {
       GlobalToaster.show({message: err.message, intent: Intent.DANGER});
@@ -38,7 +41,7 @@ function WikiComponent(props: IComponentProps): JSX.Element {
           description={"This page group contains no pages!"}
           action={(hasWritePermission && <Popover>
             <Button>Create new page</Button>
-            <div className="Mmenu-form">
+            <div className="menu-form">
               <input className="menu-input bp3-input" placeholder="Page Name" onKeyDown={(e) => {e.key === "Enter" && createPage();}} value={pageTextbox} onChange={(e) => setPageTextbox(e.target.value)}/>
               <Button className="menu-button" onClick={createPage}>Create Page</Button>
             </div>
@@ -49,8 +52,8 @@ function WikiComponent(props: IComponentProps): JSX.Element {
         <div className="WikiComponent-sidebar">
           <Menu>
             {wikiData?.wiki && wikiData.wiki.pages?.map((value) => (<Link className="link-button" key={value.id} to={`/planet/${props.planet.id}/${props.id}/${value.id ?? ""}`}><Menu.Item icon="document" text={value.name}/></Link>))}
-            {hasWritePermission && <Popover>
-              <Menu.Item icon="plus" text="New Page"/>
+            {hasWritePermission && <Popover isOpen={showNewPage}>
+              <Menu.Item icon="plus" text="New Page" onClick={() => {setNewPage(true); setPageTextbox("");}}/>
               <div className="menu-form">
                 <input className="menu-input bp3-input" placeholder="Page Name" value={pageTextbox} onChange={(e) => setPageTextbox(e.target.value)} onKeyDown={(e) => {e.key === "Enter" && createPage();}}/>
                 <Button className="menu-button" onClick={createPage}>Create Page</Button>
@@ -64,7 +67,7 @@ function WikiComponent(props: IComponentProps): JSX.Element {
             title="No page selected"
             description="Select a page from the right to view it."
           />}
-          {props.subId && <WikiPage subId={props.subId} planet={props.planet}/>}
+          {props.subId && <WikiPage id={props.id} subId={props.subId} planet={props.planet} refetch={refetch}/>}
         </div>
       </div>}
     </div>

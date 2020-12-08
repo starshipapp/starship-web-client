@@ -6,7 +6,7 @@ export interface IUpdateWikiPageData {
 }
 
 const updateWikiPageMutation = gql`
-  mutation UpdateWikiPage($pageId: String!, $newContent: String!) {
+  mutation UpdateWikiPage($pageId: ID!, $newContent: String!) {
     updateWikiPage(pageId: $pageId, newContent: $newContent) {
       id
       content

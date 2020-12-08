@@ -6,7 +6,7 @@ export interface IRemoveWikiPageData {
 }
 
 const removeWikiPageMutation = gql`
-  mutation RemoveWikiPage($pageId: String!) {
+  mutation RemoveWikiPage($pageId: ID!) {
     removeWikiPage(pageId: $pageId) {
       id
       pages {
