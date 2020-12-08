@@ -15,6 +15,8 @@ import "./css/Planet.css";
 interface IPlanetContentParams {
   planet: string,
   component?: string,
+  subId?: string,
+  page?: string
 }
 
 interface IPlanetContentProps {
@@ -23,7 +25,7 @@ interface IPlanetContentProps {
 }
 
 function PlanetContent(props: IPlanetContentProps): JSX.Element {
-  const {planet, component} = useParams<IPlanetContentParams>();
+  const {planet, component, subId, page} = useParams<IPlanetContentParams>();
   const {data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [componentName, setComponentName] = useState<string>("");
   const [addComponent] = useMutation<IAddComponentMutationData>(addComponentMutation);
@@ -56,7 +58,7 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
   if(component && props.planet.components) {
     const filteredComponents = props.planet.components.filter(value => value.componentId === component);
     if(filteredComponents.length === 1) {
-      const thisComponent = ComponentIndex.getComponent(component, filteredComponents[0].type, props.planet, filteredComponents[0].name);
+      const thisComponent = ComponentIndex.getComponent(component, filteredComponents[0].type, props.planet, filteredComponents[0].name, subId, page);
       if(thisComponent) {
         currentComponent = thisComponent;
       } else {

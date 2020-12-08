@@ -2,6 +2,7 @@ import IComponentProps from "./components/IComponentProps";
 import PageComponent from "./components/PageComponent";
 import React from "react";
 import IPlanet from "../types/IPlanet";
+import WikiComponent from "./components/wikis/WikiComponent";
 
 export interface IComponentDataType {
   name: string,
@@ -22,7 +23,8 @@ export default class ComponentIndex {
     "wiki": {
       name: "wiki",
       icon: "applications",
-      friendlyName: "Page Group"
+      friendlyName: "Page Group",
+      component: WikiComponent
     },
     "files": {
       name: "files",
@@ -36,10 +38,10 @@ export default class ComponentIndex {
     }
   };
 
-  static getComponent = function(id: string, type: string, planet: IPlanet, name: string): JSX.Element | undefined {
+  static getComponent = function(id: string, type: string, planet: IPlanet, name: string, subId?: string, pageId?: string ): JSX.Element | undefined {
     const Component = ComponentIndex.ComponentDataTypes[type].component;
     if(Component) {
-      return React.createElement(Component, {id, planet, name});
+      return React.createElement(Component, {id, planet, name, subId, pageId});
     }
   }
 }

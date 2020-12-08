@@ -18,17 +18,17 @@ a.link-button {
 }
 
 h1 {
-  margin: 0;
+  margin: 0 !important;
   margin-bottom: 0.25rem;
 }
 
 h2 {
-  margin: 0;
+  margin: 0  !important;
   margin-bottom: 0.15rem;
 }
 
 h3 {
-  margin: 0;
+  margin: 0  !important;
   margin-bottom: 0.1rem;
 }
 

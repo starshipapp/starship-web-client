@@ -28,6 +28,12 @@ function Planet(props: IPlanetProps): JSX.Element {
           <InfoStrip planet={data.planet}/>
         </div>
         <Switch>
+          <Route path={`${match.path}/:component/:subId/:page`}>
+            <PlanetContent home={false} planet={data.planet}/>
+          </Route>
+          <Route path={`${match.path}/:component/:subId`}>
+            <PlanetContent home={false} planet={data.planet}/>
+          </Route>
           <Route path={`${match.path}/:component`}>
             <PlanetContent home={false} planet={data.planet}/>
           </Route>

@@ -1,0 +1,30 @@
+.WikiComponent-container {
+  margin-top: 1rem;
+  display: flex;
+}
+
+.WikiComponent-sidebar {
+  min-width: 15rem;
+  max-width: min-content;
+}
+
+.WikiComponent-main {
+  margin-left: 1rem;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.WikiComponent-main code {
+  overflow-x: hidden;
+  white-space: normal;
+  word-wrap: none;
+  display: inline-block;
+}
+
+.WikiComponent-buttons {
+  margin-top: 0.35rem;
+}
+
+.WikiComponent-header {
+  margin-bottom: 0.5rem !important;
+}
