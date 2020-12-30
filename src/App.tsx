@@ -10,6 +10,7 @@ import Invite from './invites/Invite';
 import Terms from './legal/Terms';
 import Privacy from './legal/Privacy';
 import Rules from './legal/Rules';
+import Unsupported from './Unsupported';
 
 const history = createBrowserHistory();
 
@@ -17,6 +18,7 @@ function App(): JSX.Element {
   return (
     <Router history={history}>
       <div className="App bp3-dark">
+        <Unsupported/>
         <MainSidebar />
         <Switch>
           <Route path="/login">
