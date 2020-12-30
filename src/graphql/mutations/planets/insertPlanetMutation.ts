@@ -10,8 +10,13 @@ const insertPlanetMutation = gql`
     insertPlanet(name: $name, private: $private) {
       id
       name
-      owner
-      members
+      owner {
+        id
+        username
+      }
+      members {
+        id
+      }
     }
   }
 `;
