@@ -15,7 +15,7 @@ function Unsupported(): JSX.Element {
       isUnsupported = true;
     }
 
-    // Detect Internet Explorer as an unsuported browser for what I hope are ovbious
+    // Detect Internet Explorer as an unsupported browser for what I hope are ovbious
     // reasons
     // @ts-expect-error
     if (window.document.documentMode) {
@@ -28,7 +28,7 @@ function Unsupported(): JSX.Element {
     return (
       <div className="Unsupported">
         Your browser is unsupported. This may result in unexpected behavior. We recommend using the latest version
-        of <a href="https://www.mozilla.org/en-US/firefox/">Firefox</a> or <a href="https://www.google.com/chrome/">Chrome</a>.
+        of <a className="Unsupported-link" href="https://www.mozilla.org/en-US/firefox/">Firefox</a> or <a className="Unsupported-link" href="https://www.google.com/chrome/">Chrome</a>.
       </div>
     );
   }
