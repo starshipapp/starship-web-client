@@ -89,7 +89,7 @@ function Login(): JSX.Element {
             void client.resetStore();
           }}/>}
         /> : <><div className="Login-left">
-          <H1>Login</H1>
+          <H1 className="Login-header">Login</H1>
           <input value={username} onChange={(e) => setUsername(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Username" />
           <input value={password} onChange={(e) => setPassword(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Password" type="password" onKeyDown={(e) => {
               if(e.key === "Enter") {
@@ -98,18 +98,18 @@ function Login(): JSX.Element {
             }}/>
           <Button text="Login" onClick={() => signInFunction()} />
         </div><Divider />
-          <div className="Login-right">
-            <H1>Register</H1>
-            <input value={registerUsername} onChange={(e) => setRegisterUsername(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Username" />
-            <input value={registerPasword} onChange={(e) => setRegisterPassword(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Password" type="password" />
-            <input value={confirmPassword} onChange={(e) => setConfirm(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Confirm Password" type="password" />
-            <input value={email} onChange={(e) => setEmail(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Email" type="email" onKeyDown={(e) => {
-              if(e.key === "Enter") {
-                register();
-              }
-            }}/>
-            <Button text="Register" onClick={() => register()} />
-          </div></>)}
+        <div className="Login-right">
+          <H1 className="Login-header">Register</H1>
+          <input value={registerUsername} onChange={(e) => setRegisterUsername(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Username" />
+          <input value={registerPasword} onChange={(e) => setRegisterPassword(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Password" type="password" />
+          <input value={confirmPassword} onChange={(e) => setConfirm(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Confirm Password" type="password" />
+          <input value={email} onChange={(e) => setEmail(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Email" type="email" onKeyDown={(e) => {
+            if(e.key === "Enter") {
+              register();
+            }
+          }}/>
+          <Button text="Register" onClick={() => register()} />
+        </div></>)}
       </div>
     </div>
   );
