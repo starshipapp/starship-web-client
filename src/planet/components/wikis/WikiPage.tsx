@@ -57,7 +57,7 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
       {data?.wikiPage && !isEditing && <ReactMarkdown>{data?.wikiPage?.content ?? ""}</ReactMarkdown>}
       {data?.wikiPage && isEditing && <SimpleMDEEditor onChange={(e) => setEditingContent(e)} value={editingContent} options={editorOptions}/>}
       {(data?.wikiPage && userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <div className="PageComponent-edit PageComponent-edit-button WikiComponent-buttons">
-        <ButtonGroup minimal={true}>
+        <ButtonGroup minimal={true} >
           <Button
             icon="edit"
             text="Edit"
@@ -81,6 +81,7 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
             <Button
               icon="trash"
               text="Delete"
+              outlined={true}
               intent={Intent.DANGER}
             />
             <div className="menu-form">

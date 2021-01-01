@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Divider, Icon, Intent, Tooltip } from '@blueprintjs/core';
+import { ICON } from '@blueprintjs/core/lib/esm/common/classes';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import followMutation, { IFollowMutationData } from '../graphql/mutations/planets/followMutation';
@@ -7,6 +8,7 @@ import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/ge
 import Profile from '../profile/Profile';
 import IPlanet from '../types/IPlanet';
 import { GlobalToaster } from '../util/GlobalToaster';
+import isMobile from '../util/isMobile';
 import permissions from '../util/permissions';
 import { reportObjectType } from '../util/reportTypes';
 import './css/InfoStrip.css';
@@ -42,7 +44,7 @@ function InfoStrip(props: IInfoStripProps): JSX.Element {
       {props.planet.verified && <Tooltip content="Verified" className="InfoStrip-icon bp3-dark"><Icon icon="tick-circle"/></Tooltip>}
       {props.planet.partnered && <Tooltip content="Partnered" className="InfoStrip-icon bp3-dark"><Icon icon="unresolve"/></Tooltip>}
       {(props.planet.verified || props.planet.partnered) && <Divider/>}
-      {<div className="InfoStrip-username" onClick={() => setProfile(true)}>Created by {props.planet.owner?.username}</div>}
+      {<div className="InfoStrip-username" onClick={() => setProfile(true)}><Icon icon="user" className="InfoStrip-indicator-icon"/>{props.planet.owner?.username}</div>}
       <Divider/>
       {(props.planet.followerCount !== null && props.planet.followerCount !== undefined) && <div className="InfoStrip-followers">{props.planet.followerCount} {props.planet.followerCount === 1 ? "Follower" : "Followers"}</div>}
       {(props.planet.followerCount === null || props.planet.followerCount === undefined) && <div className="InfoStrip-followers">0 Followers</div>}
@@ -62,7 +64,7 @@ function InfoStrip(props: IInfoStripProps): JSX.Element {
         </div>
         {permissions.checkFullWritePermission(data?.currentUser, props.planet) && <div className="InfoStrip">
           <Divider/>
-          <Link className="link-button" to={`/planet/${props.planet.id}/admin`}><Button text="Admin" icon="wrench" intent="danger" minimal={true}/></Link>
+          <Link className="link-button" to={`/planet/${props.planet.id}/admin`}><Button text={isMobile() ? "" : "Admin"} icon="wrench" intent="danger" minimal={true}/></Link>
         </div>}
         {permissions.checkAdminPermission(data?.currentUser) && <div className="InfoStrip">
           <Divider/>

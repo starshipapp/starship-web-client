@@ -75,3 +75,34 @@
   background-image: url("../../assets/images/logo.png");
   background-size: cover;
 }
+
+.MainSidebar-show-button {
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .MainSidebar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: 0.2s;
+    min-width: 100vw;
+    max-width: 100vw !important;
+    z-index: 100;
+  }
+  .MainSidebar-show-button {
+    display: block;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    transition: 0.2s;
+  }
+  .MainSidebar-hidden .MainSidebar-show-button {
+    left: calc(100vw + 0.75rem);
+  }
+}
+
+.MainSidebar-hidden {
+  transition: 0.2s;
+  left: -100%;
+}

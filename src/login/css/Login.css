@@ -32,3 +32,9 @@
 .Login-header {
   margin-bottom: 0.5rem !important;
 }
+
+@media only screen and (max-width: 600px) {
+  .Login-container {
+    flex-direction: column;
+  }
+}

@@ -7,6 +7,7 @@ import insertWikiPageMutation, { IInsertWikiPageData } from "../../../graphql/mu
 import getWiki, { IGetWikiData } from "../../../graphql/queries/components/wikis/getWiki";
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
 import { GlobalToaster } from "../../../util/GlobalToaster";
+import isMobile from "../../../util/isMobile";
 import permissions from "../../../util/permissions";
 import IComponentProps from "../IComponentProps";
 import "./css/WikiComponent.css";
@@ -19,6 +20,7 @@ function WikiComponent(props: IComponentProps): JSX.Element {
   const [insertPage] = useMutation<IInsertWikiPageData>(insertWikiPageMutation);
   const [pageTextbox, setPageTextbox] = useState<string>("");
   const [showNewPage, setNewPage] = useState<boolean>(false);
+  const [showSidebar, setSidebar] = useState<boolean>(!isMobile());
 
   const createPage = function() {
     insertPage({variables: {wikiId: props.id, content: "This is a Page. Click the Edit icon in the top right corner to get started.", name: pageTextbox}}).then(() => {
@@ -31,9 +33,15 @@ function WikiComponent(props: IComponentProps): JSX.Element {
     });
   };
 
+  const toggleSidebar = function() {
+    if(isMobile()) {
+      setSidebar(!showSidebar);
+    }
+  };
+
   return (
     <div className="bp3-dark WikiComponent">
-      <h1>{props.name}</h1>
+      <h1><Button icon="menu" onClick={toggleSidebar} minimal={true} className="WikiComponent-mobile-button"/>{props.name}</h1>
       {wikiData?.wiki && wikiData.wiki.pages?.length === 0 && <div>
         <NonIdealState
           icon="error"
@@ -48,10 +56,11 @@ function WikiComponent(props: IComponentProps): JSX.Element {
           </Popover>) as JSX.Element | undefined}
         />
       </div>}
+      {showSidebar && <div className="WikiComponent-background" onClick={toggleSidebar}/>}
       {wikiData?.wiki && wikiData.wiki.pages?.length !== 0 && <div className="WikiComponent-container">
-        <div className="WikiComponent-sidebar">
+        <div className={isMobile() ? (showSidebar ? "WikiComponent-sidebar WikiComponent-sidebar-mobile" : "WikiComponent-sidebar WikiComponent-sidebar-hidden") : "WikiComponent-sidebar"}>
           <Menu>
-            {wikiData?.wiki && wikiData.wiki.pages?.map((value) => (<Link className="link-button" key={value.id} to={`/planet/${props.planet.id}/${props.id}/${value.id ?? ""}`}><Menu.Item icon="document" text={value.name}/></Link>))}
+            {wikiData?.wiki && wikiData.wiki.pages?.map((value) => (<Link onClick={toggleSidebar} className="link-button" key={value.id} to={`/planet/${props.planet.id}/${props.id}/${value.id ?? ""}`}><Menu.Item icon="document" text={value.name}/></Link>))}
             {hasWritePermission && <Popover isOpen={showNewPage}>
               <Menu.Item icon="plus" text="New Page" onClick={() => {setNewPage(true); setPageTextbox("");}}/>
               <div className="menu-form">

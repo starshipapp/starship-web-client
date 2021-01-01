@@ -34,12 +34,22 @@
   margin-top: 0.5rem;
   box-shadow: none !important;
   background-color: #293742 !important;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  width: calc(75vw + 2rem);
+  min-height: 3rem;
+  padding-bottom: 1.75rem;
+  scrollbar-width: none;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.Planet-navbar::-webkit-scrollbar {
+  display: none;
 }
 
 .Planet-navbar-content {
-  width: 75vw;
-  margin-left: auto;
-  margin-right: auto;
+  width: max-content;
 }
 
 .Planet-navbar-add-content {
@@ -51,6 +61,11 @@
   padding-top: 0.5rem;
 }
 
+.Planet-navbar-add-content .bp3-input {
+  width: 100%;
+}
+
+
 .Planet-header-name {
   white-space: nowrap;
   overflow: hidden;
@@ -60,4 +75,20 @@
 .Planet-textarea {
   width: 100%;
   resize: none;
+}
+
+@media only screen and (max-width: 600px) {
+  .Planet-contentcontainer {
+    width: 90vw
+  }
+  .Planet-navbar {
+    width: 100vw;
+  }
+  .Planet-navbar::-webkit-scrollbar {
+    display: none;
+  }
+  .Planet-header {
+    padding-right: calc(50% - 45vw);
+    padding-left: calc(50% - 45vw); 
+  }
 }

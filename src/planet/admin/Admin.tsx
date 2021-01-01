@@ -37,16 +37,16 @@ function Admin(props: IAdminProps): JSX.Element {
             </div>
             <div className="Admin-main">
               <Switch>
-                <Route path={`${match.path}/experimental`}>
+                <Route path={`/planet/${props.planet.id}/admin/experimental`}>
                   <AdminExperimental planet={props.planet} forceStyling={props.forceStyling} enableStyling={props.enableStyling}/>
                 </Route>
-                <Route path={`${match.path}/components`}>
+                <Route path={`/planet/${props.planet.id}/admin/components`}>
                   <AdminComponent planet={props.planet}/>
                 </Route>
-                <Route path={`${match.path}/members`}>
+                <Route path={`/planet/${props.planet.id}/admin/members`}>
                   <AdminMembers planet={props.planet}/>
                 </Route>
-                <Route path={`${match.path}`}>
+                <Route path={`/planet/${props.planet.id}/admin`}>
                   <AdminGeneral planet={props.planet}/>
                 </Route>
               </Switch>
