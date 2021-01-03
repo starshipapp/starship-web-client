@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Intent, Menu, NonIdealState, Popover } from "@blueprintjs/core";
-import { show } from "@blueprintjs/core/lib/esm/components/context-menu/contextMenu";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import insertWikiPageMutation, { IInsertWikiPageData } from "../../../graphql/mutations/components/wikis/insertWikiPageMutation";

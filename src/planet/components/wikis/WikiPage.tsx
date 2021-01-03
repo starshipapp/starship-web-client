@@ -13,6 +13,7 @@ import { GlobalToaster } from "../../../util/GlobalToaster";
 import renameWikiPageMutation, { IRenameWikiPageData } from "../../../graphql/mutations/components/wikis/renameWikiPageMutation";
 import removeWikiPageMutation, { IRemoveWikiPageData } from "../../../graphql/mutations/components/wikis/removeWikiPageMutation";
 import { useHistory } from "react-router-dom";
+import isMobile from "../../../util/isMobile";
 
 interface IWikiPageProps {
   id: string,
@@ -60,7 +61,7 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
         <ButtonGroup minimal={true} >
           <Button
             icon="edit"
-            text="Edit"
+            text={isMobile() ? "" : "Edit"}
             onClick={() => {
               setIsEditing(true);
               setEditingContent(data.wikiPage.content ?? "");
@@ -69,7 +70,7 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
           <Popover isOpen={showRename}>
             <Button
               icon="new-text-box"
-              text="Rename"
+              text={isMobile() ? "" : "Rename"}
               onClick={() => {setRename(true); setRenameText(data.wikiPage?.name ?? "");}}
             />
             <div className="menu-form">
@@ -80,7 +81,7 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
           <Popover>
             <Button
               icon="trash"
-              text="Delete"
+              text={isMobile() ? "" : "Delete"}
               outlined={true}
               intent={Intent.DANGER}
             />

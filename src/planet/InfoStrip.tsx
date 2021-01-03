@@ -46,18 +46,19 @@ function InfoStrip(props: IInfoStripProps): JSX.Element {
       {(props.planet.verified || props.planet.partnered) && <Divider/>}
       {<div className="InfoStrip-username" onClick={() => setProfile(true)}><Icon icon="user" className="InfoStrip-indicator-icon"/>{props.planet.owner?.username}</div>}
       <Divider/>
-      {(props.planet.followerCount !== null && props.planet.followerCount !== undefined) && <div className="InfoStrip-followers">{props.planet.followerCount} {props.planet.followerCount === 1 ? "Follower" : "Followers"}</div>}
-      {(props.planet.followerCount === null || props.planet.followerCount === undefined) && <div className="InfoStrip-followers">0 Followers</div>}
+      {(props.planet.followerCount !== null && props.planet.followerCount !== undefined) && <div className="InfoStrip-followers">{isMobile() && <Icon icon="people" className="InfoStrip-indicator-icon"/>}{props.planet.followerCount}{isMobile() ? "" : (props.planet.followerCount === 1 ? " Follower" : " Followers")}</div>}
+      {(props.planet.followerCount === null || props.planet.followerCount === undefined) && <div className="InfoStrip-followers">{isMobile() && <Icon icon="people" className="InfoStrip-indicator-icon"/>}0{!isMobile() && " Followers"}</div>}
       {!loading && data?.currentUser && <>
         <div className="InfoStrip">
-          <Divider/>
-          <Button text={(data?.currentUser.following && data?.currentUser.following.some(e => e.id === props.planet.id) ) ? "Unfollow" : "Follow"} onClick={() => {
-            follow({variables: {planetId: props.planet.id}}).then(() => {
-              void refetch();
-            }).catch((error: Error) => {
-              GlobalToaster.show({message: error.message, intent: Intent.DANGER});
-            });
-          }}/>
+          <Tooltip content="Follow">
+            <Button className="InfoStrip-follow" minimal={true} icon={(data?.currentUser.following && data?.currentUser.following.some(e => e.id === props.planet.id) ) ? "minus" : "plus"} onClick={() => {
+              follow({variables: {planetId: props.planet.id}}).then(() => {
+                void refetch();
+              }).catch((error: Error) => {
+                GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+              });
+            }}/>
+          </Tooltip>
           <Tooltip content="Report">
             <Button icon="flag" minimal={true} onClick={() => setReport(true)}/>
           </Tooltip>
@@ -68,7 +69,7 @@ function InfoStrip(props: IInfoStripProps): JSX.Element {
         </div>}
         {permissions.checkAdminPermission(data?.currentUser) && <div className="InfoStrip">
           <Divider/>
-          <Button text="Mod Tools" icon="wrench" minimal={true} onClick={() => setTools(true)}/>  
+          <Button text={isMobile() ? "" : "Mod Tools"} icon="wrench" minimal={true} onClick={() => setTools(true)}/>  
         </div>}
       </>}
     </div>
