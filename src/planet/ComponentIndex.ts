@@ -3,6 +3,7 @@ import PageComponent from "./components/PageComponent";
 import React from "react";
 import IPlanet from "../types/IPlanet";
 import WikiComponent from "./components/wikis/WikiComponent";
+import ForumComponent from "./components/forums/ForumComponent";
 
 export interface IComponentDataType {
   name: string,
@@ -34,7 +35,8 @@ export default class ComponentIndex {
     "forum": {
       name: "forum",
       icon: "comment",
-      friendlyName: "Forum"
+      friendlyName: "Forum",
+      component: ForumComponent
     }
   };
 
