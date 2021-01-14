@@ -14,7 +14,12 @@ interface IForumItemContainerProps {
 function ForumItemContainer(props: IForumItemContainerProps): JSX.Element {
   console.log(props.forum);
   return (
-    <tbody className="ForumComponent-item-container">
+    <tbody className="ForumComponent-item-container" onScroll={(e) => {
+      console.log(e);
+      if(true) {
+        return;
+      }
+    }}>
       {props.forum.stickiedPosts && props.forum.stickiedPosts.map((value) => (<ForumItem key={value.id} post={value} planet={props.planet} stickied={true} id={props.id}/>))}
       {props.forum.posts && props.forum.posts.forumPosts.map((value) => (<ForumItem key={value.id} post={value} planet={props.planet} id={props.id}/>))}
       <tr>

@@ -11,6 +11,7 @@ import { GlobalToaster } from "../../../util/GlobalToaster";
 import permissions from "../../../util/permissions";
 import IComponentProps from "../IComponentProps";
 import "./css/ForumComponent.css";
+import ForumEditor from "./ForumEditor";
 import ForumItemContainer from "./ForumItemContainer";
 
 const sortOptions = {
@@ -40,18 +41,22 @@ function ForumComponent(props: IComponentProps): JSX.Element {
   const [removeTag] = useMutation<IRemoveForumTagMutationData>(removeForumTagMutation);
   const [creatingNewThread, setCreatingNewThread] = useState<boolean>(false);
   const [newTagTextbox, setNewTagTextbox] = useState<string>("");
+  const [hasHitEnd, setHasHitEnd] = useState<boolean>(false);
   const [activeTag, setActiveTag] = useState<string>("");
   const [activeSort, setActiveSort] = useState<string>("recentlyUpdated");
-  const {data: forumData, fetchMore} = useQuery<IGetForumData>(getForum, {variables: {forumId: props.id, sortMethod: activeSort ?? "recentlyUpdated", count: 5}});
+  const {data: forumData, fetchMore, refetch} = useQuery<IGetForumData>(getForum, {variables: {forumId: props.id, sortMethod: activeSort ?? "recentlyUpdated", count: 25}});
   const history = useHistory();
 
   const loadMore = function() {
+    if(hasHitEnd) {
+      return;
+    }
     if(forumData?.forum.posts) {
       void fetchMore({
         variables: {
           forumId: props.id,
           sortMethod: activeSort ?? "recentlyUpdated",
-          count: 5,
+          count: 25,
           cursor: forumData.forum.posts.cursor
         },
         updateQuery(previousResult, { fetchMoreResult }) {
@@ -62,6 +67,10 @@ function ForumComponent(props: IComponentProps): JSX.Element {
           }
           if(!newFeed) {
             throw new Error("No feed for new");
+          }
+          if(newFeed.forumPosts.length === 0) {
+            setHasHitEnd(true);
+            return previousResult;
           }
           const newForumData: IForum = {
             ...previousResult.forum,
@@ -143,15 +152,15 @@ function ForumComponent(props: IComponentProps): JSX.Element {
             </thead>
             {creatingNewThread || props.subId ? <tbody>
               <tr>
-                <td>
-                  {/* props.subId ? <ForumThread planet={props.planet} componentId={props.id} postId={props.subId} page={props.pageId} forum={forumData?.getForum}/> : <ForumEditor 
+                {forumData?.forum && <td>
+                  { props.subId ? <>{/* <ForumThread planet={props.planet} componentId={props.id} postId={props.subId} page={props.pageId} forum={forumData?.getForum}/>*/}</> : <ForumEditor 
                     onClose={() => {
+                      void refetch();
                       setCreatingNewThread(false);
                     }} 
-                    forum={forumData?.getForum} 
-                    forumId={props.id}
-                  />*/}
-                </td>
+                    forum={forumData?.forum}
+                  />}
+                </td>}
               </tr>
             </tbody> : <>{forumData && <ForumItemContainer planet={props.planet} id={props.id} forum={forumData.forum} loadMore={loadMore}/>}</>}
           </table>
