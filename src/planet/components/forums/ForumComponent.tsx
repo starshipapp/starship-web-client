@@ -13,6 +13,7 @@ import IComponentProps from "../IComponentProps";
 import "./css/ForumComponent.css";
 import ForumEditor from "./ForumEditor";
 import ForumItemContainer from "./ForumItemContainer";
+import ForumThread from "./ForumThread";
 
 const sortOptions = {
   newest: {
@@ -101,7 +102,10 @@ function ForumComponent(props: IComponentProps): JSX.Element {
               <tr>
                 <th className="ForumComponent-header">
                   {props.subId ? <ButtonGroup minimal={true} className="ForumComponent-buttons">
-                    <Button icon="arrow-left" text="Back" onClick={() => history.push(`/planet/${props.planet.id}/${props.id}`)}/>
+                    <Button icon="arrow-left" text="Back" onClick={() => {
+                      history.push(`/planet/${props.planet.id}/${props.id}`);
+                      void refetch();
+                    }}/>
                   </ButtonGroup>: <ButtonGroup minimal={true} className="ForumComponent-buttons">
                     <Popover>
                       <Button icon="sort" text="Sort By"/>
@@ -153,7 +157,7 @@ function ForumComponent(props: IComponentProps): JSX.Element {
             {creatingNewThread || props.subId ? <tbody>
               <tr>
                 {forumData?.forum && <td>
-                  { props.subId ? <>{/* <ForumThread planet={props.planet} componentId={props.id} postId={props.subId} page={props.pageId} forum={forumData?.getForum}/>*/}</> : <ForumEditor 
+                  { props.subId ? <>{forumData?.forum && <ForumThread forumRefetch={() => void refetch()} planet={props.planet} componentId={props.id} postId={props.subId} page={props.pageId} forum={forumData?.forum}/>}</> : <ForumEditor 
                     onClose={() => {
                       void refetch();
                       setCreatingNewThread(false);

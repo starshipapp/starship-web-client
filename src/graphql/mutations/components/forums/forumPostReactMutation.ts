@@ -6,10 +6,13 @@ export interface IForumPostReactMutationData {
 }
 
 const forumPostReactMutation = gql`
-  mutation ForumPostReact($postId: ID!, $emojiId: String) {
+  mutation ForumPostReact($postId: ID!, $emojiId: String!) {
     forumPostReact(postId: $postId, emojiId: $emojiId) {
       id
-      reactions
+      reactions {
+        emoji
+        reactors
+      }
     }
   }
 `;

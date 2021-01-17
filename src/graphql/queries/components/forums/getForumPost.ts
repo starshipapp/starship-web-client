@@ -25,27 +25,29 @@ const getForumPost = gql`
       content
       tags
       replyCount
-      sticked
+      stickied
       locked
       createdAt
       replies(limit: $count, cursor: $cursor) {
-        id
-        content
-        owner {
+        forumReplies {
           id
-          username
-          profilePicture
-          admin
-          banned
+          content
+          owner {
+            id
+            username
+            profilePicture
+            admin
+            banned
+            createdAt
+          }
+          reactions {
+            emoji
+            reactors
+          }
+          stickied
           createdAt
+          updatedAt
         }
-        reactions {
-          emoji
-          reactors
-        }
-        sticked
-        createdAt
-        updatedAt
       }
     }
   }
