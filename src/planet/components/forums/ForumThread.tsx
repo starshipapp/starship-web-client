@@ -7,7 +7,7 @@ import ReactPaginate from "react-paginate";
 import SimpleMDEEditor from "react-simplemde-editor";
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
 import permissions from "../../../util/permissions";
-import { Button, Intent } from "@blueprintjs/core";
+import { Button, Icon, Intent } from "@blueprintjs/core";
 import editorOptions from "../../../util/editorOptions";
 import insertForumReplyMutation, { IInsertForumReplyMutationData } from "../../../graphql/mutations/components/forums/insertForumReplyMutation";
 import { GlobalToaster } from "../../../util/GlobalToaster";
@@ -59,11 +59,27 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
           }}
           forumRefetch={() => props.forumRefetch()}
         />}
+        {postData?.forumPost && <div className="ForumThread-itemcontainer">
+          {postData?.forumPost.replies && postData?.forumPost.replies.forumReplies.map((value) => (<ForumThreadItem 
+            key={value.id}
+            forumId={props.forum.id} 
+            refetch={() => void refetch()} 
+            planet={props.planet}
+            post={value}
+            isParent={false}
+            addQuote={(post: IForumItem) => {
+              const quote = `> ${post.content?.split("\n").join("\n> ") ?? "nullq"}`;
+              setEditingContent(editingContent + quote + "\n \n");
+              setDemandValueChange(true);
+            }}
+            forumRefetch={() => props.forumRefetch()}
+          />))}
+        </div>}
         {/* <ForumThreadItemContainer page={this.props.page ? Number(this.props.page) : 1} addQuote={this.addQuote} planet={this.props.planet} post={postData.forumPost}/>*/}
       </div>
       {postData?.forumPost && (postData.forumPost.replyCount ?? 0) > 25 && <ReactPaginate
-        previousLabel="<"
-        nextLabel=">"
+        previousLabel={<Icon icon="caret-left"/>}
+        nextLabel={<Icon icon="caret-right"/>}
         breakLabel="..."
         breakClassName="bp3-button bp3-disabled pagination-button"
         pageCount={Math.ceil((postData.forumPost.replyCount ?? 0) / 25)}
@@ -77,8 +93,8 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
         containerClassName="pagination bp3-button-group"
         activeClassName="bp3-button bp3-disabled pagination-button"
         pageClassName="bp3-button pagination-button"
-        previousClassName="bp3-button pagination-button"
-        nextClassName="bp3-button pagination-button"
+        previousClassName="bp3-button pagination-button pagination-movement"
+        nextClassName="bp3-button pagination-button pagination-movement"
         pageLinkClassName="pagination-link"
         nextLinkClassName="pagination-link"
         previousLinkClassName="pagination-link"

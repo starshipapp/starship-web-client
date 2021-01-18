@@ -66,3 +66,11 @@
 .pagination-button {
   padding: 0 !important;
 }
+
+.pagination-movement {
+  padding-left: 2.5px !important;
+}
+
+.emoji-mart-preview {
+  display: none
+}

@@ -149,6 +149,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
               onClick={() => {
                 if(textValue === "") {
                   GlobalToaster.show({message: "Your post must have content.", intent: Intent.DANGER});
+                  return;
                 }
                 if(props.isParent) {
                   updateForumPost({variables: {postId: props.post.id, content: textValue}}).then(() => {
@@ -159,7 +160,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
                   });
                 } else {
                   updateForumReply({variables: {replyId: props.post.id, content: textValue}}).then(() => {
-                    GlobalToaster.show({message: "Your reply must have content.", intent: Intent.DANGER});
+                    GlobalToaster.show({message: "Your reply has been updated.", intent: Intent.SUCCESS});
                     setEditor(false);
                   }).catch((err: Error) => {
                     GlobalToaster.show({message: err.message, intent: Intent.DANGER});
@@ -222,7 +223,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
             <Popover isOpen={showEmojiPrompt} onClose={() => setEmojiPrompt(false)}>
               <Button minimal={true} small={true} icon="new-object" onClick={() => setEmojiPrompt(true)}/>
               <div>
-                <Picker theme="dark" set="twitter" title="Pick an emoji" emoji="smile" onSelect={(e) => {
+                <Picker theme="dark" skin={1} showPreview={false} set="twitter" title="Pick an emoji" emoji="smile" onSelect={(e) => {
                   if(emojiTypeCheck(e)) {
                     selectEmoji(e.native); 
                     setEmojiPrompt(false);
