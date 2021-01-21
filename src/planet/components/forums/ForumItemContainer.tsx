@@ -14,7 +14,7 @@ interface IForumItemContainerProps {
 function ForumItemContainer(props: IForumItemContainerProps): JSX.Element {
   console.log(props.forum);
   return (
-    <tbody className="ForumComponent-item-container" onScroll={(e) => {
+    <div className="ForumComponent-item-container" onScroll={(e) => {
       console.log(e);
       if(true) {
         return;
@@ -22,13 +22,11 @@ function ForumItemContainer(props: IForumItemContainerProps): JSX.Element {
     }}>
       {props.forum.stickiedPosts && props.forum.stickiedPosts.map((value) => (<ForumItem key={value.id} post={value} planet={props.planet} stickied={true} id={props.id}/>))}
       {props.forum.posts && props.forum.posts.forumPosts.map((value) => (<ForumItem key={value.id} post={value} planet={props.planet} id={props.id}/>))}
-      <tr>
-        {/* TODO: Load on scroll to bottom */}
-        {<td className="ForumComponent-loadmore">
-          <Button text="Load More" onClick={props.loadMore}/>
-        </td>}
-      </tr>
-    </tbody>
+      {/* TODO: Load on scroll to bottom */}
+      {<div className="ForumComponent-loadmore">
+        <Button text="Load More" onClick={props.loadMore}/>
+      </div>}
+    </div>
   );
 }
 

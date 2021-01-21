@@ -1,8 +1,9 @@
-import { Divider, Icon, Tag } from "@blueprintjs/core";
+import { Divider, Icon, Tag, Text } from "@blueprintjs/core";
 import React from "react";
 import { useHistory } from "react-router-dom";
 import IForumPost from "../../../types/IForumPost";
 import IPlanet from "../../../types/IPlanet";
+import isMobile from "../../../util/isMobile";
 import "./css/ForumItem.css";
 
 interface IForumItemProps {
@@ -18,29 +19,33 @@ function ForumItem(props: IForumItemProps): JSX.Element {
   const creationDate: Date = props.post.createdAt ? new Date(Number(props.post.createdAt)) : new Date("2020-07-25T15:24:30+00:00");
   const creationDateText: string = creationDate.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
   const history = useHistory();
-  
+
   return (
-    <tr className="ForumItem" onClick={() => history.push(`/planet/${props.planet.id}/${props.id}/${props.post.id}`)}>
-      <td>
-        <div className="ForumItem-name">
-          <span className={props.stickied ? "ForumItem-name-text ForumItem-stickied" : "ForumItem-name-text"}>{props.post.locked && <Icon icon="lock" color="#ffb366" className="ForumItem-stickied-pin"/>} {props.stickied && <Icon icon="pin" color="#3dcc91" className="ForumItem-stickied-pin"/>} {props.post.name}</span>
-          <div className="ForumItem-name-flex">
-            {props.post.tags && <div className="ForumItem-tags">{props.post.tags.map((value) => (<Tag className="ForumItem-tag" key={value}>{value}</Tag>))}</div>}
-          </div>
-          <div className="ForumItem-rightside">
-            <div className="ForumItem-right-container">
-              <Icon icon="comment"/>
-              <span className="ForumItem-replies">{props.post.replyCount}</span>
-              <Divider/>
-              <span className="ForumItem-updated">{updateDateText}</span>
-            </div>
+    <div className="ForumItem" onClick={() => history.push(`/planet/${props.planet.id}/${props.id}/${props.post.id}`)}>
+      <div className="ForumItem-name">
+        <span className={props.stickied ? "ForumItem-name-text ForumItem-stickied" : "ForumItem-name-text"}>{props.post.locked && <Icon icon="lock" color="#ffb366" className="ForumItem-stickied-pin" />} {props.stickied && <Icon icon="pin" color="#3dcc91" className="ForumItem-stickied-pin" />} {props.post.name}</span>
+        <div className="ForumItem-name-flex">
+          {props.post.tags && <div className="ForumItem-tags">{props.post.tags.map((value) => (<Tag className="ForumItem-tag" key={value}>{value}</Tag>))}</div>}
+        </div>
+        <div className="ForumItem-rightside">
+          <div className="ForumItem-right-container">
+            <Icon icon="comment" />
+            <span className="ForumItem-replies">{props.post.replyCount}</span>
+            {!isMobile() && <Divider />}
+            {!isMobile() && <span className="ForumItem-updated">{updateDateText}</span>}
           </div>
         </div>
-        <div className="ForumItem-info">
-          <div>Posted by {props.post.owner && props.post.owner.username} on {creationDateText}</div>
-        </div>
-      </td>
-    </tr>
+      </div>
+      <div className="ForumItem-info">
+        {!isMobile() && <div>Posted by {props.post.owner && props.post.owner.username} on {creationDateText}</div>}
+        {isMobile() && <div>
+          <Icon className="ForumItem-info-icon" icon="user" />
+          {props.post.owner && props.post.owner.username}
+          <Icon className="ForumItem-info-icon ForumItem-info-icon-2" icon="time" />
+          {creationDateText}
+        </div>}
+      </div>
+    </div>
   );
 }
 

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import IPlanet from "../../types/IPlanet";
 import permissions from "../../util/permissions";
 import { Button, Menu, MenuItem, NonIdealState } from "@blueprintjs/core";
-import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 import AdminGeneral from "./AdminGeneral";
 import "./css/Admin.css";
 import AdminComponent from "./AdminComponents";

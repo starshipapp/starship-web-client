@@ -1,7 +1,14 @@
 .ForumItem {
-  padding: 0.85rem;
-  margin-bottom: 0.5rem;
-  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  overflow-y: hidden;
+  overflow: hidden;
+  padding: 0.5rem 0.5rem;
+  cursor: pointer;
+}
+
+.ForumItem:hover {
+  background-color: #394B59;
 }
 
 .ForumItem-info {
@@ -14,6 +21,13 @@
   font-size: 1.25rem;
   font-weight: bold;
   display: flex;
+}
+
+.ForumItem-name-text {
+  overflow: hidden !important;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-y: hidden;
 }
 
 .ForumItem-name-flex {
@@ -68,4 +82,21 @@
 
 .ForumItem-stickied-pin {
   margin-bottom: 0.25rem;
+}
+
+.ForumItem-info-icon {
+  margin-right: 0.35rem;
+}
+
+.ForumItem-info-icon-2 {
+  margin-left: 0.35rem;
+}
+
+@media only screen and (max-width: 600px) {
+  .ForumItem {
+    padding: 0.5rem 0;
+  }
+  .ForumItem:hover {
+    background-color: #00000000;
+  }
 }

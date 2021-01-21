@@ -97,77 +97,72 @@ function ForumComponent(props: IComponentProps): JSX.Element {
   return (
     <div className="bp3-dark ForumComponent">
         <div className="ForumComponent-flex">
-          <table className={Classes.HTML_TABLE + " ForumComponent-container " + (((!props.subId && !creatingNewThread) && Classes.INTERACTIVE) as string)}>
-            <thead>
-              <tr>
-                <th className="ForumComponent-header">
-                  {props.subId ? <ButtonGroup minimal={true} className="ForumComponent-buttons">
-                    <Button icon="arrow-left" text="Back" onClick={() => {
-                      history.push(`/planet/${props.planet.id}/${props.id}`);
-                      void refetch();
-                    }}/>
-                  </ButtonGroup>: <ButtonGroup minimal={true} className="ForumComponent-buttons">
-                    <Popover>
-                      <Button icon="sort" text="Sort By"/>
-                      <Menu>
-                        {Object.entries(sortOptions).map((value) => (<MenuItem text={value[1].friendlyName} key={value[0]} icon={activeSort === value[0] ? "tick" : null} onClick={() => setActiveSort(value[0])}/>))}
-                      </Menu>
-                    </Popover>
-                    {forumData?.forum && <Popover>
-                      <Button icon="tag" text="Tags"/>
-                      <Menu>
-                        {forumData?.forum.tags && forumData?.forum.tags.map((value) => (<MenuItem key={value} icon={activeTag === value && "tick"} text={value} onClick={() => setActiveTag(value)}/>))}
-                        {data?.currentUser && permissions.checkFullWritePermission(data?.currentUser, props.planet) && forumData?.forum.tags && forumData?.forum.tags.length !== 0 && <MenuDivider/>}
-                        {data?.currentUser && permissions.checkFullWritePermission(data?.currentUser, props.planet) && <MenuItem icon="plus" text="Add New">
-                          <div className="MainSidebar-menu-form">
-                            <input className={Classes.INPUT + " MainSidebar-menu-input"} value={newTagTextbox} onChange={(e) => {setNewTagTextbox(e.target.value);}}/>
-                            <Button text="Create" className="MainSidebar-menu-button" onClick={() => {
-                              if(newTagTextbox === "") {
-                                GlobalToaster.show({message: "Please enter a tag name.", intent: Intent.DANGER});
-                              }
-                              if(forumData.forum.tags && forumData.forum.tags.includes(newTagTextbox)) {
-                                GlobalToaster.show({message: "That tag already exists.", intent: Intent.DANGER});
-                              }
-                              createTag({variables: {forumId: props.id, tag: newTagTextbox}}).then(() => {
-                                GlobalToaster.show({message: `Sucessfully created tag ${newTagTextbox}.`, intent: Intent.SUCCESS});
-                                setNewTagTextbox("");
-                              }).catch((err: Error) => {
-                                GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                              });
-                            }}/>
-                          </div>
-                        </MenuItem>}
-                        {data?.currentUser && permissions.checkFullWritePermission(data?.currentUser, props.planet) && <MenuItem icon="cross" text="Delete">
-                          {forumData?.forum.tags?.map((value) => (<MenuItem key={value} icon={activeTag === value && "tick"} text={value} onClick={() => {
-                            removeTag({variables: {forumId: props.id, tag: value}}).then(() => {
-                              GlobalToaster.show({message: `Sucessfully removed tag ${value}.`, intent: Intent.SUCCESS});
-                            }).catch((err: Error) => {
-                              GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                            });
-                          }}/>))}
-                        </MenuItem>}
-                      </Menu>
-                    </Popover>}
-                    <Divider/>
-                    {forumData?.forum && data?.currentUser && <Button icon="plus" text="New Thread" onClick={() => setCreatingNewThread(true)}/>}
-                  </ButtonGroup>}
-                </th>
-              </tr>
-            </thead>
-            {creatingNewThread || props.subId ? <tbody>
-              <tr>
-                {forumData?.forum && <td>
-                  { props.subId ? <>{forumData?.forum && <ForumThread forumRefetch={() => void refetch()} planet={props.planet} componentId={props.id} postId={props.subId} page={props.pageId} forum={forumData?.forum}/>}</> : <ForumEditor 
-                    onClose={() => {
-                      void refetch();
-                      setCreatingNewThread(false);
-                    }} 
-                    forum={forumData?.forum}
-                  />}
-                </td>}
-              </tr>
-            </tbody> : <>{forumData && <ForumItemContainer planet={props.planet} id={props.id} forum={forumData.forum} loadMore={loadMore}/>}</>}
-          </table>
+          <div className={"ForumComponent-container " + (((!props.subId && !creatingNewThread) && Classes.INTERACTIVE) as string)}>
+            <div className="ForumComponent-header">
+              {props.subId ? <ButtonGroup minimal={true} className="ForumComponent-buttons">
+                <Button icon="arrow-left" text="Back" onClick={() => {
+                  history.push(`/planet/${props.planet.id}/${props.id}`);
+                  void refetch();
+                }}/>
+              </ButtonGroup>: <ButtonGroup minimal={true} className="ForumComponent-buttons">
+                <Popover>
+                  <Button icon="sort" text="Sort By"/>
+                  <Menu>
+                    {Object.entries(sortOptions).map((value) => (<MenuItem text={value[1].friendlyName} key={value[0]} icon={activeSort === value[0] ? "tick" : null} onClick={() => setActiveSort(value[0])}/>))}
+                  </Menu>
+                </Popover>
+                {forumData?.forum && <Popover>
+                  <Button icon="tag" text="Tags"/>
+                  <Menu>
+                    {forumData?.forum.tags && forumData?.forum.tags.map((value) => (<MenuItem key={value} icon={activeTag === value && "tick"} text={value} onClick={() => setActiveTag(value)}/>))}
+                    {data?.currentUser && permissions.checkFullWritePermission(data?.currentUser, props.planet) && forumData?.forum.tags && forumData?.forum.tags.length !== 0 && <MenuDivider/>}
+                    {data?.currentUser && permissions.checkFullWritePermission(data?.currentUser, props.planet) && <MenuItem icon="plus" text="Add New">
+                      <div className="MainSidebar-menu-form">
+                        <input className={Classes.INPUT + " MainSidebar-menu-input"} value={newTagTextbox} onChange={(e) => {setNewTagTextbox(e.target.value);}}/>
+                        <Button text="Create" className="MainSidebar-menu-button" onClick={() => {
+                          if(newTagTextbox === "") {
+                            GlobalToaster.show({message: "Please enter a tag name.", intent: Intent.DANGER});
+                          }
+                          if(forumData.forum.tags && forumData.forum.tags.includes(newTagTextbox)) {
+                            GlobalToaster.show({message: "That tag already exists.", intent: Intent.DANGER});
+                          }
+                          createTag({variables: {forumId: props.id, tag: newTagTextbox}}).then(() => {
+                            GlobalToaster.show({message: `Sucessfully created tag ${newTagTextbox}.`, intent: Intent.SUCCESS});
+                            setNewTagTextbox("");
+                          }).catch((err: Error) => {
+                            GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                          });
+                        }}/>
+                      </div>
+                    </MenuItem>}
+                    {data?.currentUser && permissions.checkFullWritePermission(data?.currentUser, props.planet) && <MenuItem icon="cross" text="Delete">
+                      {forumData?.forum.tags?.map((value) => (<MenuItem key={value} icon={activeTag === value && "tick"} text={value} onClick={() => {
+                        removeTag({variables: {forumId: props.id, tag: value}}).then(() => {
+                          GlobalToaster.show({message: `Sucessfully removed tag ${value}.`, intent: Intent.SUCCESS});
+                        }).catch((err: Error) => {
+                          GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                        });
+                      }}/>))}
+                    </MenuItem>}
+                  </Menu>
+                </Popover>}
+                <Divider/>
+                {forumData?.forum && data?.currentUser && <Button icon="plus" text="New Thread" onClick={() => setCreatingNewThread(true)}/>}
+              </ButtonGroup>}
+            </div>
+            <Divider/>
+            {creatingNewThread || props.subId ? <div>
+              {forumData?.forum && <>
+                { props.subId ? <>{forumData?.forum && <ForumThread forumRefetch={() => void refetch()} planet={props.planet} componentId={props.id} postId={props.subId} page={props.pageId} forum={forumData?.forum}/>}</> : <ForumEditor 
+                  onClose={() => {
+                    void refetch();
+                    setCreatingNewThread(false);
+                  }} 
+                  forum={forumData?.forum}
+                />}
+              </>}
+            </div> : <>{forumData && <ForumItemContainer planet={props.planet} id={props.id} forum={forumData.forum} loadMore={loadMore}/>}</>}
+          </div>
         </div>
       </div>
   );

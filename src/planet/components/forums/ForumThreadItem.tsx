@@ -25,6 +25,7 @@ import { useHistory } from "react-router-dom";
 import { GlobalToaster } from "../../../util/GlobalToaster";
 import "./css/ForumThreadItem.css";
 import "emoji-mart/css/emoji-mart.css";
+import isMobile from "../../../util/isMobile";
 
 interface IForumThreadItemProps {
   forumId: string
@@ -87,6 +88,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
 
   const creationDate = props.post.createdAt ? new Date(Number(props.post.createdAt)) : new Date("2020-07-25T15:24:30+00:00");
   const creationDateText = creationDate.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
+  const mobileCreationDateText = creationDate.toLocaleDateString(undefined, { weekday: "short", year: "numeric", month: "short", day: "numeric" });
   let canEdit = false;
 
   if(props.post.owner && data?.currentUser && (props.post.owner.id === data.currentUser.id || permissions.checkFullWritePermission(data?.currentUser, props.planet))) {
@@ -128,19 +130,23 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
       >Are you sure you want to delete this post? It will be lost forever! (A long time!)</Alert>
       <div className="ForumThreadItem-info">
         <div className="ForumThreadItem-profilepic" onClick={() => setProfile(true)}>
-          {props.post.owner && props.post.owner.profilePicture && <img alt="pfp" src={`https://${props.post.owner.profilePicture}?t=${Number(Date.now())}`}/>}
+          {props.post.owner && props.post.owner.profilePicture && <img alt="pfp" src={`${props.post.owner.profilePicture}?t=${Number(Date.now())}`}/>}
         </div>
         <div className="ForumThreadItem-username" onClick={() => setProfile(false)}>{props.post.owner && props.post.owner.username}</div>
-        {props.post.owner && props.post.owner.admin && <div className="ForumThreadItem-admin">Global Admin</div>}
-        {props.post.owner && permissions.checkFullWritePermission(props.post.owner, props.planet) && props.post.owner.admin && <div className="ForumThreadItem-member">Planet Member</div>}
+        {!isMobile() && props.post.owner && props.post.owner.admin && <div className="ForumThreadItem-admin">Global Admin</div>}
+        {!isMobile() && props.post.owner && permissions.checkFullWritePermission(props.post.owner, props.planet) && props.post.owner.admin && <div className="ForumThreadItem-member">Planet Member</div>}
+        {isMobile() && <div className="ForumThreadItem-mobile-date">
+          <Icon icon="time" className="ForumThreadItem-postinfo-dateicon"/>
+          <span className="ForumThreadItem-postinfo-date">{mobileCreationDateText}</span>
+        </div>}
       </div>
       <div className="ForumThreadItem-content">
-        <div className="ForumThreadItem-postinfo">
+        {!isMobile() && <div className="ForumThreadItem-postinfo">
           <div>
             <Icon icon="time" className="ForumThreadItem-postinfo-dateicon"/>
             <span className="ForumThreadItem-postinfo-date">{creationDateText}</span>
           </div>
-        </div>
+        </div>}
         <div className="ForumThreadItem-text">
           {showEditor ? <div className="ForumThreadItem-editor">
             <SimpleMDEEditor onChange={(value) => setTextValue(value)} value={textValue}/>
@@ -175,14 +181,14 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
         </div>
         <div className="ForumThreadItem-bottom">
           <ButtonGroup>
-            <Button small={true} icon="flag" text="Report" alignText="left" minimal={true} onClick={() => setReport(true)}/>
-            <Button small={true} icon="comment" text="Quote" onClick={() => props.addQuote(props.post)} minimal={true} alignText="left"/>
-            {canEdit && <Button small={true} icon="edit" text="Edit" onClick={() => setEditor(true)} minimal={true} alignText="left"/>}
-            {canEdit && <Button small={true} icon="trash" text="Delete" minimal={true} onClick={() => setAlert(true)} alignText="left" intent={Intent.DANGER}/>}
+            <Button small={true} icon="flag" text={!isMobile() && "Report"} alignText="left" minimal={true} onClick={() => setReport(true)}/>
+            <Button small={true} icon="comment" text={!isMobile() && "Quote"} onClick={() => props.addQuote(props.post)} minimal={true} alignText="left"/>
+            {canEdit && <Button small={true} icon="edit" text={!isMobile() && "Edit"} onClick={() => setEditor(true)} minimal={true} alignText="left"/>}
+            {canEdit && <Button small={true} icon="trash" text={!isMobile() && "Delete"} minimal={true} onClick={() => setAlert(true)} alignText="left" intent={Intent.DANGER}/>}
             {data?.currentUser && props.isParent && permissions.checkFullWritePermission(data?.currentUser, props.planet) && <Button 
               small={true}
               icon="pin"
-              text={props.post.stickied ? "Unsticky" : "Sticky"}
+              text={!isMobile() && (props.post.stickied ? "Unsticky" : "Sticky")}
               minimal={true}
               onClick={() => {
                 stickyForumPost({variables: {postId: props.post.id}}).then(() => {
@@ -198,7 +204,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
             {data?.currentUser && typeCheck(props.post) && permissions.checkFullWritePermission(data?.currentUser, props.planet) && <Button 
               small={true} 
               icon="lock" 
-              text={props.post.locked ? "Unlock" : "Lock"} 
+              text={!isMobile() && (props.post.locked ? "Unlock" : "Lock")} 
               minimal={true} 
               onClick={() => {
                 lockForumPost({variables: {postId: props.post.id}}).then(() => {

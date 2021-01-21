@@ -59,12 +59,18 @@
 }
 
 .ForumThreadItem-bottom {
+  overflow-x: scroll;
   color: #a7b6c2;
   padding-top: 0.35rem;
   margin-bottom: -0.15rem;
   border-top: 1px #394B59 solid;
   margin-top: auto;
   display: flex;
+  scrollbar-width: none;
+}
+
+.ForumThreadItem-bottom::-webkit-scrollbar {
+  display: none;
 }
 
 .ForumThreadItem-postinfo-date {
@@ -108,6 +114,7 @@
   background-color: #394B59;
   margin-left: 0.15rem;
   margin-right: 0.15rem;
+  overflow: scroll;
 }
 
 .ForumThreadItem-reaction-text {
@@ -150,4 +157,46 @@
   padding-bottom: 0.25rem;
   font-weight: bold;
   border-radius: 0.25rem;
+}
+
+.ForumThreadItem-mobile-date {
+  display: inline-block;
+  margin-top: 0.25rem;
+  margin-left: auto;
+}
+
+@media only screen and (max-width: 600px) {
+  .ForumThreadItem {
+    flex-direction: column;
+  }
+  .ForumThreadItem-info {
+    min-width: 100%;
+    border-right: none;
+    border-bottom: 1px #394B59 solid;
+    padding: 0.5rem;
+    display: flex;
+  }
+  .ForumThreadItem-profilepic {
+    display: inline-block !important;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.25rem;
+    margin: 0rem !important;
+  }
+  .ForumThreadItem-profilepic img {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 0.25rem;
+  }
+  .ForumThreadItem-username {
+    display: inline-block !important;
+    font-weight: bold;
+    margin-top: 0.25rem;
+    margin-left: 0.5rem;
+    font-size: 0.95rem;
+    cursor: pointer;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }

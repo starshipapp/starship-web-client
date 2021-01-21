@@ -9,7 +9,9 @@
 }
 
 .ForumComponent-item-container {
-  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  margin-bottom: 1rem;
 }
 
 .ForumComponent-buttons {
@@ -18,7 +20,8 @@
 
 .ForumComponent-container {
   margin: auto;
-  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
 }
 
 .ForumComponent-loadmore:hover {

@@ -1,6 +1,14 @@
+.ForumThread {
+  max-width: 100%;
+  min-width: 100%;
+}
+
 .ForumThread-name {
   font-size: 1.75rem;
   margin-bottom: 0.5rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-y: hidden;
 }
 
 .ForumThread-reply {
