@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Divider, Icon, Intent, Tooltip } from '@blueprintjs/core';
-import { ICON } from '@blueprintjs/core/lib/esm/common/classes';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import followMutation, { IFollowMutationData } from '../graphql/mutations/planets/followMutation';
