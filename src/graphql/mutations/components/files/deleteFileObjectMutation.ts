@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export interface IDeleteFileObjectMutationnData {
+export interface IDeleteFileObjectMutationData {
   deleteFileObject: boolean
 }
 

@@ -6,7 +6,7 @@ export interface IMoveObjectMutationData {
 }
 
 const moveObjectMutation = gql`
-  mutation MoveObject($objectId: ID!, parent: String!) {
+  mutation MoveObject($objectId: ID!, $parent: String!) {
     moveObject(objectId: $objectId, parent: $parent) {
       id
       path

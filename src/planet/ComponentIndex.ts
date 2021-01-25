@@ -4,6 +4,7 @@ import React from "react";
 import IPlanet from "../types/IPlanet";
 import WikiComponent from "./components/wikis/WikiComponent";
 import ForumComponent from "./components/forums/ForumComponent";
+import FilesComponent from "./components/files/FilesComponent";
 
 export interface IComponentDataType {
   name: string,
@@ -30,7 +31,8 @@ export default class ComponentIndex {
     "files": {
       name: "files",
       icon: "folder-open",
-      friendlyName: "Files"
+      friendlyName: "Files",
+      component: FilesComponent
     },
     "forum": {
       name: "forum",

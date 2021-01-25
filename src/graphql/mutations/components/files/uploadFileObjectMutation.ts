@@ -5,7 +5,7 @@ export interface IUploadFileObjectMutationData {
 }
 
 const uploadFileObjectMutation = gql`
-  mutation UploadFileObject($folderId: String!, type: String!, name: String!, filesId: ID!) {
+  mutation UploadFileObject($folderId: String!, $type: String!, $name: String!, $filesId: ID!) {
     uploadFileObject(folderId: $folderId, type: $type, name: $name, filesId: $filesId) {
       documentId
       uploadUrl

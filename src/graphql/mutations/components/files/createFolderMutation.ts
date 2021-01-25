@@ -6,7 +6,7 @@ export interface ICreateFolderMutationData {
 }
 
 const createFolderMutation = gql`
-  mutation CreateFolder($componentId: ID!, $parent: String!, name: String!) {
+  mutation CreateFolder($componentId: ID!, $parent: String!, $name: String!) {
     createFolder(componentId: $componentId, parent: $parent, name: $name) {
       id
       name

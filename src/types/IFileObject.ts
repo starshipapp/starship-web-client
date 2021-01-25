@@ -6,6 +6,7 @@ import IFileComponent from "./IFileComponent";
 export default interface IFileObject {
   id: string,
   path?: string[],
+  name?: string,
   parent?: IFileObject,
   createdAt?: string,
   owner?: IUser,

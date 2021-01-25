@@ -18,6 +18,7 @@ const getFileObject = gql`
         id
         username
       }
+      type
       createdAt
       fileType
       finishedUploading

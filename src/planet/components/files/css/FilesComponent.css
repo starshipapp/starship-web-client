@@ -1,0 +1,105 @@
+.FilesComponent {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.FilesComponent-top {
+  display: flex;
+}
+
+.FilesComponent-button-container {
+  padding-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(12.5rem,1fr));
+  gap: 1rem;
+}
+
+.FilesComponent-filebutton {
+  max-height: 2.5rem;
+  width: 100%;
+  overflow: hidden;
+}
+
+.FilesComponent-filebutton .bp3-button-text {
+  position: relative;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.FilesComponent-filebutton .bp3-button-text div {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.FilesComponent-filebutton .bp3-button-text .bp3-popover-wrapper {
+  position: absolute;
+  width: 100%;
+  left: 0
+}
+
+.FilesComponent-file-icon {
+  height: 14px;
+  margin-bottom: 0.2rem !important;
+}
+
+.FilesComponent-file-icon svg {
+  height: 14px !important;
+}
+
+.FilesComponent-uploading {
+  display: flex;
+  flex-direction: column;
+  margin-right: 0.45rem;
+}
+
+.FilesComponent-uploading-container {
+  display: flex;
+  margin-top: auto;
+  margin-bottom: auto;
+  flex-direction: row;
+}
+
+.FilesComponent-uploading-progress {
+  width: 13rem;
+  transform: translateY(0.25rem);
+  margin-left: 0.35rem;
+  margin-right: 0.25rem;
+}
+
+.FilesComponent-uploading-icon {
+  color: #a7b6c2;
+}
+
+.FilesComponent-breadcrumbs {
+  margin-right: auto;
+}
+
+.FilesComponent-uploading-info {
+  max-width: 13.5rem;
+  min-width: 13.5rem;
+  overflow-x: hidden;
+}
+
+.FilesComponent-uploading-info-name {
+  padding-bottom: 0.35rem;
+  padding-top: 0.5rem;
+  white-space: nowrap;
+}
+
+.FilesComponent-uploading-info-container {
+  padding: 0.5rem;
+  padding-top: 0;
+}
+
+.FilesComponent-button-container .bp3-popover-wrapper .bp3-popover-target {
+  width: 100%;
+}
+
+.FilesComponent-list-table {
+  margin-top: 0.75rem;
+  border-top: 1px #30404d solid;
+  width: 100%;
+}
