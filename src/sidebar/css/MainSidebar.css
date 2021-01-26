@@ -1,6 +1,12 @@
 .MainSidebar {
   min-width: 12.5rem;
   max-width: 12.5rem;
+  overflow-x: scroll;
+  scrollbar-width: none;
+}
+
+.MainSidebar::-webkit-scrollbar {
+  display: none;
 }
 
 .MainSidebar-menu {

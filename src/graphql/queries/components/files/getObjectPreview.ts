@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export interface IGetObjectPreview {
-  ObjectPreview: string
+  getObjectPreview: string
 }
 
 const getObjectPreview = gql`

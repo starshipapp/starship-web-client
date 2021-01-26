@@ -21,6 +21,9 @@ import axios, { AxiosRequestConfig } from "axios";
 import FileBreadcrumbs from "./FileBreadcrumbs";
 import FileButton from "./FileButton";
 import "./css/FilesComponent.css";
+import FileListButton from "./FileListButton";
+import FileView from "./FileView";
+import isMobile from "../../../util/isMobile";
 
 const uploading: Record<string, {name: string, progress: number}> = {};
 
@@ -145,13 +148,13 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           {userData?.currentUser && <Button text="Report" icon="flag" onClick={() => setReport(true)}/>}
         </ButtonGroup>}
         {userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet) && ((objectData?.fileObject && objectData.fileObject.type === "folder") || !props.subId) && <ButtonGroup minimal={true} className="FilesComponent-top-actions">
-          <Button text="Upload Files" icon="upload" onClick={() => {
+          <Button text={!isMobile() ? "Upload Files": ""} icon="upload" onClick={() => {
             if(fileInput) {
               fileInput.current?.click();
             }
           }}/>
           <Popover isOpen={createFolderPrompt} onClose={() => setCreateFolderPrompt(false)}>
-            <Button text="New Folder" icon="folder-new" onClick={() => setCreateFolderPrompt(true)}/>
+            <Button text={!isMobile() ? "New Folder": ""} icon="folder-new" onClick={() => setCreateFolderPrompt(true)}/>
             <div className="menu-form">
               <input className={Classes.INPUT + " menu-input"} value={newFolderTextbox} onChange={(e) => setNewFolderTextbox(e.target.value)}/>
               <Button text="Create" className="menu-button" onClick={() => {
@@ -200,10 +203,10 @@ function FilesComponent(props: IComponentProps): JSX.Element {
             <div><Icon className="FileListButton-icon" icon="arrow-up"/>../</div>
           </div>
         </Link>}
-        {/* foldersData?.folders.map((value) => (<FileListButton planet={props.planet} key={value.id} object={value}/>))}
-        {filesData?.files.map((value) => (<FileListButton planet={props.planet} key={value.id} object={value}/>))*/}
+        {foldersData?.folders.map((value) => (<FileListButton planet={props.planet} key={value.id} object={value} componentId={props.id} refetch={() => {void filesRefetch(); void foldersRefetch();}}/>))}
+        {filesData?.files.map((value) => (<FileListButton planet={props.planet} key={value.id} object={value} componentId={props.id} refetch={() => {void filesRefetch(); void foldersRefetch();}}/>))}
       </div>}
-      {/* objectData && objectData.fileObject.type === "file" && <FileView file={objectData.fileObject}/>*/}
+      {objectData && objectData.fileObject.type === "file" && <FileView file={objectData.fileObject}/>}
     </div> 
   );
 }

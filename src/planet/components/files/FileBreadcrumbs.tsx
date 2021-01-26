@@ -25,7 +25,7 @@ function FileBreadcrumbs(props: IFileBreadcrumbsProps): JSX.Element {
   }
 
   const breadcrumbRenderer = function ({text, ...props}: IBreadcrumbProps) {
-    return <Breadcrumb onClick={(e) => {e.preventDefault(); e.stopPropagation();}} className="FileComponent-breadcrumb" {...props}>{text}</Breadcrumb>;
+    return <Breadcrumb onClick={(e) => {e.preventDefault(); e.stopPropagation();}} className="FilesComponent-breadcrumb" {...props}>{text}</Breadcrumb>;
   };
 
   return (
