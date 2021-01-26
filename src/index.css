@@ -77,3 +77,27 @@ blockquote {
   width: 1rem;
   height: 1rem;
 }
+
+pre {
+  font-family: monospace;
+  text-transform: none;
+  background: hsla(0,0%,100%,.7);
+  border-radius: 3px;
+  -webkit-box-shadow: inset 0 0 0 1px rgba(16,22,26,.15);
+  box-shadow: inset 0 0 0 1px rgba(16,22,26,.15);
+  color: #182026;
+  display: block;
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 10px 0;
+  padding: 13px 15px 12px;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+.bp3-dark pre {
+  background: rgba(16,22,26,.3);
+  -webkit-box-shadow: inset 0 0 0 1px rgba(16,22,26,.4);
+  box-shadow: inset 0 0 0 1px rgba(16,22,26,.4);
+  color: #f5f8fa;
+}
