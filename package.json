@@ -29,7 +29,7 @@
     "@types/react-router-dom": "^5.1.6",
     "axios": "^0.21.1",
     "crypto-js": "^4.0.0",
-    "easymde": "^2.13.0",
+    "easymde": "^2.14.0",
     "emoji-mart": "^3.0.0",
     "graphql": "^15.4.0",
     "react": "^17.0.1",
