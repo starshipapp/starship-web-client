@@ -11,6 +11,7 @@ import Terms from './legal/Terms';
 import Privacy from './legal/Privacy';
 import Rules from './legal/Rules';
 import Unsupported from './Unsupported';
+import Forgot from './login/Forgot';
 
 const history = createBrowserHistory();
 
@@ -41,6 +42,9 @@ function App(): JSX.Element {
           </Route>
           <Route path="/rules">
             <Rules/>
+          </Route>
+          <Route path="/forgot/:forgotdata">
+            <Forgot/>
           </Route>
           <Route path="/">
             <Home/>

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, Classes, Divider, H1, NonIdealState } from "@blueprintjs/core";
+import { Button, Classes, Divider, H1, Intent, NonIdealState } from "@blueprintjs/core";
 import React, {useEffect, useState} from "react";
 import signInMutation, { ISignInMutationData } from "../graphql/mutations/users/signInMutation";
 import "./css/Login.css";
@@ -8,11 +8,13 @@ import signUpMutation, { ISignUpMutationData } from "../graphql/mutations/users/
 import { GlobalToaster } from "../util/GlobalToaster";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import { useHistory } from "react-router-dom";
+import sendResetPasswordEmailMutation, { ISendResetPasswordEmailMutationData } from "../graphql/mutations/users/sendResetPasswordEmailMutation";
 
 function Login(): JSX.Element {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [signIn] = useMutation<ISignInMutationData>(signInMutation);
+  const [sendResetPasswordEmail] = useMutation<ISendResetPasswordEmailMutationData>(sendResetPasswordEmailMutation);
 
   const [registerUsername, setRegisterUsername] = useState<string>("");
   const [registerPasword, setRegisterPassword] = useState<string>("");
@@ -61,6 +63,16 @@ function Login(): JSX.Element {
     });
   };
   
+  const sendResetEmail = function() {
+    sendResetPasswordEmail({variables: {username}}).then((value) => {
+      if(value){
+        GlobalToaster.show({message: "An email to reset your password has been sent.", intent: Intent.SUCCESS});
+      }
+    }).catch((error: Error) => {
+      GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+    });
+  };
+
   const signInFunction = function() {
     signIn({ variables: { username, password: sha256(password).toString() } }).then((value) => {
       if (value.data) {
@@ -72,7 +84,12 @@ function Login(): JSX.Element {
         history.push("/");
       }
     }).catch((error: Error) => {
-      GlobalToaster.show({ intent: "danger", message: error.message });
+      if(error.message == "Incorrect username or password.") {
+        GlobalToaster.show({message: error.message, intent: Intent.DANGER, action: {text: "Reset Password", onClick: () => sendResetEmail()}});
+      } else {
+        console.log(error.message);
+        GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+      }
     });
   };
 
