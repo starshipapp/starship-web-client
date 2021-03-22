@@ -1,13 +1,15 @@
 import { useQuery } from "@apollo/client";
 import { Button, ButtonGroup, Classes } from "@blueprintjs/core";
-import React from "react";
+import React, { useState } from "react";
 import getAllReports, { IGetAllReportsData } from "../graphql/queries/admin/getAllReports";
 import { reportObjectTypeStrings, reportTypeStrings } from "../util/reportTypes";
 import "./css/GAdmin-page.css";
 import "./css/GAdminReports.css";
+import Report from "./Report";
 
 function GAdminReports(): JSX.Element {
   const {data} = useQuery<IGetAllReportsData>(getAllReports, {variables: {startNumber: 0, count: 25}});
+  const [openReport, setReport] = useState<string>("");
 
   return (
     <div className="GAdmin-page bp3-dark">
@@ -38,23 +40,31 @@ function GAdminReports(): JSX.Element {
             </tr>
           </thead>
           {data?.allReports && <tbody>
-          {data.allReports.map((value) => (<tr>
-            <td>
-              {value.owner?.username}
-            </td>
-            <td>
-              {value.user?.username}
-            </td>
-            <td>
-              {reportObjectTypeStrings[value.objectType ?? 0]}
-            </td>
-            <td>
-              {reportTypeStrings[value.reportType ?? 0]}
-            </td>
-            <td>
-              {new Date(Number(value.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
-            </td>
-          </tr>))}  
+          {data.allReports.map((value) => (<>
+            <Report 
+              open={openReport === value.id} 
+              date={new Date(Number(value.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+              report={value}
+              onClose={() => setReport("")}
+            />
+            <tr onClick={() => setReport(value.id)}>
+              <td>
+                {value.owner?.username}
+              </td>
+              <td>
+                {value.user?.username}
+              </td>
+              <td>
+                {reportObjectTypeStrings[value.objectType ?? 0]}
+              </td>
+              <td>
+                {reportTypeStrings[value.reportType ?? 0]}
+              </td>
+              <td>
+                {new Date(Number(value.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+              </td>
+            </tr>
+          </>))}  
         </tbody>}
         </table>
       </div>

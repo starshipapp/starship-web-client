@@ -65,7 +65,7 @@ function MainSidebar(): JSX.Element {
         </div>
         <Icon onClick={toggleHidden} icon="menu" className="MainSidebar-show-button"/>
         {loading ? <MenuItem text="Loading..."/> : (data?.currentUser ? <>
-          {data.currentUser.admin && <MenuItem icon="warning-sign" text="Admin"/>}
+          {data.currentUser.admin && <Link className="link-button" to="/gadmin/"><MenuItem icon="warning-sign" text="Admin"/></Link>}
           <MenuDivider title="MY PLANETS"/>
           {data.currentUser.memberOf?.map((value) => (
             <Link onClick={toggleHidden} className="link-button" to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>

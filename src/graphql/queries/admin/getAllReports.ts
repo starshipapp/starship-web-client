@@ -14,6 +14,8 @@ const getAllReports = gql`
         username
         profilePicture
         createdAt
+        banned
+        admin
       }
       createdAt
       objectType
@@ -23,6 +25,8 @@ const getAllReports = gql`
         username
         profilePicture
         createdAt
+        banned
+        admin
       }
       solved
       details

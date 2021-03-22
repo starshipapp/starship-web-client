@@ -23,6 +23,12 @@ const getForumPost = gql`
         reactors
       }
       content
+      planet {
+        id
+      }
+      component {
+        id
+      }
       tags
       replyCount
       stickied

@@ -102,6 +102,9 @@
     top: 0.75rem;
     right: 0.75rem;
     transition: 0.2s;
+    width: 16px;
+    height: 16px;
+    z-index: 100;
   }
   .MainSidebar-hidden .MainSidebar-show-button {
     left: calc(100vw + 0.75rem);
