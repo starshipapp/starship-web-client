@@ -1,7 +1,9 @@
-import { Button, Dialog, H2, Intent } from "@blueprintjs/core";
-import { report } from "process";
+import { useMutation } from "@apollo/client";
+import { Button, Dialog, Intent } from "@blueprintjs/core";
 import React from "react";
+import solveReportMutation, { ISolveReportMutationData } from "../graphql/mutations/admin/solveReportMutation";
 import IReport from "../types/IReport";
+import { GlobalToaster } from "../util/GlobalToaster";
 import { reportObjectType, reportTypeStrings } from "../util/reportTypes";
 import "./css/Report.css";
 import ForumPostObject from "./objects/ForumPostObject";
@@ -13,6 +15,7 @@ interface IReportProps {
 }
 
 function Report(props: IReportProps): JSX.Element {
+  const [solve] = useMutation<ISolveReportMutationData>(solveReportMutation);
   return (
     <Dialog className="bp3-dark" title={`Report (${props.date})`} onClose={() => props.onClose()} isOpen={props.open}>
       <div className="Report-header">
@@ -22,7 +25,13 @@ function Report(props: IReportProps): JSX.Element {
         <div className="Report-header-date">
           {props.date}
         </div>
-        <Button intent={Intent.SUCCESS} text="Solve" icon="tick"/>
+        <Button intent={Intent.SUCCESS} text={props.report.solved ? "Solved" : "Solve"} icon="tick" onClick={() => {
+          solve({variables: {reportId: props.report.id}}).then(() => {
+            GlobalToaster.show({message: "Marked report as solved.", intent: Intent.SUCCESS});
+          }).catch((error: Error) => {
+            GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+          });
+        }}/>
       </div>
       <div className="Report-user">
         <div className="Report-user-label">

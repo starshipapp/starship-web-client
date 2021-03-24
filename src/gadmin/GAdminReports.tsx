@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { Button, ButtonGroup, Classes } from "@blueprintjs/core";
+import { Button, ButtonGroup, Classes, Popover } from "@blueprintjs/core";
 import React, { useState } from "react";
 import getAllReports, { IGetAllReportsData } from "../graphql/queries/admin/getAllReports";
 import { reportObjectTypeStrings, reportTypeStrings } from "../util/reportTypes";
@@ -8,15 +8,20 @@ import "./css/GAdminReports.css";
 import Report from "./Report";
 
 function GAdminReports(): JSX.Element {
-  const {data} = useQuery<IGetAllReportsData>(getAllReports, {variables: {startNumber: 0, count: 25}});
+  const [pageNumber, setPage] = useState<number>(0);
+  const {data} = useQuery<IGetAllReportsData>(getAllReports, {variables: {startNumber: pageNumber * 25, count: 25}});
   const [openReport, setReport] = useState<string>("");
 
   return (
     <div className="GAdmin-page bp3-dark">
       <div className="GAdmin-page-header">Reports</div>
-      <ButtonGroup className="GAdminReports-buttongroup">
-        <Button icon="tag" text="Types" minimal={true} rightIcon="caret-down"/>
-        <Button icon="search" text="Search" minimal={true} rightIcon="caret-down"/>
+      <ButtonGroup minimal={true} className="GAdminReports-buttongroup">
+        <Popover>
+          <Button rightIcon="caret-down">Set Page</Button>
+          <div className="menu-form">
+            <input className={Classes.INPUT + " menu-input"} onChange={(e) => setPage(Number(e.target.value))} value={pageNumber}/>
+          </div>
+        </Popover>
       </ButtonGroup>
       <div className="GAdmin-page-container">
         <table className={`${Classes.HTML_TABLE} GAdminReports-table`}>
@@ -36,6 +41,9 @@ function GAdminReports(): JSX.Element {
               </td>
               <td>
                 Date
+              </td>
+              <td>
+                Status
               </td>
             </tr>
           </thead>
@@ -62,6 +70,9 @@ function GAdminReports(): JSX.Element {
               </td>
               <td>
                 {new Date(Number(value.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+              </td>
+              <td>
+                {value.solved ? "Solved" : "Open"}
               </td>
             </tr>
           </>))}  
