@@ -6,7 +6,10 @@ import IReport from "../types/IReport";
 import { GlobalToaster } from "../util/GlobalToaster";
 import { reportObjectType, reportTypeStrings } from "../util/reportTypes";
 import "./css/Report.css";
+import FileObject from "./objects/FileObject";
 import ForumPostObject from "./objects/ForumPostObject";
+import ForumReplyObject from "./objects/ForumReplyObject";
+import PlanetObject from "./objects/PlanetObject";
 interface IReportProps {
   open: boolean
   report: IReport
@@ -74,6 +77,9 @@ function Report(props: IReportProps): JSX.Element {
         </div>
       </div>
       {props.report.objectType === reportObjectType.FORUMPOST && <ForumPostObject id={props.report.objectId ?? ""}/>}
+      {props.report.objectType === reportObjectType.FILE && <FileObject id={props.report.objectId ?? ""}/>}
+      {props.report.objectType === reportObjectType.PLANET && <PlanetObject id={props.report.objectId ?? ""}/>}
+      {props.report.objectType === reportObjectType.FORUMREPLY && <ForumReplyObject id={props.report.objectId ?? ""}/>}
     </Dialog>
   );
 }
