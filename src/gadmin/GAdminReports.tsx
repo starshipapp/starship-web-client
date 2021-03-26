@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import getAllReports, { IGetAllReportsData } from "../graphql/queries/admin/getAllReports";
 import { reportObjectTypeStrings, reportTypeStrings } from "../util/reportTypes";
 import "./css/GAdmin-page.css";
-import "./css/GAdminReports.css";
 import Report from "./Report";
 
 function GAdminReports(): JSX.Element {
@@ -15,7 +14,7 @@ function GAdminReports(): JSX.Element {
   return (
     <div className="GAdmin-page bp3-dark">
       <div className="GAdmin-page-header">Reports</div>
-      <ButtonGroup minimal={true} className="GAdminReports-buttongroup">
+      <ButtonGroup minimal={true} className="GAdmin-page-buttongroup">
         <Popover>
           <Button rightIcon="caret-down">Set Page</Button>
           <div className="menu-form">
@@ -24,7 +23,7 @@ function GAdminReports(): JSX.Element {
         </Popover>
       </ButtonGroup>
       <div className="GAdmin-page-container">
-        <table className={`${Classes.HTML_TABLE} GAdminReports-table`}>
+        <table className={`${Classes.HTML_TABLE} GAdmin-page-table`}>
           <thead>
             <tr>
               <td>

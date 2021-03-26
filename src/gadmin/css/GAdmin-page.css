@@ -24,3 +24,12 @@
   margin-left: auto;
   margin-right: auto;
 }
+
+.GAdmin-page-table {
+  width: 100%;
+}
+
+.GAdmin-page-buttongroup {
+  margin-top: 1rem;
+  margin-left: 7.5vw;
+}
