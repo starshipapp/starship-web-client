@@ -43,6 +43,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
   const [uploadUpdateCounter, setUploadUpdateCounter] = useState<number>(0);
   const [createFolderPrompt, setCreateFolderPrompt] = useState<boolean>(false);
   const [listView, setListView] = useState<boolean>(window.localStorage.getItem("files.listView") === "true" ? true : false);
+  const [isDragging, setDragging] = useState<boolean>(false);
 
   const uploadFile = function(file: File, folderId: string) {
     uploadFileM({variables: {folderId, type: file.type, name: file.name, filesId: props.id}}).then((data) => {
@@ -75,21 +76,32 @@ function FilesComponent(props: IComponentProps): JSX.Element {
     });
   };
 
-  const onDrop = function(e: React.DragEvent<HTMLButtonElement | HTMLDivElement>) {
+  const onDrop = function(e: React.DragEvent<HTMLButtonElement | HTMLDivElement>, toParent: boolean) {
     e.preventDefault();
     e.stopPropagation();
-    if(e.dataTransfer.items[0].kind === "string") {
-      e.dataTransfer.items[0].getAsString((stringValue) => {
-        if(stringValue !== (objectData?.fileObject.parent ?? "")) {
-          moveObject({variables: {objectId: stringValue, parent: objectData?.fileObject.parent?.id}}).then(() => {
-            void client.cache.gc();
-            void foldersRefetch();
-            void filesRefetch();
-          }).catch((err: Error) => {
-            GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+    setDragging(false);
+    if (e.dataTransfer.items) {
+      // eslint-disable-next-line @typescript-eslint/prefer-for-of
+      for (let i = 0; i < e.dataTransfer.items.length; i++) {
+        if (e.dataTransfer.items[i].kind === "file") {
+          const file = e.dataTransfer.items[i].getAsFile();
+          if(file) {
+            uploadFile(file, objectData?.fileObject.id ?? "root");
+          }
+        } else if(e.dataTransfer.items[i].kind === "string") {
+          e.dataTransfer.items[i].getAsString((stringValue) => {
+            if(stringValue !== (objectData?.fileObject.parent ?? "") && objectData?.fileObject.id) {
+              moveObject({variables: {objectId: stringValue, parent: toParent ? (objectData?.fileObject.parent?.id ?? "root") : objectData.fileObject.id}}).then(() => {
+                void client.cache.gc();
+                void foldersRefetch();
+                void filesRefetch();
+              }).catch((err: Error) => {
+                GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+              });
+            }
           });
         }
-      });
+      }
     }
   };
 
@@ -109,10 +121,26 @@ function FilesComponent(props: IComponentProps): JSX.Element {
 
   return (
     <div 
-      className="bp3-dark FilesComponent" 
-      onDrop={(e) => [onDrop]}
-      onDragOver={(e) => {e.preventDefault();}} 
-      onDragEnd={(e) => {e.preventDefault();}}
+      className={`bp3-dark FilesComponent ${isDragging ? "FilesComponent-dragging" : ""}`}
+      onDrop={(e) => onDrop(e, false)}
+      onDragOver={(e) => {
+        e.preventDefault();
+        if(e.dataTransfer.items[0].kind === "file") {
+          setDragging(true);
+        }
+      }} 
+      onDragLeave={(e) => {
+        e.preventDefault();
+        setDragging(false);
+      }}
+      onDragExit={(e) => {
+        e.preventDefault();
+        setDragging(false);
+      }}
+      onDragEnd={(e) => {
+        e.preventDefault();
+        setDragging(false);
+      }}
     >
       {objectData?.fileObject && <ReportDialog isOpen={showReport} onClose={() => setReport(false)} objectId={objectData.fileObject.id} objectType={reportObjectType.FILE} userId={objectData.fileObject.owner?.id ?? ""}/>}
       <div className="FilesComponent-top">
@@ -205,7 +233,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
             icon="arrow-up"
             text="../"
             large={true}
-            onDrop={onDrop}
+            onDrop={(e) => onDrop(e, true)}
           />
         </Link>}
         {foldersData?.folders.map((value) => (<FileButton planet={props.planet} key={value.id} object={value} componentId={props.id} refetch={() => {void filesRefetch(); void foldersRefetch();}}/>))}
@@ -213,7 +241,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
       </div>}
       {((objectData && objectData.fileObject.type === "folder") || !props.subId) && listView && <div className="FilesComponent-list-table">
         {props.subId && objectData && <Link className="link-button" to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
-          <div className="FileListButton" onDrop={onDrop}>
+          <div className="FileListButton" onDrop={(e) => onDrop(e, true)}>
             <div><Icon className="FileListButton-icon" icon="arrow-up"/>../</div>
           </div>
         </Link>}
