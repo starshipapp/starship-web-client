@@ -4,6 +4,15 @@
   min-height: 100%;
 }
 
+.FilesComponent-dragging {
+  box-shadow: 0 0 3pt 2pt #3dcc91;
+  padding: 1rem;
+  margin: -1rem;
+  padding-top: 0.5rem;
+  margin-top: -0.5rem;
+  cursor: copy;
+}
+
 .FilesComponent-top {
   display: flex;
 }
