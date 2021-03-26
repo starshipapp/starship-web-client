@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Button, Checkbox, Classes, Icon, Intent, Menu, MenuDivider, MenuItem, Popover, Position, Tooltip } from '@blueprintjs/core';
+import { Alert, Button, Checkbox, Classes, Icon, Intent, Menu, MenuDivider, MenuItem, Popover, Position, Tooltip } from '@blueprintjs/core';
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import insertPlanetMutation, { IInsertPlanetMutationData } from '../graphql/mutations/planets/insertPlanetMutation';
@@ -70,8 +70,23 @@ function MainSidebar(): JSX.Element {
           {data.currentUser.memberOf?.map((value) => (
             <Link onClick={toggleHidden} className="link-button" to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>
           ))}
-          <Popover className="MainSidebar-insert-planet-popover" position={Position.RIGHT} isOpen={showPopout}>
-            <MenuItem icon="new-object" text="New Planet" className="MainSidebar-insert-planet-button" onClick={() => setPopout(!showPopout)}/>
+          <Popover 
+            className="MainSidebar-insert-planet-popover" 
+            modifiers={{preventOverflow: 
+              {boundariesElement: 'window'}, 
+              hide: {enabled: false}, 
+              flip: {behavior: isMobile() ? "flip" : "counterclockwise"}
+            }} 
+            position={Position.RIGHT} 
+            isOpen={showPopout}
+            onClose={() => setPopout(false)}
+          >
+            <MenuItem icon="new-object" text="New Planet" className="MainSidebar-insert-planet-button" onClick={() => {
+              setPopout(!showPopout);
+              if(isMobile()) {
+                setHidden(true);
+              }
+            }}/>
             <div className="MainSidebar-insert-planet-box">
               <input className={Classes.INPUT} value={planetName} onChange={(e) => setPlanetName(e.target.value)}/>
               <div className="MainSidebar-insert-planet-bottom">
