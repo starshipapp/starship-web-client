@@ -22,7 +22,7 @@ function ForumItemContainer(props: IForumItemContainerProps): JSX.Element {
       {props.forum.stickiedPosts && props.forum.stickiedPosts.map((value) => (<ForumItem key={value.id} post={value} planet={props.planet} stickied={true} id={props.id}/>))}
       {props.forum.posts && props.forum.posts.forumPosts.map((value) => (<ForumItem key={value.id} post={value} planet={props.planet} id={props.id}/>))}
       {/* TODO: Load on scroll to bottom */}
-      {(props.forum.posts?.forumPosts?.length ?? 1 % 25) === 0 && <div className="ForumComponent-loadmore">
+      {(((props.forum.posts?.forumPosts?.length ?? 1) + 1) % 25) === 0 && <div className="ForumComponent-loadmore">
         <Button text="Load More" onClick={props.loadMore}/>
       </div>}
     </div>

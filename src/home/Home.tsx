@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './css/Home.css';
 import { useQuery } from '@apollo/client';
 import getFeaturedPlanets, { IGetFeaturedPlanetsData } from '../graphql/queries/planets/getFeaturedPlanets';
-import { Callout, Intent, Text } from '@blueprintjs/core';
+import { Callout, Classes, Intent, Text } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 
 
@@ -40,6 +40,18 @@ function Home(): JSX.Element {
                 <div className="Home-featured-followers">{value.followerCount} {value.followerCount === 1 ? "Follower" : "Followers"}</div>
               </div>
             </Link>))}
+          </div>}
+          {loading && <div className="Home-featured-list">
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
           </div>}
         </div>
         <div className="Home-footer">

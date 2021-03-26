@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, ButtonGroup, Classes, ContextMenu, Divider, Icon, Intent, Menu, MenuItem, Popover, ProgressBar, Text } from "@blueprintjs/core";
+import { Button, ButtonGroup, Classes, ContextMenu, Divider, Icon, Intent, Menu, MenuItem, NonIdealState, Popover, ProgressBar, Text } from "@blueprintjs/core";
 import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import completeUploadMutation, { ICompleteUploadMutationData } from "../../../graphql/mutations/components/files/completeUploadMutation";
@@ -93,6 +93,20 @@ function FilesComponent(props: IComponentProps): JSX.Element {
     }
   };
 
+  if(!objectData?.fileObject && !objectLoading && props.subId) {
+    return (
+      <div 
+        className="bp3-dark FilesComponent"
+      >
+        <NonIdealState
+          title="404"
+          icon="error"
+          description="The requested file/folder could not be found."
+        />
+      </div>
+    );
+  }
+
   return (
     <div 
       className="bp3-dark FilesComponent" 
@@ -118,7 +132,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           }}
           multiple
         />
-        <FileBreadcrumbs path={objectData?.fileObject.path ? objectData.fileObject.path.concat([objectData.fileObject.id]) : ["root"]} componentId={props.id} planetId={props.planet.id}/>
+        {(objectData?.fileObject || !props.subId) && <FileBreadcrumbs path={objectData?.fileObject.path ? objectData.fileObject.path.concat([objectData.fileObject.id]) : ["root"]} componentId={props.id} planetId={props.planet.id}/>}
         <div className="FilesComponent-uploading">
           {Object.values(uploading).length !== 0 && <div className="FilesComponent-uploading-container">
             <Icon className="FilesComponent-uploading-icon" iconSize={16} icon="upload"/>

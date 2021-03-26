@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, ButtonGroup, Intent, Popover } from "@blueprintjs/core";
+import { Button, ButtonGroup, Intent, NonIdealState, Popover } from "@blueprintjs/core";
 import ReactMarkdown from "react-markdown";
 import SimpleMDEEditor from "react-simplemde-editor";
 import IPlanet from "../../../types/IPlanet";
@@ -30,7 +30,7 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
   const [showRename, setRename] = useState<boolean>(false);
   const [renameTextbox, setRenameText] = useState<string>("");
   const {data: userData} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const {data} = useQuery<IGetWikiPageData>(getWikiPage, {variables: {id: props.subId}});
+  const {data, loading} = useQuery<IGetWikiPageData>(getWikiPage, {variables: {id: props.subId}});
   const [savePage] = useMutation<IUpdateWikiPageData>(updateWikiPageMutation);
   const [renameWikiPage] = useMutation<IRenameWikiPageData>(renameWikiPageMutation); 
   const [removeWikiPage] = useMutation<IRemoveWikiPageData>(removeWikiPageMutation);
@@ -118,6 +118,11 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
       >
         Save
       </Button>)}
+      {!data?.wikiPage && !loading && <NonIdealState
+        icon="error"
+        title="404"
+        description="We couldn't find that page."
+      />}
     </div>
   );
 }
