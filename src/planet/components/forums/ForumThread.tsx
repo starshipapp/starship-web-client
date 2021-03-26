@@ -7,7 +7,7 @@ import ReactPaginate from "react-paginate";
 import SimpleMDEEditor from "react-simplemde-editor";
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
 import permissions from "../../../util/permissions";
-import { Button, Icon, Intent } from "@blueprintjs/core";
+import { Button, Icon, Intent, NonIdealState } from "@blueprintjs/core";
 import editorOptions from "../../../util/editorOptions";
 import insertForumReplyMutation, { IInsertForumReplyMutationData } from "../../../graphql/mutations/components/forums/insertForumReplyMutation";
 import { GlobalToaster } from "../../../util/GlobalToaster";
@@ -29,7 +29,7 @@ let mdeInstance: EasyMDE | null = null;
 
 function ForumThread(props: IForumThreadProps): JSX.Element {
   const {data} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const {data: postData, refetch} = useQuery<IGetForumPostData>(getForumPost, {variables: {id: props.postId, count: 25, cursor: (props.page ? String(Number(props.page) * 25 - 25) : "0")}});
+  const {data: postData, refetch, loading} = useQuery<IGetForumPostData>(getForumPost, {variables: {id: props.postId, count: 25, cursor: (props.page ? String(Number(props.page) * 25 - 25) : "0")}});
   const [editingContent, setEditingContent] = useState<string>("");
   const [demandValueChange, setDemandValueChange] = useState<boolean>(false);
   const [insertReply] = useMutation<IInsertForumReplyMutationData>(insertForumReplyMutation);
@@ -75,6 +75,11 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
             forumRefetch={() => props.forumRefetch()}
           />))}
         </div>}
+        {!postData?.forumPost && !loading && <NonIdealState
+          title="404"
+          icon="error"
+          description="This forum post doesn't exist."
+        />}
         {/* <ForumThreadItemContainer page={this.props.page ? Number(this.props.page) : 1} addQuote={this.addQuote} planet={this.props.planet} post={postData.forumPost}/>*/}
       </div>
       {postData?.forumPost && (postData.forumPost.replyCount ?? 0) > 25 && <ReactPaginate
