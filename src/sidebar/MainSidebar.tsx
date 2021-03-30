@@ -108,7 +108,7 @@ function MainSidebar(): JSX.Element {
             setProfile(true);
             toggleHidden();  
           }}/>
-          <MenuItem onClick={toggleHidden} icon="settings" text="Settings"/>
+          <Link to="/settings" className="link-button"><MenuItem onClick={toggleHidden} icon="settings" text="Settings"/></Link>
           <MenuItem icon="log-out" text="Logout" onClick={() => {
             localStorage.removeItem("token");
             void client.cache.gc();

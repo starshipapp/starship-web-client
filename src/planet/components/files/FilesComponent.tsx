@@ -28,10 +28,10 @@ import isMobile from "../../../util/isMobile";
 const uploading: Record<string, {name: string, progress: number}> = {};
 
 function FilesComponent(props: IComponentProps): JSX.Element {
-  const {data: userData, loading: userLoading, client} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+  const {data: userData, client} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const {data: objectData, loading: objectLoading} = useQuery<IGetFileObjectData>(getFileObject, {variables: {id: props.subId}, errorPolicy: 'all'});
-  const {data: foldersData, loading: foldersLoading, refetch: foldersRefetch} = useQuery<IGetFoldersData>(getFolders, {variables: {componentId: props.id, parent: (props.subId ?? "root")}, errorPolicy: 'all', fetchPolicy: "cache-and-network"});
-  const {data: filesData, loading: filesLoading, refetch: filesRefetch} = useQuery<IGetFilesData>(getFiles, {variables: {componentId: props.id, parent: (props.subId ?? "root")}, errorPolicy: 'all', fetchPolicy: "cache-and-network"});
+  const {data: foldersData, refetch: foldersRefetch} = useQuery<IGetFoldersData>(getFolders, {variables: {componentId: props.id, parent: (props.subId ?? "root")}, errorPolicy: 'all', fetchPolicy: "cache-and-network"});
+  const {data: filesData, refetch: filesRefetch} = useQuery<IGetFilesData>(getFiles, {variables: {componentId: props.id, parent: (props.subId ?? "root")}, errorPolicy: 'all', fetchPolicy: "cache-and-network"});
   const {refetch} = useQuery<IGetDownloadFileObjectData>(getDownloadFileObject, {variables: {fileId: props.subId}, errorPolicy: 'all', fetchPolicy: "no-cache"});
   const [uploadFileM] = useMutation<IUploadFileObjectMutationData>(uploadFileObjectMutation);
   const [completeUpload] = useMutation<ICompleteUploadMutationData>(completeUploadMutation);
