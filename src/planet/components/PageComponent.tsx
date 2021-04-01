@@ -5,13 +5,14 @@ import ReactMarkdown from "react-markdown";
 import SimpleMDEEditor from "react-simplemde-editor";
 import getPage, { IGetPageData } from "../../graphql/queries/components/getPage";
 import getCurrentUser, { IGetCurrentUserData } from "../../graphql/queries/users/getCurrentUser";
-import editorOptions from "../../util/editorOptions";
+import { assembleEditorOptions } from "../../util/editorOptions";
 import permissions from "../../util/permissions";
 import "easymde/dist/easymde.min.css";
 import "./css/PageComponent.css";
 import IComponentProps from "./IComponentProps";
 import updatePageMutation, { IUpdatePageMutationData } from "../../graphql/mutations/components/updatePageMutation";
 import { GlobalToaster } from "../../util/GlobalToaster";
+import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../graphql/mutations/misc/uploadMarkdownImageMutation";
 
 function PageComponent(props: IComponentProps): JSX.Element {
   const {data, loading } = useQuery<IGetPageData>(getPage, {variables: {page: props.id}});
@@ -19,6 +20,7 @@ function PageComponent(props: IComponentProps): JSX.Element {
   const [editorState, setEditorState] = useState<string>("");
   const {data: userData} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [updatePage] = useMutation<IUpdatePageMutationData>(updatePageMutation);
+  const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
 
   return (
     <div className="bp3-dark PageComponent">
@@ -35,7 +37,7 @@ function PageComponent(props: IComponentProps): JSX.Element {
           <p className={Classes.SKELETON}>Morbi non eros arcu. Nam ex justo, posuere vitae justo ac, feugiat pulvinar magna. Mauris libero mauris, eleifend hendrerit ligula et, tincidunt finibus velit. Aliquam erat volutpat. Integer nisi lorem, commodo ut auctor eu, ultricies at magna. Nunc eu suscipit metus. Donec ac lorem at elit blandit viverra. Pellentesque luctus felis est, fringilla posuere tellus condimentum vel. Etiam vel libero sit amet mauris euismod scelerisque. Sed iaculis luctus metus vel scelerisque.</p>
       </div> : (data?.page ? <>
         {!isEditing && <ReactMarkdown>{data.page.content}</ReactMarkdown>}
-        {isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={editorOptions}/>}
+        {isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={assembleEditorOptions(uploadMarkdownImage)}/>}
         {(userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <Button
           icon="edit"
           onClick={() => {
