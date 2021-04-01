@@ -26,6 +26,8 @@ import { GlobalToaster } from "../../../util/GlobalToaster";
 import "./css/ForumThreadItem.css";
 import "emoji-mart/css/emoji-mart.css";
 import isMobile from "../../../util/isMobile";
+import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
+import { assembleEditorOptions } from "../../../util/editorOptions";
 
 interface IForumThreadItemProps {
   forumId: string
@@ -90,6 +92,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const creationDateText = creationDate.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
   const mobileCreationDateText = creationDate.toLocaleDateString(undefined, { weekday: "short", year: "numeric", month: "short", day: "numeric" });
   let canEdit = false;
+  const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
 
   if(props.post.owner && data?.currentUser && (props.post.owner.id === data.currentUser.id || permissions.checkFullWritePermission(data?.currentUser, props.planet))) {
     canEdit = true;
@@ -149,7 +152,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
         </div>}
         <div className="ForumThreadItem-text">
           {showEditor ? <div className="ForumThreadItem-editor">
-            <SimpleMDEEditor onChange={(value) => setTextValue(value)} value={textValue}/>
+            <SimpleMDEEditor onChange={(value) => setTextValue(value)} value={textValue} options={assembleEditorOptions(uploadMarkdownImage)}/>
             <Button
               icon="saved"
               onClick={() => {

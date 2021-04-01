@@ -1,7 +1,13 @@
+import { MutationFunctionOptions, OperationVariables } from "@apollo/client";
 import { Intent } from "@blueprintjs/core";
+import axios from "axios";
+import EasyMDE from "easymde";
+import { ExecutionResult } from "graphql";
+import { IUploadMarkdownImageMutationData } from "../graphql/mutations/misc/uploadMarkdownImageMutation";
 import { GlobalToaster } from "./GlobalToaster";
+import MimeTypes from "./validMimes";
 
-/* type ToolbarButton =
+type ToolbarButton =
     'bold'
     | 'italic'
     | 'quote'
@@ -25,14 +31,19 @@ import { GlobalToaster } from "./GlobalToaster";
     | 'preview'
     | 'side-by-side'
     | 'fullscreen'
-    | 'guide';*/
+    | 'guide';
 
 
-const editorOptions = {
+const editorOptions: EasyMDE.Options = {
   uploadImage: true,
   hideIcons: ["side-by-side", "fullscreen", "guide"],
-  // showIcons: ["upload-image"],
-  /* imageUploadFunction: (file, onSuccess, onError) => {
+  errorCallback: (errorMessage: string): void => {
+    GlobalToaster.show({message: errorMessage, icon:"error", intent: Intent.DANGER});
+  }
+};
+
+export function assembleEditorOptions(newFunction: (options?: MutationFunctionOptions<IUploadMarkdownImageMutationData, OperationVariables> | undefined) => Promise<ExecutionResult<IUploadMarkdownImageMutationData>>): EasyMDE.Options {
+  editorOptions.imageUploadFunction = (file: File, onSuccess: (arg0: string) => void, onError: (arg0: string) => void): void => {
     if(!MimeTypes.imageTypes.includes(file.type)) {
       onError("Invalid file type.");
       return;
@@ -41,29 +52,24 @@ const editorOptions = {
     if(file.size > 8000000) {
       onError("File too big. Max file size is 8MB.");
       return;
+      
     }
 
-    Meteor.call("aws.markdownuploadimage", file.size, file.type, (error, value) => {
-      if(error) {
+    newFunction({variables: {type: file.type, size: file.size}}).then((data) => {
+      const options = { headers: { "Content-Type": file.type, "x-amz-acl": "public-read" }};
+      axios.put(data.data?.uploadMarkdownImage.uploadUrl ?? "", file, options).then(() => {
+        onSuccess(data.data?.uploadMarkdownImage.finalUrl ?? "");
+      }).catch(function (error) {
+        // handle error
         console.log(error);
-        onError("Unknown error while preparing to upload image.");
-      }
-
-      if(value) {
-        const options = { headers: { "Content-Type": file.type, "x-amz-acl": "public-read" }};
-        Axios.put(value.uploadUrl, file, options).then(() => {
-          onSuccess(value.finalUrl);
-        }).catch(function (error) {
-          // handle error
-          console.log(error);
-          onError("Unknown error while uploading image.");
-        });
-      }
+        onError("Unknown error while uploading image.");
+      });
+    }).catch((error: Error) => {
+      onError(error.message);
     });
-  },*/
-  errorCallback: (errorMessage: string): void => {
-    GlobalToaster.show({message: errorMessage, icon:"error", intent: Intent.DANGER});
-  }
-};
+  };
+
+  return editorOptions;
+}
 
 export default editorOptions;

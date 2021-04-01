@@ -8,13 +8,14 @@ import SimpleMDEEditor from "react-simplemde-editor";
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
 import permissions from "../../../util/permissions";
 import { Button, Icon, Intent, NonIdealState } from "@blueprintjs/core";
-import editorOptions from "../../../util/editorOptions";
+import editorOptions, { assembleEditorOptions } from "../../../util/editorOptions";
 import insertForumReplyMutation, { IInsertForumReplyMutationData } from "../../../graphql/mutations/components/forums/insertForumReplyMutation";
 import { GlobalToaster } from "../../../util/GlobalToaster";
 import { useHistory } from "react-router-dom";
 import IForumItem from "../../../types/IForumItem";
 import ForumThreadItem from "./ForumThreadItem";
 import "./css/ForumThread.css";
+import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
 
 interface IForumThreadProps {
   planet: IPlanet,
@@ -34,6 +35,7 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
   const [demandValueChange, setDemandValueChange] = useState<boolean>(false);
   const [insertReply] = useMutation<IInsertForumReplyMutationData>(insertForumReplyMutation);
   const history = useHistory();
+  const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
 
   useEffect(() => {
     if(demandValueChange && mdeInstance) {
@@ -111,7 +113,7 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
           onChange={(e) => setEditingContent(e)}
           value={editingContent} 
           getMdeInstance={(instance) => mdeInstance = instance}
-          options={editorOptions}/>
+          options={assembleEditorOptions(uploadMarkdownImage)}/>
         <Button text="Post" className="ForumEditor-button" onClick={() => {
           if(editingContent === "") {
             GlobalToaster.show({message: "Your reply must have content.", intent: Intent.DANGER});
