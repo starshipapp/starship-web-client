@@ -53,3 +53,9 @@
     flex-direction: column;
   }
 }
+
+.Login-recaptcha {
+  transform:scale(0.78);
+  transform-origin:0 0;
+  margin-bottom: -0.5rem;
+}

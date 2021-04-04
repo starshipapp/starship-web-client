@@ -10,6 +10,7 @@ import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/ge
 import { useHistory } from "react-router-dom";
 import sendResetPasswordEmailMutation, { ISendResetPasswordEmailMutationData } from "../graphql/mutations/users/sendResetPasswordEmailMutation";
 import resendVerificationEmailMutation, { IResendVerificationEmailMutationData } from "../graphql/mutations/users/resendVerificationEmailMutation";
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Login(): JSX.Element {
   const [username, setUsername] = useState<string>("");
@@ -23,10 +24,13 @@ function Login(): JSX.Element {
   const [confirmPassword, setConfirm] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [signUp] = useMutation<ISignUpMutationData>(signUpMutation);
+  const [recaptcha, setRecaptcha] = useState<string>("");
 
   const { client, loading, data } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
 
   const history = useHistory();
+
+  console.log(process.env);
 
   useEffect(() => {
     document.title = "Login | starship";
@@ -50,7 +54,7 @@ function Login(): JSX.Element {
       return;
     }
 
-    signUp({ variables: { username: registerUsername, password: sha256(registerPasword).toString(), email, recaptcha: "" } }).then((value) => {
+    signUp({ variables: { username: registerUsername, password: sha256(registerPasword).toString(), email, recaptcha } }).then((value) => {
       if (value.data) {
         if (value.data.insertUser.id) {
           GlobalToaster.show({ intent: "success", message: "Sucessfully registered! Check your email to verify." });
@@ -96,7 +100,7 @@ function Login(): JSX.Element {
     }).catch((error: Error) => {
       if(error.message === "Incorrect username or password.") {
         GlobalToaster.show({message: error.message, intent: Intent.DANGER, action: {text: "Reset Password", onClick: () => sendResetEmail()}});
-      } if(error.message === "You need to verify your email.") {
+      } else if(error.message === "You need to verify your email.") {
         GlobalToaster.show({message: error.message, intent: Intent.DANGER, action: {text: "Resend Email", onClick: () => sendVerificationEmail()}});
       } else {
         console.log(error.message);
@@ -137,6 +141,14 @@ function Login(): JSX.Element {
               register();
             }
           }}/>
+          {process.env.REACT_APP_RECAPTCHA_KEY && <div className="Login-recaptcha">
+            <ReCAPTCHA
+              sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
+              onChange={(value) => setRecaptcha(value ?? "")}
+              theme="dark"
+              size="normal"
+            />
+          </div>}
           <Button text="Register" onClick={() => register()} />
         </div></>)}
       </div>
