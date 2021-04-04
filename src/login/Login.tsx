@@ -9,12 +9,14 @@ import { GlobalToaster } from "../util/GlobalToaster";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import { useHistory } from "react-router-dom";
 import sendResetPasswordEmailMutation, { ISendResetPasswordEmailMutationData } from "../graphql/mutations/users/sendResetPasswordEmailMutation";
+import resendVerificationEmailMutation, { IResendVerificationEmailMutationData } from "../graphql/mutations/users/resendVerificationEmailMutation";
 
 function Login(): JSX.Element {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [signIn] = useMutation<ISignInMutationData>(signInMutation);
   const [sendResetPasswordEmail] = useMutation<ISendResetPasswordEmailMutationData>(sendResetPasswordEmailMutation);
+  const [resendVerificationEmail] = useMutation<IResendVerificationEmailMutationData>(resendVerificationEmailMutation);
 
   const [registerUsername, setRegisterUsername] = useState<string>("");
   const [registerPasword, setRegisterPassword] = useState<string>("");
@@ -73,6 +75,14 @@ function Login(): JSX.Element {
     });
   };
 
+  const sendVerificationEmail = function () {
+    resendVerificationEmail({variables: {username}}).then((value) => {
+      GlobalToaster.show({message: "An email to verify your account has been sent."});
+    }).catch((error: Error) => {
+      GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+    });
+  };
+
   const signInFunction = function() {
     signIn({ variables: { username, password: sha256(password).toString() } }).then((value) => {
       if (value.data) {
@@ -84,8 +94,10 @@ function Login(): JSX.Element {
         history.push("/");
       }
     }).catch((error: Error) => {
-      if(error.message == "Incorrect username or password.") {
+      if(error.message === "Incorrect username or password.") {
         GlobalToaster.show({message: error.message, intent: Intent.DANGER, action: {text: "Reset Password", onClick: () => sendResetEmail()}});
+      } if(error.message === "You need to verify your email.") {
+        GlobalToaster.show({message: error.message, intent: Intent.DANGER, action: {text: "Resend Email", onClick: () => sendVerificationEmail()}});
       } else {
         console.log(error.message);
         GlobalToaster.show({message: error.message, intent: Intent.DANGER});
