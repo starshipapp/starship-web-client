@@ -16,12 +16,27 @@
 
 .Login-input {
   display: block;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.65rem;
 }
 
 .Login-left {
   margin-left: 0.5rem;
   margin-right: 0.35rem;
+}
+
+.Login-center {
+  margin-left: 0.5rem;
+  margin-left: 0.35rem;
+}
+
+.Login-center input {
+  width: 100%;
+}
+
+.Login-center button {
+  margin-left: auto !important;
+  margin-right: 0.05rem;
+  display: block;
 }
 
 .Login-right {
@@ -30,11 +45,17 @@
 }
 
 .Login-header {
-  margin-bottom: 0.5rem !important;
+  margin-bottom: 0.65rem !important;
 }
 
 @media only screen and (max-width: 600px) {
   .Login-container {
     flex-direction: column;
   }
+}
+
+.Login-recaptcha {
+  transform:scale(0.78);
+  transform-origin:0 0;
+  margin-bottom: -0.5rem;
 }

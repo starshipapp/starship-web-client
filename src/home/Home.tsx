@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import './css/Home.css';
 import { useQuery } from '@apollo/client';
 import getFeaturedPlanets, { IGetFeaturedPlanetsData } from '../graphql/queries/planets/getFeaturedPlanets';
-import { Callout, Intent, Text } from '@blueprintjs/core';
+import { Callout, Classes, Intent, Text } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 
 
@@ -23,7 +23,7 @@ function Home(): JSX.Element {
             If you find a bug, please report it <a href="https://starship.william341.me/planet/kCnATXqBCD4vEvzMB/pekuosDPGGxHKc6Qg">here</a>.
           </Callout>
           <Callout icon="warning-sign" intent={Intent.WARNING} className="Home-alpha-callout-padtop" title="Expiremental version">
-            starship-client v0.5<br/>
+            starship-client v0.6.995-1<br/>
             <Link to="/planet/9kauFkf5iPb64jqKT/YKwFEqCtYXfD9RBGi">For more information, click here.</Link>
           </Callout>
           {process.env.NODE_ENV === "development" && <Callout icon="warning-sign" intent={Intent.WARNING} className="Home-alpha-callout-padtop">
@@ -40,6 +40,18 @@ function Home(): JSX.Element {
                 <div className="Home-featured-followers">{value.followerCount} {value.followerCount === 1 ? "Follower" : "Followers"}</div>
               </div>
             </Link>))}
+          </div>}
+          {loading && <div className="Home-featured-list">
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
           </div>}
         </div>
         <div className="Home-footer">

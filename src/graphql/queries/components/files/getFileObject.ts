@@ -20,6 +20,12 @@ const getFileObject = gql`
       }
       type
       createdAt
+      component {
+        id
+      }
+      planet {
+        id
+      }
       fileType
       finishedUploading
     }

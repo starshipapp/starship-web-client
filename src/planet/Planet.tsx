@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import {NonIdealState} from "@blueprintjs/core";
+import {Alignment, Button, Classes, Navbar, NonIdealState} from "@blueprintjs/core";
 import React from "react";
 import { Route, Switch, useParams, useRouteMatch } from "react-router-dom";
 import getPlanet, { IGetPlanetData } from "../graphql/queries/planets/getPlanet";
@@ -22,7 +22,22 @@ function Planet(props: IPlanetProps): JSX.Element {
 
   return (
     <div className="Planet">
-      {loading ? <></> : (data?.planet ? <>
+      {loading ? <>
+        <div className={"Planet-header"}>
+          <div className={`Planet-header-name-skeleton ${Classes.SKELETON}`}/>
+          <div className={`Planet-header-infostrip-skeleton ${Classes.SKELETON}`}/>
+        </div>
+        <Navbar className="Planet-navbar">
+          <div className="Planet-navbar-content">
+            <Navbar.Group align={Alignment.LEFT}>
+              <Button className={`Planet-navbar-button-skeleton ${Classes.SKELETON}`} outlined={props.home} small={true} icon="home" text="Home"/>
+              <Button className={`Planet-navbar-button-skeleton ${Classes.SKELETON}`} outlined={props.home} small={true} icon="home" text="Home"/>
+              <Button className={`Planet-navbar-button-skeleton ${Classes.SKELETON}`} outlined={props.home} small={true} icon="home" text="Home"/>
+            </Navbar.Group>
+          </div>
+        </Navbar>
+        <div className={`Planet-contentcontainer Planet-contentcontainer-skeleton ${Classes.SKELETON}`}/>
+      </> : (data?.planet ? <>
         <div className="Planet-header">
           <div className="Planet-header-name">{data.planet.name}</div>
           <InfoStrip planet={data.planet}/>

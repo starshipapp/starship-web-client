@@ -16,3 +16,5 @@ export enum reportType {
   MALWARE = 4,
   NSFW = 5,
 }
+
+export const reportTypeStrings = ["Harassment", "Copyright", "Illegal", "Spam", "Malware", "NSFW"];

@@ -25,6 +25,7 @@ function FileView(props: IFileViewProps): JSX.Element {
         {MimeTypes.audioTypes.includes(props.file.fileType ?? "dummy/file") && data && <audio preload="auto" className="FileView-preview-audio" controls src={data.getObjectPreview}/>}
         {MimeTypes.imageTypes.includes(props.file.fileType ?? "dummy/file") && data && <img className="FileView-preview" src={data.getObjectPreview} alt="File preview"/>}
         {MimeTypes.videoTypes.includes(props.file.fileType ?? "dummy/file") && data && <video preload="auto" className="FileView-preview" controls src={data.getObjectPreview}/>}
+        {props.file.fileType === "application/pdf" && data && <object height="100%" width="100%" type="application/pdf" className="FileView-preview-pdf" data={data.getObjectPreview}>Failed to load PDF.</object>}
       </div> : <div className="FileView-container">
         <Icon className="FileView-icon" icon="document" iconSize={128}/>
         <div className="FileView-name">{props.file.name}</div>

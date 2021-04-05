@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, Classes, Divider, H1, NonIdealState } from "@blueprintjs/core";
+import { Button, Classes, Divider, H1, Intent, NonIdealState } from "@blueprintjs/core";
 import React, {useEffect, useState} from "react";
 import signInMutation, { ISignInMutationData } from "../graphql/mutations/users/signInMutation";
 import "./css/Login.css";
@@ -8,21 +8,29 @@ import signUpMutation, { ISignUpMutationData } from "../graphql/mutations/users/
 import { GlobalToaster } from "../util/GlobalToaster";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import { useHistory } from "react-router-dom";
+import sendResetPasswordEmailMutation, { ISendResetPasswordEmailMutationData } from "../graphql/mutations/users/sendResetPasswordEmailMutation";
+import resendVerificationEmailMutation, { IResendVerificationEmailMutationData } from "../graphql/mutations/users/resendVerificationEmailMutation";
+import ReCAPTCHA from "react-google-recaptcha";
 
 function Login(): JSX.Element {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [signIn] = useMutation<ISignInMutationData>(signInMutation);
+  const [sendResetPasswordEmail] = useMutation<ISendResetPasswordEmailMutationData>(sendResetPasswordEmailMutation);
+  const [resendVerificationEmail] = useMutation<IResendVerificationEmailMutationData>(resendVerificationEmailMutation);
 
   const [registerUsername, setRegisterUsername] = useState<string>("");
   const [registerPasword, setRegisterPassword] = useState<string>("");
   const [confirmPassword, setConfirm] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [signUp] = useMutation<ISignUpMutationData>(signUpMutation);
+  const [recaptcha, setRecaptcha] = useState<string>("");
 
   const { client, loading, data } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
 
   const history = useHistory();
+
+  console.log(process.env);
 
   useEffect(() => {
     document.title = "Login | starship";
@@ -46,7 +54,7 @@ function Login(): JSX.Element {
       return;
     }
 
-    signUp({ variables: { username: registerUsername, password: sha256(registerPasword).toString(), email, recaptcha: "" } }).then((value) => {
+    signUp({ variables: { username: registerUsername, password: sha256(registerPasword).toString(), email, recaptcha } }).then((value) => {
       if (value.data) {
         if (value.data.insertUser.id) {
           GlobalToaster.show({ intent: "success", message: "Sucessfully registered! Check your email to verify." });
@@ -61,6 +69,24 @@ function Login(): JSX.Element {
     });
   };
   
+  const sendResetEmail = function() {
+    sendResetPasswordEmail({variables: {username}}).then((value) => {
+      if(value){
+        GlobalToaster.show({message: "An email to reset your password has been sent.", intent: Intent.SUCCESS});
+      }
+    }).catch((error: Error) => {
+      GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+    });
+  };
+
+  const sendVerificationEmail = function () {
+    resendVerificationEmail({variables: {username}}).then((value) => {
+      GlobalToaster.show({message: "An email to verify your account has been sent."});
+    }).catch((error: Error) => {
+      GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+    });
+  };
+
   const signInFunction = function() {
     signIn({ variables: { username, password: sha256(password).toString() } }).then((value) => {
       if (value.data) {
@@ -72,7 +98,14 @@ function Login(): JSX.Element {
         history.push("/");
       }
     }).catch((error: Error) => {
-      GlobalToaster.show({ intent: "danger", message: error.message });
+      if(error.message === "Incorrect username or password.") {
+        GlobalToaster.show({message: error.message, intent: Intent.DANGER, action: {text: "Reset Password", onClick: () => sendResetEmail()}});
+      } else if(error.message === "You need to verify your email.") {
+        GlobalToaster.show({message: error.message, intent: Intent.DANGER, action: {text: "Resend Email", onClick: () => sendVerificationEmail()}});
+      } else {
+        console.log(error.message);
+        GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+      }
     });
   };
 
@@ -108,6 +141,14 @@ function Login(): JSX.Element {
               register();
             }
           }}/>
+          {process.env.REACT_APP_RECAPTCHA_KEY && <div className="Login-recaptcha">
+            <ReCAPTCHA
+              sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
+              onChange={(value) => setRecaptcha(value ?? "")}
+              theme="dark"
+              size="normal"
+            />
+          </div>}
           <Button text="Register" onClick={() => register()} />
         </div></>)}
       </div>

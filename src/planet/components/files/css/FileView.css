@@ -40,3 +40,8 @@
   margin: 0.5rem auto;
   margin-top: 0;
 }
+
+.FileView-preview-pdf {
+  width: 50vw;
+  height: 50vh;
+}

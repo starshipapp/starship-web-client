@@ -30,6 +30,10 @@
   overflow-x: visible;
 }
 
+.Planet-contentcontainer-skeleton {
+  height: 100vh;
+}
+
 .Planet-navbar {
   margin-top: 0.5rem;
   box-shadow: none !important;
@@ -70,6 +74,23 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.Planet-header-name-skeleton {
+  margin-top: 0.5rem;
+  height: 3.25rem;
+  width: 17.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.Planet-header-infostrip-skeleton {
+  margin-top: 0rem;
+  height: 1.5rem;
+  width: 20rem;
+}
+
+.Planet-navbar-button-skeleton {
+  margin-right: 0.75rem;
 }
 
 .Planet-textarea {
