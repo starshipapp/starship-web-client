@@ -23,7 +23,7 @@ function Home(): JSX.Element {
             If you find a bug, please report it <a href="https://starship.william341.me/planet/kCnATXqBCD4vEvzMB/pekuosDPGGxHKc6Qg">here</a>.
           </Callout>
           <Callout icon="warning-sign" intent={Intent.WARNING} className="Home-alpha-callout-padtop" title="Expiremental version">
-            starship-client v0.5<br/>
+            starship-client v0.6.995-1<br/>
             <Link to="/planet/9kauFkf5iPb64jqKT/YKwFEqCtYXfD9RBGi">For more information, click here.</Link>
           </Callout>
           {process.env.NODE_ENV === "development" && <Callout icon="warning-sign" intent={Intent.WARNING} className="Home-alpha-callout-padtop">
