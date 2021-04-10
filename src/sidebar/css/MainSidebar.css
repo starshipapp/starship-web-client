@@ -74,11 +74,10 @@
 }
 
 .MainSidebar-logo {
-  width: 7rem;
-  height: 2rem;
+  width: 7.45rem;
+  height: 1.75rem;
   display: inline-block;
-  margin-top: -0.15rem;
-  background-image: url("../../assets/images/logo.png");
+  background-image: url("../../assets/images/logo.svg");
   background-size: cover;
 }
 

@@ -59,9 +59,6 @@ function MainSidebar(): JSX.Element {
       <Menu className="MainSidebar-menu">
         <div className="MainSidebar-menu-logo" onClick={toggleHidden} >
           <Link className="link-button" to="/"><div className="MainSidebar-logo"/></Link>
-          <Tooltip content="EXPERIMENTAL NON-PRODUCTION BUILD" position={Position.RIGHT}>
-            <Icon className="version-warning-icon" icon="warning-sign"/>
-          </Tooltip>
         </div>
         <Icon onClick={toggleHidden} icon="menu" className="MainSidebar-show-button"/>
         {loading ? <MenuItem text="Loading..."/> : (data?.currentUser ? <>
