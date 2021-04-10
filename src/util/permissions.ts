@@ -11,7 +11,7 @@ function checkReadPermission(user: IUser, planet: IPlanet): boolean {
       return true;
     }
 
-    if(planet.members && planet.members.includes({id: user.id, username: user.username})) {
+    if(planet.members && planet.members.some(e => e.id === user.id)) {
       return true;
     }
 
@@ -35,7 +35,7 @@ function checkPublicWritePermission(user: IUser, planet: IPlanet): boolean {
       return true;
     }
 
-    if(planet.banned && planet.banned.includes({id: user.id})) {
+    if(planet.banned && planet.banned.some(e => e.id === user.id)) {
       return false;
     }
 
@@ -43,7 +43,7 @@ function checkPublicWritePermission(user: IUser, planet: IPlanet): boolean {
       return true;
     }
 
-    if(planet.members && planet.members.includes({id: user.id})) {
+    if(planet.members && planet.members.some(e => e.id === user.id)) {
       return true;
     }
 
@@ -67,11 +67,11 @@ function checkFullWritePermission(user: IUser, planet: IPlanet): boolean {
       return true;
     }
 
-    if(planet.banned && planet.banned.includes({id: user.id})) {
+    if(planet.banned && planet.banned.some(e => e.id === user.id)) {
       return false;
     }
 
-    if(planet.members && planet.members.includes({id: user.id})) {
+    if(planet.members && planet.members.some(e => e.id === user.id)) {
       return true;
     }
 
