@@ -3,6 +3,7 @@ import { Button, Dialog, Intent } from "@blueprintjs/core";
 import React from "react";
 import solveReportMutation, { ISolveReportMutationData } from "../graphql/mutations/admin/solveReportMutation";
 import IReport from "../types/IReport";
+import fixPFP from "../util/fixPFP";
 import { GlobalToaster } from "../util/GlobalToaster";
 import { reportObjectType, reportTypeStrings } from "../util/reportTypes";
 import "./css/Report.css";
@@ -42,7 +43,7 @@ function Report(props: IReportProps): JSX.Element {
         </div>
         <div className="Report-user-content">
           <div className="Report-profilepic">
-            {props.report.user?.profilePicture && <img alt="pfp" src={`${props.report.user?.profilePicture}?t=${Number(Date.now())}`}/>}
+            {props.report.user?.profilePicture && <img alt="pfp" src={`${fixPFP(props.report.user?.profilePicture)}?t=${Number(Date.now())}`}/>}
           </div>
           <div className="Report-username">
             {props.report.user?.username}
@@ -58,7 +59,7 @@ function Report(props: IReportProps): JSX.Element {
         </div>
         <div className="Report-user-content">
           <div className="Report-profilepic">
-            {props.report.owner?.profilePicture && <img alt="pfp" src={`${props.report.owner.profilePicture}?t=${Number(Date.now())}`}/>}
+            {props.report.owner?.profilePicture && <img alt="pfp" src={`${fixPFP(props.report.owner.profilePicture)}?t=${Number(Date.now())}`}/>}
           </div>
           <div className="Report-username">
             {props.report.owner?.username}

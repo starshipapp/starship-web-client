@@ -47,7 +47,7 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
 
   const renamePage = function() {
     renameWikiPage({variables: {pageId: props.subId, newName: renameTextbox}}).then(() => {
-      GlobalToaster.show({message: "Successfully renamed page.", intent: Intent.DANGER});
+      GlobalToaster.show({message: "Successfully renamed page.", intent: Intent.SUCCESS});
       setRename(false);
     }).catch((err: Error) => {
       GlobalToaster.show({message: err.message});

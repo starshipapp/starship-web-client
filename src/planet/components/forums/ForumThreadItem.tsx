@@ -28,6 +28,7 @@ import "emoji-mart/css/emoji-mart.css";
 import isMobile from "../../../util/isMobile";
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
 import { assembleEditorOptions } from "../../../util/editorOptions";
+import fixPFP from "../../../util/fixPFP";
 
 interface IForumThreadItemProps {
   forumId: string
@@ -133,7 +134,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
       >Are you sure you want to delete this post? It will be lost forever! (A long time!)</Alert>
       <div className="ForumThreadItem-info">
         <div className="ForumThreadItem-profilepic" onClick={() => setProfile(true)}>
-          {props.post.owner && props.post.owner.profilePicture && <img alt="pfp" src={`${props.post.owner.profilePicture}?t=${Number(Date.now())}`}/>}
+          {props.post.owner && props.post.owner.profilePicture && <img alt="pfp" src={`${fixPFP(props.post.owner.profilePicture)}?t=${Number(Date.now())}`}/>}
         </div>
         <div className="ForumThreadItem-username" onClick={() => setProfile(false)}>{props.post.owner && props.post.owner.username}</div>
         {!isMobile() && props.post.owner && props.post.owner.admin && <div className="ForumThreadItem-admin">Global Admin</div>}
