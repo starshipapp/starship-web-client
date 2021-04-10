@@ -4,6 +4,7 @@ import React from "react";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import getUser, { IGetUserData } from "../graphql/queries/users/getUser";
 import IPlanet from "../types/IPlanet";
+import fixPFP from "../util/fixPFP";
 import permissions from "../util/permissions";
 import "./css/Profile.css";
 
@@ -25,7 +26,7 @@ function Profile(props: IProfileProps): JSX.Element {
       <div className={Classes.DIALOG_BODY}>
         <div className="Profile-container">
           <div className="Profile-icon">
-            {data.user.profilePicture ? <div className="Profile-pfp"><img alt={data.user.username} src={`${data.user.profilePicture}?t=${Number(Date.now())}`} /></div> : <div className="Profile-pfp" />}
+            {data.user.profilePicture ? <div className="Profile-pfp"><img alt={data.user.username} src={`${fixPFP(data.user.profilePicture)}?t=${Number(Date.now())}`} /></div> : <div className="Profile-pfp" />}
           </div>
           <div className="Profile-info">
             <div className="Profile-name">{data.user.username}</div>

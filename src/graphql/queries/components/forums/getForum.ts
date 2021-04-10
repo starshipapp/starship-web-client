@@ -6,7 +6,7 @@ export interface IGetForumData {
 }
 
 const getForum = gql`
-  query getForum($forumId: ID!, $cursor: String, $sortMethod: String, $count: Int) {
+  query getForum($forumId: ID!, $cursor: String, $sortMethod: String, $count: Int, $tag: String) {
     forum(id: $forumId) {
       id
       owner {
@@ -34,7 +34,7 @@ const getForum = gql`
         createdAt
         updatedAt
       }
-      posts(cursor: $cursor, sortMethod: $sortMethod, limit: $count) {
+      posts(cursor: $cursor, sortMethod: $sortMethod, limit: $count, tag: $tag) {
         cursor
         forumPosts {
           id

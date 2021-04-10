@@ -22,10 +22,6 @@ function Home(): JSX.Element {
             Starship is in an early alpha stage. Expect bugs and unfinished features. (including this homepage, which will one day be more focused on your followed planets)<br/>
             If you find a bug, please report it <a href="https://starship.william341.me/planet/kCnATXqBCD4vEvzMB/pekuosDPGGxHKc6Qg">here</a>.
           </Callout>
-          <Callout icon="warning-sign" intent={Intent.WARNING} className="Home-alpha-callout-padtop" title="Expiremental version">
-            starship-client v0.6.995-1<br/>
-            <Link to="/planet/9kauFkf5iPb64jqKT/YKwFEqCtYXfD9RBGi">For more information, click here.</Link>
-          </Callout>
           {process.env.NODE_ENV === "development" && <Callout icon="warning-sign" intent={Intent.WARNING} className="Home-alpha-callout-padtop">
             This is not a production build. You may encounter performance issues.
           </Callout>}

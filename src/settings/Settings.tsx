@@ -4,6 +4,7 @@ import axios from "axios";
 import React, { useRef } from "react";
 import uploadProfilePictureMutation, { IUploadProfilePictureMutationData } from "../graphql/mutations/users/uploadProfilePictureMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
+import fixPFP from "../util/fixPFP";
 import { GlobalToaster } from "../util/GlobalToaster";
 import "./css/Settings.css";
 
@@ -58,7 +59,7 @@ function Settings(): JSX.Element {
         <h1>Profile Picture</h1>
         <div className="Settings-profilepic" onClick={() => fileInput.current?.click()}>
           {/* eslint-disable-next-line jsx-a11y/img-redundant-alt*/}
-          {userData?.currentUser && userData?.currentUser.profilePicture && <img alt="Change profile picture" src={userData.currentUser.profilePicture + "?t=" + String(Number(Date.now()))} ref={image}/>}
+          {userData?.currentUser && userData?.currentUser.profilePicture && <img alt="Change profile picture" src={fixPFP(userData.currentUser.profilePicture) + "?t=" + String(Number(Date.now()))} ref={image}/>}
           <Icon icon="upload" className="Settings-uploadpfp"/>
         </div>
       </div>

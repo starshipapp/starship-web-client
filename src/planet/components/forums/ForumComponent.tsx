@@ -45,7 +45,7 @@ function ForumComponent(props: IComponentProps): JSX.Element {
   const [hasHitEnd, setHasHitEnd] = useState<boolean>(false);
   const [activeTag, setActiveTag] = useState<string>("");
   const [activeSort, setActiveSort] = useState<string>("recentlyUpdated");
-  const {data: forumData, fetchMore, refetch} = useQuery<IGetForumData>(getForum, {variables: {forumId: props.id, sortMethod: activeSort ?? "recentlyUpdated", count: 25}});
+  const {data: forumData, fetchMore, refetch} = useQuery<IGetForumData>(getForum, {variables: {forumId: props.id, tag: activeTag !== "" ? activeTag : null, sortMethod: activeSort ?? "recentlyUpdated", count: 25}});
   const history = useHistory();
 
   const loadMore = function() {
@@ -58,6 +58,7 @@ function ForumComponent(props: IComponentProps): JSX.Element {
           forumId: props.id,
           sortMethod: activeSort ?? "recentlyUpdated",
           count: 25,
+          tag: activeTag !== "" ? activeTag : null,
           cursor: forumData.forum.posts.cursor
         },
         updateQuery(previousResult, { fetchMoreResult }) {
@@ -114,7 +115,10 @@ function ForumComponent(props: IComponentProps): JSX.Element {
                 {forumData?.forum && <Popover>
                   <Button icon="tag" text="Tags"/>
                   <Menu>
-                    {forumData?.forum.tags && forumData?.forum.tags.map((value) => (<MenuItem key={value} icon={activeTag === value && "tick"} text={value} onClick={() => setActiveTag(value)}/>))}
+                    {forumData?.forum.tags && forumData?.forum.tags.map((value) => (<MenuItem key={value} icon={activeTag === value && "tick"} text={value} onClick={() => {
+                      activeTag === value ? setActiveTag("") : setActiveTag(value);
+                      void refetch();
+                    }}/>))}
                     {data?.currentUser && permissions.checkFullWritePermission(data?.currentUser, props.planet) && forumData?.forum.tags && forumData?.forum.tags.length !== 0 && <MenuDivider/>}
                     {data?.currentUser && permissions.checkFullWritePermission(data?.currentUser, props.planet) && <MenuItem icon="plus" text="Add New">
                       <div className="MainSidebar-menu-form">
@@ -122,9 +126,11 @@ function ForumComponent(props: IComponentProps): JSX.Element {
                         <Button text="Create" className="MainSidebar-menu-button" onClick={() => {
                           if(newTagTextbox === "") {
                             GlobalToaster.show({message: "Please enter a tag name.", intent: Intent.DANGER});
+                            return;
                           }
                           if(forumData.forum.tags && forumData.forum.tags.includes(newTagTextbox)) {
                             GlobalToaster.show({message: "That tag already exists.", intent: Intent.DANGER});
+                            return;
                           }
                           createTag({variables: {forumId: props.id, tag: newTagTextbox}}).then(() => {
                             GlobalToaster.show({message: `Sucessfully created tag ${newTagTextbox}.`, intent: Intent.SUCCESS});
