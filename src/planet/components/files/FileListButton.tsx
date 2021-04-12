@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Alert, Button, Classes, ContextMenu, Icon, Intent, Menu, MenuItem, Popover, PopoverPosition } from "@blueprintjs/core";
+import { Alert, Button, Classes, ContextMenu, Divider, Icon, Intent, Menu, MenuItem, Popover, PopoverPosition } from "@blueprintjs/core";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import deleteFileObjectMutation, { IDeleteFileObjectMutationData } from "../../../graphql/mutations/components/files/deleteFileObjectMutation";
@@ -11,6 +11,7 @@ import IFileObject from "../../../types/IFileObject";
 import IPlanet from "../../../types/IPlanet";
 import { GlobalToaster } from "../../../util/GlobalToaster";
 import permissions from "../../../util/permissions";
+import filesize from "filesize";
 import "./css/FileListButton.css";
 
 interface IFileButtonProps {
@@ -21,7 +22,7 @@ interface IFileButtonProps {
 }
 
 function FileListButton(props: IFileButtonProps): JSX.Element {
-  const {data: userData, client} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+  const {data: userData, client, refetch: refetchUser} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const {refetch} = useQuery<IGetDownloadFileObjectData>(getDownloadFileObject, {variables: {fileId: props.object.id}, errorPolicy: 'all', fetchPolicy: "standby"});
   const [moveObject] = useMutation<IMoveObjectMutationData>(moveObjectMutation);
   const [deleteObject] = useMutation<IDeleteFileObjectMutationData>(deleteFileObjectMutation);
@@ -38,11 +39,9 @@ function FileListButton(props: IFileButtonProps): JSX.Element {
       className="link-button" 
       to={`/planet/${props.planet.id}/${props.componentId}/${props.object.id}`}
       onDragStart={(e) => {
-        console.log("drag started");
         e.stopPropagation();
         e.dataTransfer.clearData();
         e.dataTransfer.setData("text/plain", props.object.id);
-        console.log(e.dataTransfer);
       }}
     >
       <div
@@ -67,7 +66,6 @@ function FileListButton(props: IFileButtonProps): JSX.Element {
           }, true);
         }}
         onDrop={(e) => {
-          console.log("dropped");
           e.preventDefault();
           e.stopPropagation();
           if(e.dataTransfer.items[0].kind === "string") {
@@ -100,13 +98,18 @@ function FileListButton(props: IFileButtonProps): JSX.Element {
             deleteObject({variables: {objectId: props.object.id}}).then(() => {
               GlobalToaster.show({message: `Deleted ${props.object.name ?? ""}.`, intent: Intent.SUCCESS});
               props.refetch();
+              void refetchUser();
             }).catch((err: Error) => {
               GlobalToaster.show({message: err.message, intent: Intent.DANGER});
             });
           }}
         >Are you sure you want to delete this file?<br/>&apos;{props.object.name}&apos; will be lost forever! (A long time!)</Alert>
         <div><Icon className="FileListButton-icon" icon={props.object.type === "folder" ? "folder-close" : "document"}/>{props.object.name}</div>
-        <div className="FileListButton-date">{fileDate}</div>
+        <div className="FileListButton-date">
+          {props.object.size && <span>{filesize(props.object.size)}</span>}
+          {props.object.size && <Divider/>}
+          <span>{fileDate}</span>
+        </div>
         <Popover isOpen={rename} position={PopoverPosition.AUTO_START} onClose={() => setRename(false)}>
           <div className="FilesComponent-dummytarget"></div>
           <div className="menu-form" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()} onKeyPress={(e) => e.stopPropagation()} onKeyUp={(e) => e.stopPropagation()}>

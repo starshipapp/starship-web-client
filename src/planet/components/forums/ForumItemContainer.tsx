@@ -14,7 +14,6 @@ interface IForumItemContainerProps {
 function ForumItemContainer(props: IForumItemContainerProps): JSX.Element {
   return (
     <div className="ForumComponent-item-container" onScroll={(e) => {
-      console.log(e);
       if(true) {
         return;
       }

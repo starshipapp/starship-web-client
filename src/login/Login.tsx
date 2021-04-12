@@ -30,8 +30,6 @@ function Login(): JSX.Element {
 
   const history = useHistory();
 
-  console.log(process.env);
-
   useEffect(() => {
     document.title = "Login | starship";
   });
@@ -103,7 +101,6 @@ function Login(): JSX.Element {
       } else if(error.message === "You need to verify your email.") {
         GlobalToaster.show({message: error.message, intent: Intent.DANGER, action: {text: "Resend Email", onClick: () => sendVerificationEmail()}});
       } else {
-        console.log(error.message);
         GlobalToaster.show({message: error.message, intent: Intent.DANGER});
       }
     });

@@ -119,3 +119,8 @@
   word-wrap: none;
   white-space: nowrap;
 }
+
+.FileListButton-date {
+  display: flex;
+  flex-direction: row;
+}

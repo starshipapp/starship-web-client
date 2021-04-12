@@ -20,7 +20,7 @@ interface IFileButtonProps {
 }
 
 function FileButton(props: IFileButtonProps): JSX.Element {
-  const {data: userData, client} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+  const {data: userData, client, refetch: refetchUser} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const {refetch} = useQuery<IGetDownloadFileObjectData>(getDownloadFileObject, {variables: {fileId: props.object.id}, errorPolicy: 'all'});
   const [moveObject] = useMutation<IMoveObjectMutationData>(moveObjectMutation);
   const [deleteObject] = useMutation<IDeleteFileObjectMutationData>(deleteFileObjectMutation);
@@ -46,6 +46,7 @@ function FileButton(props: IFileButtonProps): JSX.Element {
           deleteObject({variables: {objectId: props.object.id}}).then(() => {
             GlobalToaster.show({message: `Deleted ${props.object.name ?? ""}.`, intent: Intent.SUCCESS});
             props.refetch();
+            void refetchUser();
           }).catch((err: Error) => {
             GlobalToaster.show({message: err.message, intent: Intent.DANGER});
           });

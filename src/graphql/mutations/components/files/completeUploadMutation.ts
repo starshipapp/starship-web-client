@@ -10,6 +10,7 @@ const completeUploadMutation = gql`
     completeUpload(objectId: $objectId) {
       id
       finishedUploading
+      size
     }
   }
 `;

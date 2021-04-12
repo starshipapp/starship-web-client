@@ -26,6 +26,7 @@ const getFileObject = gql`
       planet {
         id
       }
+      size
       fileType
       finishedUploading
     }

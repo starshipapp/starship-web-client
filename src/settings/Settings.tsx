@@ -43,7 +43,6 @@ function Settings(): JSX.Element {
               });
             }).catch(function (error) {
               // handle error
-              console.log(error);
             });
           }).catch((error: Error) => {
             GlobalToaster.show({message: error.message, intent: Intent.DANGER});

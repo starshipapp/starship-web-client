@@ -22,6 +22,8 @@ const getCurrentUser = gql`
         id
         name
       }
+      usedBytes
+      capWaived
     }
   }
 `;

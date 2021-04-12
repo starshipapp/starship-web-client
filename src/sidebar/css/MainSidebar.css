@@ -118,3 +118,13 @@
   overflow-y: visible;
   overflow-x: visible;
 }
+
+.MainSidebar-datacap {
+  padding: 5px 7px;
+}
+
+.MainSidebar-datacap-text {
+  font-size: 0.8rem;
+  color: #BFCCD6;
+  margin-bottom: 0.25rem;
+}
