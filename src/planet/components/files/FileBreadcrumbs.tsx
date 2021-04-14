@@ -8,14 +8,16 @@ interface IFileBreadcrumbsProps {
   path: string[],
   planetId: string,
   componentId: string,
+  resetSearch: () => void
 }
 
 function FileBreadcrumbs(props: IFileBreadcrumbsProps): JSX.Element {
   const {data} = useQuery<IGetBreadcrumbObjectsData>(getBreadcrumbObjects, {variables: {ids: props.path}});
   const history = useHistory();
+  const propsRef = props;
 
   const items: IBreadcrumbProps[] = [
-    {text: "Root", current: (props.path.length === 1), icon: "home", onClick: () => history.push(`/planet/${props.planetId}/${props.componentId}`)}
+    {text: "Root", current: (props.path.length === 1), icon: "home", onClick: () => {history.push(`/planet/${props.planetId}/${props.componentId}`); propsRef.resetSearch();}}
   ];
 
   if(data?.fileObjectArray) {
@@ -25,7 +27,7 @@ function FileBreadcrumbs(props: IFileBreadcrumbsProps): JSX.Element {
   }
 
   const breadcrumbRenderer = function ({text, ...props}: IBreadcrumbProps) {
-    return <Breadcrumb onClick={(e) => {e.preventDefault(); e.stopPropagation();}} className="FilesComponent-breadcrumb" {...props}>{text}</Breadcrumb>;
+    return <Breadcrumb onClick={(e) => {e.preventDefault(); e.stopPropagation(); propsRef.resetSearch();}} className="FilesComponent-breadcrumb" {...props}>{text}</Breadcrumb>;
   };
 
   return (

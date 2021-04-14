@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, ButtonGroup, Classes, Divider, Icon, Intent, Menu, MenuItem, NonIdealState, Popover, ProgressBar, Text } from "@blueprintjs/core";
+import { Button, ButtonGroup, Classes, Divider, Icon, InputGroup, Intent, Menu, MenuItem, NonIdealState, Popover, ProgressBar, Text } from "@blueprintjs/core";
 import React, { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import completeUploadMutation, { ICompleteUploadMutationData } from "../../../graphql/mutations/components/files/completeUploadMutation";
@@ -24,6 +24,7 @@ import "./css/FilesComponent.css";
 import FileListButton from "./FileListButton";
 import FileView from "./FileView";
 import isMobile from "../../../util/isMobile";
+import FileSearch from "./FileSearch";
 
 const uploading: Record<string, {name: string, progress: number}> = {};
 
@@ -44,6 +45,13 @@ function FilesComponent(props: IComponentProps): JSX.Element {
   const [createFolderPrompt, setCreateFolderPrompt] = useState<boolean>(false);
   const [listView, setListView] = useState<boolean>(window.localStorage.getItem("files.listView") === "true" ? true : false);
   const [isDragging, setDragging] = useState<boolean>(false);
+  const [searchTextbox, setSearchTextbox] = useState<string>("");
+  const [searchText, setSearchText] = useState<string>("");
+
+  const resetSearch = function() {
+    setSearchTextbox("");
+    setSearchText("");
+  };
 
   const uploadFile = function(file: File, folderId: string) {
     uploadFileM({variables: {folderId, type: file.type, name: file.name, filesId: props.id}}).then((data) => {
@@ -161,7 +169,28 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           }}
           multiple
         />
-        {(objectData?.fileObject || !props.subId) && <FileBreadcrumbs path={objectData?.fileObject.path ? objectData.fileObject.path.concat([objectData.fileObject.id]) : ["root"]} componentId={props.id} planetId={props.planet.id}/>}
+        {(objectData?.fileObject || !props.subId) && <FileBreadcrumbs path={objectData?.fileObject.path ? objectData.fileObject.path.concat([objectData.fileObject.id]) : ["root"]} componentId={props.id} planetId={props.planet.id} resetSearch={resetSearch}/>}
+        {(objectData?.fileObject || !props.subId) && (objectData?.fileObject.type === "folder" || !props.subId) && <InputGroup 
+          leftIcon="search"
+          value={searchTextbox}
+          placeholder="Search..."
+          className={Classes.MINIMAL}
+          onKeyDown={(e) => {
+            if(e.key === "Enter") {
+              if(searchTextbox.length < 3 && searchTextbox !== "") {
+                GlobalToaster.show({message: "Search term must be at least 3 characters long.", intent: Intent.DANGER});
+              } else {
+                setSearchText(searchTextbox);
+              }
+            }
+          }}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setSearchTextbox(e.target.value);
+          }}
+          rightElement={searchText !== "" ? <Button minimal={true} small={true} icon="cross" onClick={() => {
+            resetSearch();
+          }}/> : undefined}
+        />}
         <div className="FilesComponent-uploading">
           {Object.values(uploading).length !== 0 && <div className="FilesComponent-uploading-container">
             <Icon className="FilesComponent-uploading-icon" iconSize={16} icon="upload"/>
@@ -226,7 +255,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           {/* this.props.subId && <Button text="Download Folder" icon="download" onClick={this.downloadZip}/>*/}
         </ButtonGroup>}
       </div>
-      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && !listView && <div className="FilesComponent-button-container">
+      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && !listView && <div className="FilesComponent-button-container">
         {props.subId && objectData && <Link to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
           <Button
             alignText="left"
@@ -240,7 +269,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         {foldersData?.folders.map((value) => (<FileButton planet={props.planet} key={value.id} object={value} componentId={props.id} refetch={() => {void filesRefetch(); void foldersRefetch();}}/>))}
         {filesData?.files.map((value) => (<FileButton planet={props.planet} key={value.id} object={value} componentId={props.id} refetch={() => {void filesRefetch(); void foldersRefetch();}}/>))}
       </div>}
-      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && listView && <div className="FilesComponent-list-table">
+      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && listView && <div className="FilesComponent-list-table">
         {props.subId && objectData && <Link className="link-button" to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
           <div className="FileListButton" onDrop={(e) => onDrop(e, true)}>
             <div><Icon className="FileListButton-icon" icon="arrow-up"/>../</div>
@@ -249,6 +278,16 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         {foldersData?.folders.map((value) => (<FileListButton planet={props.planet} key={value.id} object={value} componentId={props.id} refetch={() => {void filesRefetch(); void foldersRefetch();}}/>))}
         {filesData?.files.map((value) => (<FileListButton planet={props.planet} key={value.id} object={value} componentId={props.id} refetch={() => {void filesRefetch(); void foldersRefetch();}}/>))}
       </div>}
+      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText !== "" && <FileSearch
+        id={props.id}
+        searchText={searchText}
+        parentId={props.subId ? props.subId : "root"}
+        planet={props.planet}
+        onClick={() => {
+          resetSearch();
+        }}
+        useLists={listView}
+      />}
       {objectData && objectData.fileObject.type === "file" && <FileView file={objectData.fileObject}/>}
     </div> 
   );

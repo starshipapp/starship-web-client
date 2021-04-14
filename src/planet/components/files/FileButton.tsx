@@ -17,6 +17,7 @@ interface IFileButtonProps {
   object: IFileObject
   componentId: string
   refetch: () => void
+  onClick?: () => void
 }
 
 function FileButton(props: IFileButtonProps): JSX.Element {
@@ -75,6 +76,11 @@ function FileButton(props: IFileButtonProps): JSX.Element {
               </Menu>, { left: e.clientX, top: e.clientY }, () => {
                 // menu was closed; callback optional
               }, true);
+            }}
+            onClick={() => {
+              if(props.onClick) {
+                props.onClick();
+              }
             }}
             large={true}
             className={"FilesComponent-filebutton"}

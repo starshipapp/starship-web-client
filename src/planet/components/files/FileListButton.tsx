@@ -19,6 +19,7 @@ interface IFileButtonProps {
   object: IFileObject
   componentId: string
   refetch: () => void
+  onClick?: () => void
 }
 
 function FileListButton(props: IFileButtonProps): JSX.Element {
@@ -42,6 +43,11 @@ function FileListButton(props: IFileButtonProps): JSX.Element {
         e.stopPropagation();
         e.dataTransfer.clearData();
         e.dataTransfer.setData("text/plain", props.object.id);
+      }}
+      onClick={() => {
+        if(props.onClick) {
+          props.onClick();
+        }
       }}
     >
       <div
