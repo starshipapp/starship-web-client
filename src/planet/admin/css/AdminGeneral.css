@@ -6,3 +6,20 @@
   display: block;
   margin-bottom: 0.5rem;
 }
+
+.AdminGeneral-description {
+  width: 25rem;
+  resize: none;
+}
+
+.AdminGeneral-upper-margin {
+  margin-top: 0.25rem;
+}
+
+.AdminGeneral-option-header {
+  margin-bottom: 0.25rem;
+}
+
+.AdminGeneral-label {
+  margin-bottom: -0.5rem;
+}

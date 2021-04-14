@@ -18,5 +18,6 @@ export default interface IPlanet {
   members?: [IUser],
   banned?: [IUser],
   css?: string,
-  invites?: [IInvite]
+  invites?: [IInvite],
+  description?: string
 }

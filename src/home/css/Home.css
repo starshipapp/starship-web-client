@@ -2,15 +2,15 @@
   height: 100vh;
   width: 100%;
   display: flex;
-  padding-top: 4rem;
+  padding-top: 1.5rem;
   height: 100vh;
   overflow-y: auto;
   overflow-x: hidden;
 }
 
 .Home-container {
-  min-width: 75vw;
-  max-width: 75vw;
+  min-width: calc(100% - 3rem);
+  max-width: calc(100% - 3rem);
   margin-right: auto;
   margin-left: auto;
   display: flex;
@@ -18,13 +18,13 @@
 }
 
 .Home-alpha-callout {
-  min-width: 75vw;
-  max-width: 75vw;
+  min-width: 100%;
+  max-width: 100%;
 }
 
 .Home-alpha-callout-padtop {
-  min-width: 75vw;
-  max-width: 75vw;
+  min-width: 100%;
+  max-width: 100%;
   margin-top: 0.5rem;
 }
 
@@ -50,15 +50,33 @@
 .Home-featured-header {
   font-size: 1.5rem;
   font-weight: bold;
-  text-align: center;
   margin-bottom: 1rem;
+}
+
+.Home-header-nav {
+  display: flex;
+}
+
+.Home-search-box {
+  margin-top: -0.2rem;
+  margin-left: auto;
+}
+
+.Home-logo {
+  width: 8.45rem;
+  height: 2rem;
+  display: inline-block;
+  background-image: url("../../assets/images/logo.svg");
+  background-size: cover;
+  margin-bottom: 1rem;
+  margin-top: -0.25rem;
 }
 
 .Home-featured-list {
   width: 100%;
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fill,minmax(17rem,1.5fr));
+  grid-template-columns: repeat(auto-fill,minmax(16.5rem,1.5fr));
 }
 
 .Home-featured-item {
