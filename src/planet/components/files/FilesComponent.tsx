@@ -193,7 +193,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         />}
         <div className="FilesComponent-uploading">
           {Object.values(uploading).length !== 0 && <div className="FilesComponent-uploading-container">
-            <Icon className="FilesComponent-uploading-icon" iconSize={16} icon="upload"/>
+            <Icon className="FilesComponent-uploading-icon FilesComponent-uploading-icon-first" iconSize={16} icon="upload"/>
             <ProgressBar className="FilesComponent-uploading-progress" intent={Intent.PRIMARY}/>
             <Popover>
               <Icon className="FilesComponent-uploading-icon" iconSize={16} icon="chevron-down"/>
