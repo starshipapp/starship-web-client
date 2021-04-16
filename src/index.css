@@ -10,9 +10,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace !important;
-  line-height: 1rem;
   font-size: 0.95em !important;
-  transform: translateY(0.25em);
+  transform: translateY(0.3em);
 }
 
 a.link-button {
