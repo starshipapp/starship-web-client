@@ -1,22 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './css/Home.css';
 import { useQuery } from '@apollo/client';
 import getFeaturedPlanets, { IGetFeaturedPlanetsData } from '../graphql/queries/planets/getFeaturedPlanets';
-import { Callout, Classes, InputGroup, Intent, Text } from '@blueprintjs/core';
+import { Button, Callout, Classes, InputGroup, Intent, Text } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
+import { GlobalToaster } from '../util/GlobalToaster';
+import PlanetSearch from './PlanetSearch';
 
 
 function Home(): JSX.Element {
   const { loading, data } = useQuery<IGetFeaturedPlanetsData>(getFeaturedPlanets, { errorPolicy: 'all' });
   const { data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser);
+  const [searchTextbox, setTextbox] = useState("");
+  const [searchText, setText] = useState("");
 
   useEffect(() => {
     document.title = "starship";
   });
 
   return (
-    <div className="Home">
+   <div className="Home">
       <div className="Home-container">
         <div className="Home-header">
           <div className="Home-header-nav">
@@ -25,6 +29,21 @@ function Home(): JSX.Element {
               className="Home-search-box"
               placeholder="Search Planets"
               leftIcon="search"
+              onChange={(e) => setTextbox(e.target.value)}
+              onKeyDown={(e) => {
+                if(e.key === "Enter") {
+                  if(searchTextbox.length < 3 && searchTextbox !== "") {
+                    GlobalToaster.show({message: "Search term must be at least 3 characters long.", intent: Intent.DANGER});
+                  } else {
+                    setText(searchTextbox);
+                  }
+                }
+              }}
+              rightElement={searchText !== "" ? <Button minimal={true} small={true} icon="cross" onClick={() => {
+                setText("");
+                setTextbox("");
+              }}/> : undefined}
+              value={searchTextbox}
             />
           </div>
           <Callout icon="warning-sign" intent={Intent.WARNING} className="Home-alpha-callout">
@@ -34,7 +53,7 @@ function Home(): JSX.Element {
             This is not a production build. You may encounter performance issues.
           </Callout>}
         </div>
-        {userData?.currentUser && <div className="Home-featured">
+        {searchText === "" && userData?.currentUser && <div className="Home-featured">
           <div className="Home-featured-header">Followed Planets</div>
           {!userLoading && <div className="Home-featured-list">
             {userData && userData.currentUser.following && userData.currentUser.following.map((value) => (<Link className="link-button" to={`/planet/` + value.id} key={value.id}>
@@ -58,7 +77,7 @@ function Home(): JSX.Element {
             <div className={`Home-featured-item ${Classes.SKELETON}`}/>
           </div>}
         </div>}
-        <div className="Home-featured">
+        {searchText === "" && <div className="Home-featured">
           <div className="Home-featured-header">Featured Planets</div>
           {!loading && <div className="Home-featured-list">
             {data && data.featuredPlanets.map((value) => (<Link className="link-button" to={`/planet/` + value.id} key={value.id}>
@@ -81,7 +100,8 @@ function Home(): JSX.Element {
             <div className={`Home-featured-item ${Classes.SKELETON}`}/>
             <div className={`Home-featured-item ${Classes.SKELETON}`}/>
           </div>}
-        </div>
+        </div>}
+        {searchText !== "" && <PlanetSearch searchText={searchText}/>}
         <div className="Home-footer">
           <span className="Home-footer-copyright">© Starship 2020 - 2021. All rights reserved.</span>
           <span className="Home-footer-links">

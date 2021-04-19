@@ -1,6 +1,6 @@
 import IPlanet from "../../types/IPlanet";
 import React, { useState } from "react";
-import { Button, Callout, Classes, ControlGroup, Intent, Label, TextArea } from "@blueprintjs/core";
+import { Button, Callout, Classes, Intent, Label, TextArea } from "@blueprintjs/core";
 import "./css/AdminGeneral.css";
 import { useMutation } from "@apollo/client";
 import updateNameMutation, { IUpdateNameMutationData } from "../../graphql/mutations/planets/updateNameMutation";
