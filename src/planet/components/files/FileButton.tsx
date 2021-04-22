@@ -81,8 +81,8 @@ function FileButton(props: IFileButtonProps): JSX.Element {
               e.preventDefault();
               ContextMenu.show(<Menu>
                 {hasWritePermission && <MenuItem text="Delete" icon="delete" onClick={() => setDelete(true)}/>}
-                {hasWritePermission && <MenuItem text="Rename" icon="edit" onClick={() => {setRename(true); setRenameText(props.object.name ?? "");}}/>}
-                {props.object.type === "file" && <MenuItem text="Download" icon="download" onClick={() => {
+                {hasWritePermission && !((props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id)) && <MenuItem text="Rename" icon="edit" onClick={() => {setRename(true); setRenameText(props.object.name ?? "");}}/>}
+                {props.object.type === "file" && !((props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id)) && <MenuItem text="Download" icon="download" onClick={() => {
                   refetch().then((data) => {
                     if(data.data) {
                       window.open(data.data.downloadFileObject, "_self");

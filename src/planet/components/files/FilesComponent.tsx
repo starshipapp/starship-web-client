@@ -100,14 +100,29 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           }
         } else if(e.dataTransfer.items[i].kind === "string") {
           e.dataTransfer.items[i].getAsString((stringValue) => {
-            if(stringValue !== (objectData?.fileObject.parent ?? "") && objectData?.fileObject.id) {
-              moveObject({variables: {objectId: stringValue, parent: toParent ? (objectData?.fileObject.parent?.id ?? "root") : objectData.fileObject.id}}).then(() => {
-                void client.cache.gc();
-                void foldersRefetch();
-                void filesRefetch();
-              }).catch((err: Error) => {
-                GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-              });
+            if(objectData?.fileObject.id) {
+              const parent = toParent ? (objectData?.fileObject.parent?.id ?? "root") : objectData.fileObject.id;
+              if(e.dataTransfer.items[0].type === "text/plain") {
+                moveObject({variables: {objectIds: [stringValue], parent}}).then(() => {
+                  void client.cache.gc();
+                  void foldersRefetch();
+                  void filesRefetch();
+                }).catch((err: Error) => {
+                  GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                });
+              } else if (e.dataTransfer.items[0].type === "application/json") {
+                const idArray: string[] = JSON.parse(stringValue) as string[] ?? [];
+                if(idArray && idArray.length > 0) {
+                  moveObject({variables: {objectIds: idArray, parent}}).then(() => {
+                    void client.cache.gc();
+                  void foldersRefetch();
+                  void filesRefetch();
+                    void client.cache.gc();
+                  }).catch((err: Error) => {
+                    GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                  });
+                }
+              }
             }
           });
         }

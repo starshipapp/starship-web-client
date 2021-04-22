@@ -137,5 +137,5 @@
 }
 
 .FilesComponent .bp3-button-text {
-  pointer-events: none;
+  /* pointer-events: none;*/
 }
