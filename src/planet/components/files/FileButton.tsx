@@ -17,7 +17,8 @@ interface IFileButtonProps {
   object: IFileObject
   componentId: string
   refetch: () => void
-  onClick?: () => void
+  onClick?: (e?: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id?: string) => void
+  selections?: string[]
 }
 
 function FileButton(props: IFileButtonProps): JSX.Element {
@@ -44,7 +45,7 @@ function FileButton(props: IFileButtonProps): JSX.Element {
         onCancel={() => setDelete(false)}
         onConfirm={(e) => {
           e?.stopPropagation();
-          deleteObject({variables: {objectId: props.object.id}}).then(() => {
+          deleteObject({variables: {objectIds: [props.object.id]}}).then(() => {
             GlobalToaster.show({message: `Deleted ${props.object.name ?? ""}.`, intent: Intent.SUCCESS});
             props.refetch();
             void refetchUser();

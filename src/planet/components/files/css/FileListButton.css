@@ -20,3 +20,17 @@
   margin-bottom: 0.1rem;
   padding-right: 0.5rem;
 }
+
+.FileListButton-date {
+  display: flex;
+  flex-direction: row;
+}
+
+.FileListButton-selected {
+  background-color: #137CBD;
+  border-bottom: 1px #106BA3 solid;
+}
+
+.FileListButton-selected:hover {
+  background-color: #106BA3;
+}

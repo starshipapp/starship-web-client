@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, ButtonGroup, Classes, Divider, Icon, InputGroup, Intent, Menu, MenuItem, NonIdealState, Popover, ProgressBar, Text } from "@blueprintjs/core";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import completeUploadMutation, { ICompleteUploadMutationData } from "../../../graphql/mutations/components/files/completeUploadMutation";
 import createFolderMutation, { ICreateFolderMutationData } from "../../../graphql/mutations/components/files/createFolderMutation";
@@ -27,6 +27,7 @@ import isMobile from "../../../util/isMobile";
 import FileSearch from "./FileSearch";
 
 const uploading: Record<string, {name: string, progress: number}> = {};
+let hasSetup = false;
 
 function FilesComponent(props: IComponentProps): JSX.Element {
   const {data: userData, client, refetch: refetchUser} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
@@ -41,12 +42,13 @@ function FilesComponent(props: IComponentProps): JSX.Element {
   const fileInput = useRef<HTMLInputElement>(null);
   const [showReport, setReport] = useState<boolean>(false);
   const [newFolderTextbox, setNewFolderTextbox] = useState<string>("");
-  const [uploadUpdateCounter, setUploadUpdateCounter] = useState<number>(0);
+  const [, setUploadUpdateCounter] = useState<number>(0);
   const [createFolderPrompt, setCreateFolderPrompt] = useState<boolean>(false);
   const [listView, setListView] = useState<boolean>(window.localStorage.getItem("files.listView") === "true" ? true : false);
   const [isDragging, setDragging] = useState<boolean>(false);
   const [searchTextbox, setSearchTextbox] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
+  const [selected, setSelected] = useState<string[]>([]);
 
   const resetSearch = function() {
     setSearchTextbox("");
@@ -66,7 +68,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           if(uploading[currentIndex].progress === 1) {
             delete uploading[currentIndex];
           }
-          setUploadUpdateCounter(uploadUpdateCounter + 1);
+          setUploadUpdateCounter(Math.random() * 300000000);
         }};
         axios.put(data.data.uploadFileObject.uploadUrl, file, options).then(() => {
           completeUpload({variables: {objectId: data.data?.uploadFileObject.documentId}}).then(() => {
@@ -113,6 +115,47 @@ function FilesComponent(props: IComponentProps): JSX.Element {
       }
     }
   };
+
+  const clickHandler = function(e?: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id?: string) {
+    if(e?.ctrlKey && id) {
+      e.preventDefault();
+      if(!selected.includes(id)) {
+        const newSelections = [...selected];
+        newSelections.push(id);
+        setSelected(newSelections);
+      } else {
+        const newSelections = [...selected];
+        newSelections.splice(newSelections.indexOf(id), 1);
+        setSelected(newSelections);
+      }
+    } if(e?.shiftKey) {
+      e.preventDefault();
+      if(selected.length !== 0) {
+        // TODO
+      }
+
+    } else if(selected.length !== 0) {
+      setSelected([]);
+    }
+  };
+
+  useEffect(() => {
+    if(!hasSetup) {
+      document.onclick = (e) => {
+        // i don't know why but for some reason triple equals breaks this
+        // eslint-disable-next-line eqeqeq
+        if(selected.length != 0) {
+          const closestElement = document.elementFromPoint(e.clientX, e.clientY);
+          if(!closestElement?.className.includes("selected")) {
+            if(!closestElement?.className.includes("FileButton") || !closestElement.className.includes("FileListButton") || (!e.ctrlKey && !e.shiftKey)) {
+              setSelected([]);
+            }
+          }
+        }
+      };
+      hasSetup = true;
+    }
+  });
 
   if(!objectData?.fileObject && !objectLoading && props.subId) {
     return (
@@ -275,8 +318,24 @@ function FilesComponent(props: IComponentProps): JSX.Element {
             <div><Icon className="FileListButton-icon" icon="arrow-up"/>../</div>
           </div>
         </Link>}
-        {foldersData?.folders.map((value) => (<FileListButton planet={props.planet} key={value.id} object={value} componentId={props.id} refetch={() => {void filesRefetch(); void foldersRefetch();}}/>))}
-        {filesData?.files.map((value) => (<FileListButton planet={props.planet} key={value.id} object={value} componentId={props.id} refetch={() => {void filesRefetch(); void foldersRefetch();}}/>))}
+        {foldersData?.folders.map((value) => (<FileListButton 
+          planet={props.planet}
+          key={value.id}
+          object={value}
+          componentId={props.id}
+          refetch={() => {void filesRefetch(); void foldersRefetch();}}
+          onClick={clickHandler}
+          selections={selected}
+        />))}
+        {filesData?.files.map((value) => (<FileListButton 
+          planet={props.planet} 
+          key={value.id}
+          object={value}
+          componentId={props.id}
+          refetch={() => {void filesRefetch(); void foldersRefetch();}}
+          onClick={clickHandler}
+          selections={selected}
+        />))}
       </div>}
       {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText !== "" && <FileSearch
         id={props.id}
