@@ -27,7 +27,6 @@ import isMobile from "../../../util/isMobile";
 import FileSearch from "./FileSearch";
 
 const uploading: Record<string, {name: string, progress: number}> = {};
-let hasSetup = false;
 
 function FilesComponent(props: IComponentProps): JSX.Element {
   const {data: userData, client, refetch: refetchUser} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
@@ -116,7 +115,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
     }
   };
 
-  const clickHandler = function(e?: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id?: string) {
+  const clickHandler = function(e?: React.MouseEvent<HTMLElement, MouseEvent>, id?: string) {
     if(e?.ctrlKey && id) {
       e.preventDefault();
       if(!selected.includes(id)) {
@@ -128,33 +127,44 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         newSelections.splice(newSelections.indexOf(id), 1);
         setSelected(newSelections);
       }
-    } if(e?.shiftKey) {
+    } else if(e?.shiftKey) {
       e.preventDefault();
       if(selected.length !== 0) {
-        // TODO
+        if(selected.length === 1 && selected[0] === id) {
+          return;
+        } else {
+          if(filesData?.files && foldersData?.folders) {
+            const newSelection: string[] = [];
+            const cObjectArray = foldersData.folders.concat(filesData.files);
+            const positionSelected = cObjectArray.findIndex((value) => value.id === selected[selected.length - 1]);
+            const positionNewSelector = cObjectArray.findIndex((value) => value.id === id);
+            const arrayToSearch = positionNewSelector > positionSelected ? 
+              cObjectArray.slice(positionSelected, positionNewSelector + 1) : 
+              cObjectArray.slice(positionNewSelector, positionSelected + 1) ;
+            arrayToSearch.map((value) => newSelection.push(value.id));
+            setSelected(newSelection);
+          }
+        }
       }
-
     } else if(selected.length !== 0) {
       setSelected([]);
     }
   };
 
   useEffect(() => {
-    if(!hasSetup) {
-      document.onclick = (e) => {
-        // i don't know why but for some reason triple equals breaks this
-        // eslint-disable-next-line eqeqeq
-        if(selected.length != 0) {
-          const closestElement = document.elementFromPoint(e.clientX, e.clientY);
-          if(!closestElement?.className.includes("selected")) {
-            if(!closestElement?.className.includes("FileButton") || !closestElement.className.includes("FileListButton") || (!e.ctrlKey && !e.shiftKey)) {
-              setSelected([]);
-            }
+    document.onclick = (e) => {
+      if(!(selected.length === 0)) {
+        const closestElement = document.elementFromPoint(e.clientX, e.clientY);
+        if(!closestElement?.className) {
+          return;
+        }
+        if(!closestElement?.className.includes("selected")) {
+          if(!closestElement?.className.includes("FileButton") || !closestElement.className.includes("FileListButton") || (!e.ctrlKey && !e.shiftKey)) {
+            setSelected([]);
           }
         }
-      };
-      hasSetup = true;
-    }
+      }
+    };
   });
 
   if(!objectData?.fileObject && !objectLoading && props.subId) {
@@ -309,8 +319,24 @@ function FilesComponent(props: IComponentProps): JSX.Element {
             onDrop={(e) => onDrop(e, true)}
           />
         </Link>}
-        {foldersData?.folders.map((value) => (<FileButton planet={props.planet} key={value.id} object={value} componentId={props.id} refetch={() => {void filesRefetch(); void foldersRefetch();}}/>))}
-        {filesData?.files.map((value) => (<FileButton planet={props.planet} key={value.id} object={value} componentId={props.id} refetch={() => {void filesRefetch(); void foldersRefetch();}}/>))}
+        {foldersData?.folders.map((value) => (<FileButton
+          planet={props.planet}
+          key={value.id}
+          object={value}
+          componentId={props.id}
+          refetch={() => {void filesRefetch(); void foldersRefetch();}}
+          onClick={clickHandler}
+          selections={selected}
+        />))}
+        {filesData?.files.map((value) => (<FileButton
+          planet={props.planet}
+          key={value.id}
+          object={value}
+          componentId={props.id}
+          refetch={() => {void filesRefetch(); void foldersRefetch();}}
+          onClick={clickHandler}
+          selections={selected}
+        />))}
       </div>}
       {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && listView && <div className="FilesComponent-list-table">
         {props.subId && objectData && <Link className="link-button" to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>

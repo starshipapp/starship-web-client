@@ -123,3 +123,19 @@
   word-wrap: none;
   white-space: nowrap;
 }
+
+.FilesComponent-filebutton-selected {
+  background-color: #137CBD !important;
+}
+
+.FilesComponent-filebutton-selected:hover {
+  background-color: #106BA3 !important;
+}
+
+.FilesComponent-dummytarget {
+  pointer-events: none;
+}
+
+.FilesComponent .bp3-button-text {
+  pointer-events: none;
+}
