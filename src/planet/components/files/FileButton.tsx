@@ -17,7 +17,7 @@ interface IFileButtonProps {
   object: IFileObject
   componentId: string
   refetch: () => void
-  onClick?: (e?: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id?: string) => void
+  onClick?: (e?: React.MouseEvent<HTMLElement, MouseEvent>, id?: string) => void
   selections?: string[]
 }
 
@@ -78,13 +78,13 @@ function FileButton(props: IFileButtonProps): JSX.Element {
                 // menu was closed; callback optional
               }, true);
             }}
-            onClick={() => {
+            onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
               if(props.onClick) {
-                props.onClick();
+                props.onClick(e, props.object.id);
               }
             }}
             large={true}
-            className={"FilesComponent-filebutton"}
+            className={`FilesComponent-filebutton ${props.selections && props.selections.includes(props.object.id) ? "FilesComponent-filebutton-selected" : ""}`}
             icon={props.object.type === "folder" ? "folder-close" : "document"}
             text={props.object.name}
             onDragStart={(e) => {
@@ -107,6 +107,7 @@ function FileButton(props: IFileButtonProps): JSX.Element {
                 });
               }
             }}
+            id={props.object.id}
           >
             <Popover isOpen={rename} position={PopoverPosition.AUTO_START} onClose={() => setRename(false)}>
               <div className="FilesComponent-dummytarget"></div>
