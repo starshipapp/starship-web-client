@@ -21,6 +21,7 @@ interface IFileButtonProps {
   refetch: () => void
   onClick?: (e?: React.MouseEvent<HTMLAnchorElement, MouseEvent>, id?: string) => void
   selections?: string[]
+  resetSelection?: () => void
 }
 
 function FileListButton(props: IFileButtonProps): JSX.Element {
@@ -50,22 +51,31 @@ function FileListButton(props: IFileButtonProps): JSX.Element {
         onCancel={() => setDelete(false)}
         onConfirm={(e) => {
           e?.stopPropagation();
-          deleteObject({variables: {objectIds: [props.object.id]}}).then(() => {
-            GlobalToaster.show({message: `Deleted ${props.object.name ?? ""}.`, intent: Intent.SUCCESS});
+          const deletionArray = (props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id) ? props.selections : [props.object.id];
+          deleteObject({variables: {objectIds: deletionArray}}).then(() => {
+            GlobalToaster.show({message: `Deleted ${props.object.name ?? ""}${deletionArray.length > 1 ? ` and ${deletionArray.length - 1} ${deletionArray.length > 2 ? "others" : "other file"}` : ""}.`, intent: Intent.SUCCESS});
             props.refetch();
+            props.resetSelection && props.resetSelection();
             void refetchUser();
           }).catch((err: Error) => {
             GlobalToaster.show({message: err.message, intent: Intent.DANGER});
           });
         }}
-      >Are you sure you want to delete this file?<br/>&apos;{props.object.name}&apos; will be lost forever! (A long time!)</Alert>
+      >Are you sure you want to delete {(props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id) ? `these files?` : "this file?"}
+      <br/>
+      &apos;{props.object.name}&apos;{(props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id) && ` and ${props.selections.length - 1} other${props.selections.length > 2 ? "s" : " file"}`} will be lost forever! (A long time!)
+      </Alert>
       <Link 
         className="link-button" 
         to={`/planet/${props.planet.id}/${props.componentId}/${props.object.id}`}
         onDragStart={(e) => {
           e.stopPropagation();
           e.dataTransfer.clearData();
-          e.dataTransfer.setData("text/plain", props.object.id);
+          if(props.selections && props.selections.includes(props.object.id)) {
+            e.dataTransfer.setData("application/json", JSON.stringify(props.selections));
+          } else {
+            e.dataTransfer.setData("text/plain", props.object.id);
+          }
         }}
         onClick={(e) => {
           if(props.onClick) {
@@ -100,13 +110,25 @@ function FileListButton(props: IFileButtonProps): JSX.Element {
             e.stopPropagation();
             if(e.dataTransfer.items[0].kind === "string") {
               e.dataTransfer.items[0].getAsString((stringValue) => {
-                if(stringValue !== props.object.id) {
-                  moveObject({variables: {objectIds: [stringValue], parent: props.object.id}}).then(() => {
-                    props.refetch();
-                    void client.cache.gc();
-                  }).catch((err: Error) => {
-                    GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                  });
+                if(e.dataTransfer.items[0].type === "text/plain") {
+                  if(stringValue !== props.object.id) {
+                    moveObject({variables: {objectIds: [stringValue], parent: props.object.id}}).then(() => {
+                      props.refetch();
+                      void client.cache.gc();
+                    }).catch((err: Error) => {
+                      GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                    });
+                  }
+                } else if (e.dataTransfer.items[0].type === "application/json") {
+                  const idArray: string[] = JSON.parse(stringValue) as string[] ?? [];
+                  if(idArray && idArray.length > 0 && !idArray.includes(props.object.id)) {
+                    moveObject({variables: {objectIds: idArray, parent: props.object.id}}).then(() => {
+                      props.refetch();
+                      void client.cache.gc();
+                    }).catch((err: Error) => {
+                      GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                    });
+                  }
                 }
               });
             }

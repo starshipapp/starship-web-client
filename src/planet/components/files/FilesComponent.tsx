@@ -153,6 +153,15 @@ function FilesComponent(props: IComponentProps): JSX.Element {
 
   useEffect(() => {
     document.onclick = (e) => {
+      if(document.getElementsByClassName("bp3-overlay-open").length > 0) {
+        return;
+      }
+      if(!selected) {
+        return;
+      }
+      if(!setSelected) {
+        return;
+      }
       if(!(selected.length === 0)) {
         const closestElement = document.elementFromPoint(e.clientX, e.clientY);
         if(!closestElement?.className) {
@@ -166,6 +175,10 @@ function FilesComponent(props: IComponentProps): JSX.Element {
       }
     };
   });
+
+  const resetSelection = function() {
+    setSelected([]);
+  };
 
   if(!objectData?.fileObject && !objectLoading && props.subId) {
     return (
@@ -327,6 +340,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           refetch={() => {void filesRefetch(); void foldersRefetch();}}
           onClick={clickHandler}
           selections={selected}
+          resetSelection={resetSelection}
         />))}
         {filesData?.files.map((value) => (<FileButton
           planet={props.planet}
@@ -336,6 +350,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           refetch={() => {void filesRefetch(); void foldersRefetch();}}
           onClick={clickHandler}
           selections={selected}
+          resetSelection={resetSelection}
         />))}
       </div>}
       {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && listView && <div className="FilesComponent-list-table">
@@ -352,6 +367,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           refetch={() => {void filesRefetch(); void foldersRefetch();}}
           onClick={clickHandler}
           selections={selected}
+          resetSelection={resetSelection}
         />))}
         {filesData?.files.map((value) => (<FileListButton 
           planet={props.planet} 
@@ -361,6 +377,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           refetch={() => {void filesRefetch(); void foldersRefetch();}}
           onClick={clickHandler}
           selections={selected}
+          resetSelection={resetSelection}
         />))}
       </div>}
       {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText !== "" && <FileSearch
