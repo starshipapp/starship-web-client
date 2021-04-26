@@ -1,18 +1,20 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Icon, Intent } from "@blueprintjs/core";
+import { Button, Icon, Intent } from "@blueprintjs/core";
 import axios from "axios";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import uploadProfilePictureMutation, { IUploadProfilePictureMutationData } from "../graphql/mutations/users/uploadProfilePictureMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import fixPFP from "../util/fixPFP";
 import { GlobalToaster } from "../util/GlobalToaster";
 import "./css/Settings.css";
+import TFAWizard from "./TFAWizard";
 
 function Settings(): JSX.Element {
   const fileInput = useRef<HTMLInputElement>(null);
   const image = useRef<HTMLImageElement>(null);
   const {data: userData, refetch} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [uploadProfilePicture] = useMutation<IUploadProfilePictureMutationData>(uploadProfilePictureMutation);
+  const [isTFAOpen, setTFAOpen] = useState<boolean>(false);
 
   return (
     <div className="Settings bp3-dark">
@@ -60,6 +62,12 @@ function Settings(): JSX.Element {
           {/* eslint-disable-next-line jsx-a11y/img-redundant-alt*/}
           {userData?.currentUser && userData?.currentUser.profilePicture && <img alt="Change profile picture" src={fixPFP(userData.currentUser.profilePicture) + "?t=" + String(Number(Date.now()))} ref={image}/>}
           <Icon icon="upload" className="Settings-uploadpfp"/>
+        </div>
+        <h1>Security</h1>
+        <div className="Settings-tfa">
+          <p>Two Factor Authentication <b>is{userData?.currentUser && !userData.currentUser.tfaEnabled && " not"}</b> enabled</p>
+          {userData?.currentUser && !userData.currentUser.tfaEnabled && <Button onClick={() => setTFAOpen(true)}>Enable 2FA</Button>}
+          <TFAWizard isOpen={isTFAOpen} onClose={() => setTFAOpen(false)} onComplete={() => void refetch()}/>
         </div>
       </div>
     </div>

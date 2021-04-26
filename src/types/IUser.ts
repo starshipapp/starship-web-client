@@ -12,5 +12,6 @@ export default interface IUser {
   banned?: boolean,
   admin?: boolean,
   usedBytes?: number,
-  capWaived?: boolean
+  capWaived?: boolean,
+  tfaEnabled?: boolean
 }
