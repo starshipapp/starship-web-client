@@ -2,10 +2,12 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Button, Icon, Intent } from "@blueprintjs/core";
 import axios from "axios";
 import React, { useRef, useState } from "react";
+import disableTFAMutation, { IDisableTFAMutation } from "../graphql/mutations/users/disableTFAMutation";
 import uploadProfilePictureMutation, { IUploadProfilePictureMutationData } from "../graphql/mutations/users/uploadProfilePictureMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import fixPFP from "../util/fixPFP";
 import { GlobalToaster } from "../util/GlobalToaster";
+import TFAPrompt from "../util/TFAPrompt";
 import "./css/Settings.css";
 import TFAWizard from "./TFAWizard";
 
@@ -14,7 +16,9 @@ function Settings(): JSX.Element {
   const image = useRef<HTMLImageElement>(null);
   const {data: userData, refetch} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [uploadProfilePicture] = useMutation<IUploadProfilePictureMutationData>(uploadProfilePictureMutation);
+  const [disableTFA] = useMutation<IDisableTFAMutation>(disableTFAMutation);
   const [isTFAOpen, setTFAOpen] = useState<boolean>(false);
+  const [isTFAPromptOpen, setTFAPromptOpen] = useState<boolean>(false);
 
   return (
     <div className="Settings bp3-dark">
@@ -67,6 +71,20 @@ function Settings(): JSX.Element {
         <div className="Settings-tfa">
           <p>Two Factor Authentication <b>is{userData?.currentUser && !userData.currentUser.tfaEnabled && " not"}</b> enabled</p>
           {userData?.currentUser && !userData.currentUser.tfaEnabled && <Button onClick={() => setTFAOpen(true)}>Enable 2FA</Button>}
+          {userData?.currentUser && userData.currentUser.tfaEnabled && <Button onClick={() => setTFAPromptOpen(true)}>Disable 2FA</Button>}
+          <TFAPrompt 
+            onSubmit={(key) => {
+              disableTFA({variables: {token: key}}).then(() => {
+                GlobalToaster.show({message: "Disabled two factor authentication.", intent: Intent.SUCCESS});
+                void refetch();
+                setTFAPromptOpen(false);
+              }).catch((err: Error) => {
+                GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+              });
+            }}
+            onClose={() => {setTFAPromptOpen(false);}}
+            isOpen={isTFAPromptOpen}
+          />
           <TFAWizard isOpen={isTFAOpen} onClose={() => setTFAOpen(false)} onComplete={() => void refetch()}/>
         </div>
       </div>

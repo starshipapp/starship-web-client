@@ -26,6 +26,7 @@ const getCurrentUser = gql`
       }
       usedBytes
       capWaived
+      tfaEnabled
     }
   }
 `;

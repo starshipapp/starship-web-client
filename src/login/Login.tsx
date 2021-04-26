@@ -11,6 +11,10 @@ import { useHistory } from "react-router-dom";
 import sendResetPasswordEmailMutation, { ISendResetPasswordEmailMutationData } from "../graphql/mutations/users/sendResetPasswordEmailMutation";
 import resendVerificationEmailMutation, { IResendVerificationEmailMutationData } from "../graphql/mutations/users/resendVerificationEmailMutation";
 import ReCAPTCHA from "react-google-recaptcha";
+import TFAPrompt from "../util/TFAPrompt";
+import finalizeAuthorizationMutation, { IFinalizeAuthorizationMutationData } from "../graphql/mutations/users/finalizeAuthorizationMutation";
+
+let tfaToken = "";
 
 function Login(): JSX.Element {
   const [username, setUsername] = useState<string>("");
@@ -18,6 +22,7 @@ function Login(): JSX.Element {
   const [signIn] = useMutation<ISignInMutationData>(signInMutation);
   const [sendResetPasswordEmail] = useMutation<ISendResetPasswordEmailMutationData>(sendResetPasswordEmailMutation);
   const [resendVerificationEmail] = useMutation<IResendVerificationEmailMutationData>(resendVerificationEmailMutation);
+  const [finalizeAuthorization] = useMutation<IFinalizeAuthorizationMutationData>(finalizeAuthorizationMutation);
 
   const [registerUsername, setRegisterUsername] = useState<string>("");
   const [registerPasword, setRegisterPassword] = useState<string>("");
@@ -25,6 +30,7 @@ function Login(): JSX.Element {
   const [email, setEmail] = useState<string>("");
   const [signUp] = useMutation<ISignUpMutationData>(signUpMutation);
   const [recaptcha, setRecaptcha] = useState<string>("");
+  const [showTFADialog, setTFADialog] = useState<boolean>(false);
 
   const { client, loading, data } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
 
@@ -87,13 +93,18 @@ function Login(): JSX.Element {
 
   const signInFunction = function() {
     signIn({ variables: { username, password: sha256(password).toString() } }).then((value) => {
-      if (value.data) {
-        localStorage.setItem("token", value.data.loginUser.token);
-        GlobalToaster.show({ intent: "success", message: "Sucessfully logged in." });
-        void client.resetStore();
-        setUsername("");
-        setPassword("");
-        history.push("/");
+      if(value.data) {
+        if(value.data.loginUser.expectingTFA) {
+          tfaToken = value.data.loginUser.token;
+          setTFADialog(true);
+        } else {
+          localStorage.setItem("token", value.data.loginUser.token);
+          GlobalToaster.show({ intent: "success", message: "Sucessfully logged in." });
+          void client.resetStore();
+          setUsername("");
+          setPassword("");
+          history.push("/");
+        }
       }
     }).catch((error: Error) => {
       if(error.message === "Incorrect username or password.") {
@@ -119,6 +130,24 @@ function Login(): JSX.Element {
             void client.resetStore();
           }}/>}
         /> : <><div className="Login-left">
+          <TFAPrompt
+            isOpen={showTFADialog}
+            onClose={() => setTFADialog(false)}
+            onSubmit={(key) => {
+              finalizeAuthorization({variables: {loginToken: tfaToken, totpToken: key}}).then((data) => {
+                if(data.data) {
+                  localStorage.setItem("token", data.data.finalizeAuthorization.token);
+                  GlobalToaster.show({ intent: "success", message: "Sucessfully logged in." });
+                  void client.resetStore();
+                  setUsername("");
+                  setPassword("");
+                  history.push("/");
+                }
+              }).catch((err: Error) => {
+                GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+              });
+            }}
+          />
           <H1 className="Login-header">Login</H1>
           <input value={username} onChange={(e) => setUsername(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Username" />
           <input value={password} onChange={(e) => setPassword(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Password" type="password" onKeyDown={(e) => {

@@ -1,5 +1,5 @@
 import { useMutation } from "@apollo/client";
-import { Classes, Code, DialogStep, H1, H3, Intent, MultistepDialog, NonIdealState, Spinner } from "@blueprintjs/core";
+import { Button, Classes, Code, DialogStep, H1, H3, Intent, MultistepDialog, NonIdealState, Spinner } from "@blueprintjs/core";
 import QRCode from "qrcode.react";
 import React, { useState } from "react";
 import confirmTFAMutation, { IConfirmTFAMutation } from "../graphql/mutations/users/confirmTFAMutation";
@@ -29,7 +29,13 @@ function TFAWizard(props: ITFAWizardProps): JSX.Element {
       onClose={() => {
         setSecret("");
         setPage("");
+        setCodes([]);
+        props.onClose();
+        if(page === "finished") {
+          props.onComplete();
+        }
       }}
+      resetOnClose={true}
       onChange={(newStepId, prevStepId) => {
         setPage(newStepId.toString());
         if(newStepId.toString() === "qrCode" && prevStepId?.toString() === "start") {
@@ -40,20 +46,16 @@ function TFAWizard(props: ITFAWizardProps): JSX.Element {
             GlobalToaster.show({message: "Could not generate QR code. Closing dialog.", intent: Intent.DANGER});
           });
         }
-        if(newStepId.toString() === "finished" && prevStepId?.toString() === "verify") {
-          const codeNumber = Number(codeTextbox);
-          if(codeNumber && !isNaN(codeNumber)) {
-            confirmTFA({variables: {token: codeNumber}}).then((data) => {
-              setCodes(data.data?.confirmTFA ?? []);
-            }).catch((err: Error) => {
-              GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-            });
-          } else {
-            GlobalToaster.show({message: "Invalid token.", intent: Intent.DANGER});
-          }
-        }
       }}
       backButtonProps={{disabled: page !== "verify"}}
+      nextButtonProps={{disabled: ((page === "verify" && backupCodes.length === 0))}}
+      finalButtonProps={{text: "Finish", onClick: () => {
+        setSecret("");
+        setPage("");
+        setCodes([]);
+        props.onClose();
+        props.onComplete();
+      }}}
     >
       <DialogStep
         id="start"
@@ -109,6 +111,23 @@ function TFAWizard(props: ITFAWizardProps): JSX.Element {
                 value={codeTextbox}
               />
             </div>
+            {backupCodes.length === 0 && <div className="TFAWizard-qrcode-backuptext">
+              <Button text="Check" onClick={() => {
+                const codeNumber = Number(codeTextbox);
+                if(codeNumber && !isNaN(codeNumber)) {
+                  confirmTFA({variables: {token: codeNumber}}).then((data) => {
+                    setCodes(data.data?.confirmTFA ?? []);
+                  }).catch((err: Error) => {
+                    GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                  });
+                } else {
+                  GlobalToaster.show({message: "Invalid token.", intent: Intent.DANGER});
+                }
+              }}/>
+            </div>}
+            {backupCodes.length !== 0 && <div className="TFAWizard-qrcode-backuptext">
+              Token verified. Click the next button to see your backup codes.
+            </div>}
           </>}
         </div>}
       />
