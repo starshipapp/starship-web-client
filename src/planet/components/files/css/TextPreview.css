@@ -1,0 +1,27 @@
+.TextPreview {
+  min-width: 65vw;
+  max-width: 65vw;
+  border: #394B59 1px solid;
+  border-radius: 0.35rem;
+  padding: 0.75rem;
+  background-color: #30404D;
+  margin-bottom: 0.5rem;
+}
+
+.TextPreview-content {
+  white-space: pre-wrap;
+  width: 100%;
+}
+
+.TextPreview-name {
+  display: flex;
+  padding-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
+  border-bottom: #394B59 1px solid;
+  font-weight: bold;
+}
+
+.TextPreview-name-text {
+  margin-top: -0.15rem;
+  margin-left: 0.4rem;
+}
