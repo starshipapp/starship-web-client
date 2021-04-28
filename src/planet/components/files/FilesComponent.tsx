@@ -25,6 +25,7 @@ import FileListButton from "./FileListButton";
 import FileView from "./FileView";
 import isMobile from "../../../util/isMobile";
 import FileSearch from "./FileSearch";
+import ReadmeWrapper from "./ReadmeWrapper";
 
 const uploading: Record<string, {name: string, progress: number}> = {};
 
@@ -163,6 +164,24 @@ function FilesComponent(props: IComponentProps): JSX.Element {
       }
     } else if(selected.length !== 0) {
       setSelected([]);
+    }
+  };
+
+  const determineReadmeComponent = function(): (JSX.Element | undefined) {
+    const filtered = filesData?.files.filter((value) => {
+      const lowerCase = value.name?.toLowerCase();
+      if(lowerCase) {
+        if(lowerCase === "readme.txt" || lowerCase === "readme" || lowerCase === "readme.md") {
+          console.log("readme found");
+          return true;
+        }
+      }
+      console.log("not readme");
+      return false;
+    });
+    
+    if(filtered && filtered.length > 0) {
+      return <ReadmeWrapper file={filtered[0]}/>;
     }
   };
 
@@ -406,6 +425,9 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         useLists={listView}
       />}
       {objectData && objectData.fileObject.type === "file" && <FileView file={objectData.fileObject}/>}
+      <div className="FilesComponent-readme">
+        {((objectData && objectData.fileObject.type === "folder") || !props.subId) && determineReadmeComponent()}
+      </div>
     </div> 
   );
 }

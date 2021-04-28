@@ -137,7 +137,7 @@ function TFAWizard(props: ITFAWizardProps): JSX.Element {
         panel={<div className="TFAWizard-panel">
           <div className="TFAWizard-qrcode-header">Two Factor Authentication is now enabled!</div>
           <div className="TFAWizard-qrcode-backuptext">
-            If you lose your phone, or lose access to your authenticator app, you'll need these background codes:
+            If you lose your phone, or lose access to your authenticator app, you'll need these backup codes:
           </div>
           <div className="TFAWizard-qrcode-backuptext">
             {backupCodes.map((value) => (<span>{value}, </span>))}
