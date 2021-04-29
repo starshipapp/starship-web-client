@@ -61,7 +61,7 @@
 .FilesComponent-uploading {
   display: flex;
   flex-direction: column;
-  margin-right: 0.45rem;
+  margin-left: auto;
 }
 
 .FilesComponent-uploading-container {
@@ -80,7 +80,14 @@
 
 .FilesComponent-uploading-icon {
   color: #a7b6c2;
+  z-index: 2;
+  position: relative;
 }
+
+.FilesComponent-uploading-icon:last-of-type {
+  top: -1px;
+}
+
 
 .FilesComponent-uploading-icon-first {
   margin-left: 0.95rem;
@@ -140,4 +147,63 @@
   min-width: 75vw;
   max-width: 75vw;
   margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.FilesComponent-statusbar {
+  display: flex;
+  padding: 0.5rem;
+  position: absolute;
+  bottom: 0rem;
+  min-width: 75.1vw;
+  max-width: 75.1vw;
+  background-color: rgb(41, 55, 66);
+  margin-left: -0.15rem;
+  border-top: 1px #30404d solid;
+}
+
+.FilesComponent-statusbar-objectinfo .bp3-icon {
+  margin-right: 0.3rem;
+  position: relative;
+  top: -1px;
+}
+
+.FilesComponent-statusbar-objectinfo {
+  z-index: 2;
+  position: relative;
+}
+
+.FilesComponent-statusbar-objectinfo span {
+  margin-right: 0.5rem;
+}
+
+.FileComponent-status-spacer {
+  margin-bottom: 2rem;
+}
+
+.FilesComponent-drop-icon {
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  z-index: 12;
+  pointer-events: none;
+}
+
+.FilesComponent-drop-icon h2 {
+  margin-top: 1rem !important;
+  pointer-events: none;
+}
+
+.FilesComponent-drop-bg {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 11;
+  background-color: #30404dcc;
 }

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, ButtonGroup, Classes, Divider, Icon, InputGroup, Intent, Menu, MenuItem, NonIdealState, Popover, ProgressBar, Text } from "@blueprintjs/core";
+import { Button, ButtonGroup, Classes, Divider, H2, Icon, InputGroup, Intent, Menu, MenuItem, NonIdealState, Popover, ProgressBar, Text } from "@blueprintjs/core";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import completeUploadMutation, { ICompleteUploadMutationData } from "../../../graphql/mutations/components/files/completeUploadMutation";
@@ -26,6 +26,7 @@ import FileView from "./FileView";
 import isMobile from "../../../util/isMobile";
 import FileSearch from "./FileSearch";
 import ReadmeWrapper from "./ReadmeWrapper";
+import fileSize from "filesize";
 
 const uploading: Record<string, {name: string, progress: number}> = {};
 
@@ -49,6 +50,9 @@ function FilesComponent(props: IComponentProps): JSX.Element {
   const [searchTextbox, setSearchTextbox] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
+
+  const date = objectData?.fileObject.createdAt ? new Date(Number(objectData?.fileObject.createdAt)) : new Date("2020-07-25T15:24:30+00:00");
+  const fileDate = date.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
   const resetSearch = function() {
     setSearchTextbox("");
@@ -91,6 +95,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
     e.preventDefault();
     e.stopPropagation();
     setDragging(false);
+    console.log(e);
     if (e.dataTransfer.items) {
       // eslint-disable-next-line @typescript-eslint/prefer-for-of
       for (let i = 0; i < e.dataTransfer.items.length; i++) {
@@ -172,11 +177,9 @@ function FilesComponent(props: IComponentProps): JSX.Element {
       const lowerCase = value.name?.toLowerCase();
       if(lowerCase) {
         if(lowerCase === "readme.txt" || lowerCase === "readme" || lowerCase === "readme.md") {
-          console.log("readme found");
           return true;
         }
       }
-      console.log("not readme");
       return false;
     });
     
@@ -230,28 +233,48 @@ function FilesComponent(props: IComponentProps): JSX.Element {
 
   return (
     <div 
-      className={`bp3-dark FilesComponent ${isDragging ? "FilesComponent-dragging" : ""}`}
-      onDrop={(e) => onDrop(e, false)}
+      className={`bp3-dark FilesComponent`}
       onDragOver={(e) => {
         e.preventDefault();
         if(e.dataTransfer.items[0].kind === "file") {
           setDragging(true);
         }
-      }} 
-      onDragLeave={(e) => {
-        e.preventDefault();
-        setDragging(false);
-      }}
-      onDragExit={(e) => {
-        e.preventDefault();
-        setDragging(false);
-      }}
-      onDragEnd={(e) => {
-        e.preventDefault();
-        setDragging(false);
       }}
     >
       {objectData?.fileObject && <ReportDialog isOpen={showReport} onClose={() => setReport(false)} objectId={objectData.fileObject.id} objectType={reportObjectType.FILE} userId={objectData.fileObject.owner?.id ?? ""}/>}
+      {isDragging && <div className="FilesComponent-drop-bg"
+        onDrop={(e) => onDrop(e, false)}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          setDragging(false);
+        }}
+        onDragExit={(e) => {
+          e.preventDefault();
+          setDragging(false);
+        }}
+        onDragEnd={(e) => {
+          e.preventDefault();
+          setDragging(false);
+        }}
+      />}
+      {isDragging && <div className="FilesComponent-drop-icon"
+        onDrop={(e) => onDrop(e, false)}
+        onDragLeave={(e) => {
+          e.preventDefault();
+          setDragging(false);
+        }}
+        onDragExit={(e) => {
+          e.preventDefault();
+          setDragging(false);
+        }}
+        onDragEnd={(e) => {
+          e.preventDefault();
+          setDragging(false);
+        }}
+      >
+        <Icon intent={Intent.SUCCESS} icon="cloud-upload" iconSize={200}/>
+        <H2>Drop file to upload.</H2>
+      </div>}
       <div className="FilesComponent-top">
         <input
           type="file"
@@ -291,21 +314,6 @@ function FilesComponent(props: IComponentProps): JSX.Element {
             resetSearch();
           }}/> : undefined}
         />}
-        <div className="FilesComponent-uploading">
-          {Object.values(uploading).length !== 0 && <div className="FilesComponent-uploading-container">
-            <Icon className="FilesComponent-uploading-icon FilesComponent-uploading-icon-first" iconSize={16} icon="upload"/>
-            <ProgressBar className="FilesComponent-uploading-progress" intent={Intent.PRIMARY}/>
-            <Popover>
-              <Icon className="FilesComponent-uploading-icon" iconSize={16} icon="chevron-down"/>
-              <div className="FilesComponent-uploading-info-container">
-                {Object.values(uploading).map((value, index) => (<div key={index} className="FilesComponent-uploading-info">
-                  <Text className="FilesComponent-uploading-info-name">{value.name}</Text>
-                  <ProgressBar className="FilesComponent-uploading-info" value={value.progress} intent={Intent.PRIMARY}/>
-                </div>))}
-              </div>
-            </Popover>
-          </div>}
-        </div>
         <Divider/>
         {objectData?.fileObject && objectData?.fileObject.type === "file" && <ButtonGroup minimal={true} className="FilesComponent-top-actions">
           <Button text="Download" icon="download" onClick={() => {
@@ -427,6 +435,38 @@ function FilesComponent(props: IComponentProps): JSX.Element {
       {objectData && objectData.fileObject.type === "file" && <FileView file={objectData.fileObject}/>}
       <div className="FilesComponent-readme">
         {((objectData && objectData.fileObject.type === "folder") || !props.subId) && determineReadmeComponent()}
+      </div>
+      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && <div className="FileComponent-status-spacer"/>}
+      <div className="FilesComponent-statusbar">
+        {((objectData && objectData.fileObject.type === "folder") || !props.subId) && <div className="FilesComponent-statusbar-count">
+          {foldersData?.folders.length ?? 0} folders, {filesData?.files.length ?? 0} files
+        </div>}
+        {objectData && objectData.fileObject.type === "folder" && <Divider/>}
+        {objectData && <div className="FilesComponent-statusbar-objectinfo">
+          <Icon icon="user"/>
+          <span>{objectData.fileObject.owner?.username}</span>
+          <Icon icon="time"/>
+          <span>{fileDate}</span>
+          {objectData.fileObject.size && <>
+            <Icon icon="folder-open"/>
+            <span>{fileSize(objectData.fileObject.size ?? 0)}</span>
+          </>}
+        </div>}
+        <div className="FilesComponent-uploading">
+          {Object.values(uploading).length !== 0 && <div className="FilesComponent-uploading-container">
+            <Icon className="FilesComponent-uploading-icon FilesComponent-uploading-icon-first" iconSize={16} icon="upload"/>
+            <ProgressBar className="FilesComponent-uploading-progress" intent={Intent.PRIMARY}/>
+            <Popover>
+              <Icon className="FilesComponent-uploading-icon" iconSize={16} icon="chevron-up"/>
+              <div className="FilesComponent-uploading-info-container">
+                {Object.values(uploading).map((value, index) => (<div key={index} className="FilesComponent-uploading-info">
+                  <Text className="FilesComponent-uploading-info-name">{value.name}</Text>
+                  <ProgressBar className="FilesComponent-uploading-info" value={value.progress} intent={Intent.PRIMARY}/>
+                </div>))}
+              </div>
+            </Popover>
+          </div>}
+        </div>
       </div>
     </div> 
   );

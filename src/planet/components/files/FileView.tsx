@@ -22,7 +22,6 @@ function FileView(props: IFileViewProps): JSX.Element {
   return (
     <div className="FileView">
       {MimeTypes.previewTypes.includes(props.file.fileType ?? "application/octet-stream") ? <div className="FileView-container">
-        {props.file.owner && <div className="FileView-upload-info">Uploaded at {fileDate} by {props.file.owner.username}</div>}
         {MimeTypes.audioTypes.includes(props.file.fileType ?? "application/octet-stream") && data && <audio preload="auto" className="FileView-preview-audio" controls src={data.getObjectPreview}/>}
         {MimeTypes.imageTypes.includes(props.file.fileType ?? "application/octet-stream") && data && <img className="FileView-preview" src={data.getObjectPreview} alt="File preview"/>}
         {MimeTypes.videoTypes.includes(props.file.fileType ?? "application/octet-stream") && data && <video preload="auto" className="FileView-preview" controls src={data.getObjectPreview}/>}

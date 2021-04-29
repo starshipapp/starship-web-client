@@ -20,7 +20,6 @@ function TextPreview(props: ITextPreviewProps): JSX.Element {
     if(lastEffected !== props.fileURL) {
       lastEffected = props.fileURL;
       axios.get(props.fileURL, {responseType: "text", transformResponse: (res) => {return res as string;}}).then((data) => {
-        console.log(data);
         setText((data.data as string).replace("\n", "\n\n"));
       }).catch((err: Error) => {
         GlobalToaster.show({message: err.message, intent: Intent.DANGER});
