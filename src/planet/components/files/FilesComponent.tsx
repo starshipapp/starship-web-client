@@ -52,6 +52,8 @@ function FilesComponent(props: IComponentProps): JSX.Element {
   const [searchTextbox, setSearchTextbox] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
+  const [total, setTotal] = useState<number>(0);
+  const [completed, setCompleted] = useState<number>(0);
 
   const date = objectData?.fileObject.createdAt ? new Date(Number(objectData?.fileObject.createdAt)) : new Date("2020-07-25T15:24:30+00:00");
   const fileDate = date.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
@@ -75,9 +77,15 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           uploading[currentIndex].progress = progressEvent.loaded / progressEvent.total;
           if(uploading[currentIndex].progress === 1) {
             delete uploading[currentIndex];
+            setTotal(Object.keys(uploading).length);
           }
+          let completed = 0;
+          Object.values(uploading).map((value) => {return completed += value.progress;});
+          setCompleted(completed);
           setUploadUpdateCounter(Math.random() * 300000000);
+          console.log(completed / total);
         }, cancelToken: uploading[currentIndex].cancelToken.token};
+        setTotal(Object.keys(uploading).length);
         axios.put(data.data.uploadFileObject.uploadUrl, file, options).then(() => {
           completeUpload({variables: {objectId: data.data?.uploadFileObject.documentId}}).then(() => {
             GlobalToaster.show({message: `Finished uploading ${file.name}.`, intent: Intent.SUCCESS});
@@ -461,7 +469,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         <div className="FilesComponent-uploading">
           {Object.values(uploading).length !== 0 && <div className="FilesComponent-uploading-container">
             <Icon className="FilesComponent-uploading-icon FilesComponent-uploading-icon-first" iconSize={16} icon="upload"/>
-            <ProgressBar className="FilesComponent-uploading-progress" intent={Intent.PRIMARY}/>
+            <ProgressBar className="FilesComponent-uploading-progress" intent={Intent.PRIMARY} value={completed / total}/>
             <Popover>
               <Icon className="FilesComponent-uploading-icon" iconSize={16} icon="chevron-up"/>
               <div className="FilesComponent-uploading-info-container">
@@ -474,6 +482,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
                         console.log(value.documentId);
                         GlobalToaster.show({message: `Upload of ${value.name} canceled.`, intent: Intent.SUCCESS});
                         delete uploading[Object.keys(uploading)[index]];
+                        setTotal(Object.keys(uploading).length);
                         setUploadUpdateCounter(Math.random() * 300000000);
                       }).catch((err: Error) => {
                         GlobalToaster.show({message: err.message, intent: Intent.DANGER});
