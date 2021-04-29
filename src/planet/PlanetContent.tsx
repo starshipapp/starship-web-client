@@ -113,9 +113,14 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
             {!userLoading && props.planet.owner && permissions.checkFullWritePermission(userData?.currentUser as IUser, props.planet) && <Popover>
               <Button className="bp3-minimal" icon="plus"/>
               <div className="Planet-navbar-add-content">
-                <input className="bp3-input" placeholder="name" value={componentName} onChange={(e) => setComponentName(e.target.value)}/>
+                <input className="bp3-input" placeholder="Name" value={componentName} onChange={(e) => setComponentName(e.target.value)}/>
                 <Menu>
                   {Object.values(ComponentIndex.ComponentDataTypes).map((value) => (<MenuItem text={"Create new " + value.friendlyName} key={value.name} icon={value.icon} onClick={() => {
+                    if(componentName === "") {
+                      GlobalToaster.show({message: "Your component must have a name.", intent: Intent.DANGER});
+                      return;
+                    }
+
                     addComponent({variables: {planetId: planet, name: componentName, type: value.name}}).then((value) => {
                       if(value.data?.addComponent.id) {
                         GlobalToaster.show({message: `Successfully added ${componentName}.`, intent: Intent.SUCCESS});
