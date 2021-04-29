@@ -26,3 +26,10 @@
   margin-top: -0.05rem;
   margin-left: 0.4rem;
 }
+
+@media only screen and (max-width: 600px) {
+  .TextPreview {
+    min-width: 90vw;
+    max-width: 90vw;
+  }
+}

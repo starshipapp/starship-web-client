@@ -17,7 +17,7 @@ import { reportObjectType } from "../../../util/reportTypes";
 import ReportDialog from "../../ReportDialog";
 import IComponentProps from "../IComponentProps";
 import { v4 } from "uuid";
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig, CancelTokenSource } from "axios";
 import FileBreadcrumbs from "./FileBreadcrumbs";
 import FileButton from "./FileButton";
 import "./css/FilesComponent.css";
@@ -27,8 +27,9 @@ import isMobile from "../../../util/isMobile";
 import FileSearch from "./FileSearch";
 import ReadmeWrapper from "./ReadmeWrapper";
 import fileSize from "filesize";
+import cancelUploadMutation, { ICancelUploadMutationData } from "../../../graphql/mutations/components/files/cancelUploadMutation";
 
-const uploading: Record<string, {name: string, progress: number}> = {};
+const uploading: Record<string, {name: string, progress: number, documentId: string, cancelToken: CancelTokenSource}> = {};
 
 function FilesComponent(props: IComponentProps): JSX.Element {
   const {data: userData, client, refetch: refetchUser} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
@@ -40,6 +41,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
   const [completeUpload] = useMutation<ICompleteUploadMutationData>(completeUploadMutation);
   const [moveObject] = useMutation<IMoveObjectMutationData>(moveObjectMutation);
   const [createFolder] = useMutation<ICreateFolderMutationData>(createFolderMutation);
+  const [cancelUpload] = useMutation<ICancelUploadMutationData>(cancelUploadMutation);
   const fileInput = useRef<HTMLInputElement>(null);
   const [showReport, setReport] = useState<boolean>(false);
   const [newFolderTextbox, setNewFolderTextbox] = useState<string>("");
@@ -65,7 +67,9 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         const currentIndex = v4();
         uploading[currentIndex] = {
           name: file.name,
-          progress: 0
+          progress: 0,
+          documentId: data.data.uploadFileObject.documentId ?? "",
+          cancelToken: axios.CancelToken.source()
         };
         const options: AxiosRequestConfig = {headers: {"Content-Type": file.type}, onUploadProgress: (progressEvent: {loaded: number, total: number}) => {
           uploading[currentIndex].progress = progressEvent.loaded / progressEvent.total;
@@ -73,7 +77,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
             delete uploading[currentIndex];
           }
           setUploadUpdateCounter(Math.random() * 300000000);
-        }};
+        }, cancelToken: uploading[currentIndex].cancelToken.token};
         axios.put(data.data.uploadFileObject.uploadUrl, file, options).then(() => {
           completeUpload({variables: {objectId: data.data?.uploadFileObject.documentId}}).then(() => {
             GlobalToaster.show({message: `Finished uploading ${file.name}.`, intent: Intent.SUCCESS});
@@ -83,7 +87,9 @@ function FilesComponent(props: IComponentProps): JSX.Element {
             GlobalToaster.show({message: err.message, intent: Intent.DANGER});
           });
         }).catch((err: Error) => {
-          GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+          if(err.message) {
+            GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+          }
         });
       }
     }).catch((err: Error) => {
@@ -236,7 +242,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
       className={`bp3-dark FilesComponent`}
       onDragOver={(e) => {
         e.preventDefault();
-        if(e.dataTransfer.items[0].kind === "file") {
+        if(e.dataTransfer.items[0] && e.dataTransfer.items[0].kind === "file") {
           setDragging(true);
         }
       }}
@@ -460,7 +466,20 @@ function FilesComponent(props: IComponentProps): JSX.Element {
               <Icon className="FilesComponent-uploading-icon" iconSize={16} icon="chevron-up"/>
               <div className="FilesComponent-uploading-info-container">
                 {Object.values(uploading).map((value, index) => (<div key={index} className="FilesComponent-uploading-info">
-                  <Text className="FilesComponent-uploading-info-name">{value.name}</Text>
+                  <div className="FilesComponent-uploading-info-top">
+                    <Text className="FilesComponent-uploading-info-name">{value.name}</Text>
+                    <Icon className="FilesComponent-uploading-info-cancel" icon="cross" onClick={() => {
+                      value.cancelToken.cancel();
+                      cancelUpload({variables: {objectId: value.documentId}}).then(() => {
+                        console.log(value.documentId);
+                        GlobalToaster.show({message: `Upload of ${value.name} canceled.`, intent: Intent.SUCCESS});
+                        delete uploading[Object.keys(uploading)[index]];
+                        setUploadUpdateCounter(Math.random() * 300000000);
+                      }).catch((err: Error) => {
+                        GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                      });
+                    }}/>
+                  </div>
                   <ProgressBar className="FilesComponent-uploading-info" value={value.progress} intent={Intent.PRIMARY}/>
                 </div>))}
               </div>
