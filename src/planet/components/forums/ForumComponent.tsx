@@ -93,8 +93,6 @@ function ForumComponent(props: IComponentProps): JSX.Element {
     }
   };
 
-  console.log(forumData);
-
   return (
     <div className="bp3-dark ForumComponent">
         <div className="ForumComponent-flex">

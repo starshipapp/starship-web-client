@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Intent, NonIdealState, H1, H2, Classes } from "@blueprintjs/core";
 import React, { useState } from "react";
-import ReactMarkdown from "react-markdown";
 import SimpleMDEEditor from "react-simplemde-editor";
 import getPage, { IGetPageData } from "../../graphql/queries/components/getPage";
 import getCurrentUser, { IGetCurrentUserData } from "../../graphql/queries/users/getCurrentUser";
@@ -13,6 +12,7 @@ import IComponentProps from "./IComponentProps";
 import updatePageMutation, { IUpdatePageMutationData } from "../../graphql/mutations/components/updatePageMutation";
 import { GlobalToaster } from "../../util/GlobalToaster";
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../graphql/mutations/misc/uploadMarkdownImageMutation";
+import Markdown from "../../util/Markdown";
 
 function PageComponent(props: IComponentProps): JSX.Element {
   const {data, loading } = useQuery<IGetPageData>(getPage, {variables: {page: props.id}});
@@ -36,7 +36,7 @@ function PageComponent(props: IComponentProps): JSX.Element {
           <p className={Classes.SKELETON}>Morbi id auctor ante. Nam et mauris eu nulla porttitor fringilla. Quisque velit erat, commodo id tempus venenatis, scelerisque viverra tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse rutrum erat cursus, tempor odio quis, ultrices velit. Maecenas quis auctor magna. Donec interdum a justo in maximus.</p>
           <p className={Classes.SKELETON}>Morbi non eros arcu. Nam ex justo, posuere vitae justo ac, feugiat pulvinar magna. Mauris libero mauris, eleifend hendrerit ligula et, tincidunt finibus velit. Aliquam erat volutpat. Integer nisi lorem, commodo ut auctor eu, ultricies at magna. Nunc eu suscipit metus. Donec ac lorem at elit blandit viverra. Pellentesque luctus felis est, fringilla posuere tellus condimentum vel. Etiam vel libero sit amet mauris euismod scelerisque. Sed iaculis luctus metus vel scelerisque.</p>
       </div> : (data?.page ? <>
-        {!isEditing && <ReactMarkdown>{data.page.content}</ReactMarkdown>}
+        {!isEditing && <Markdown>{data.page.content}</Markdown>}
         {isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={assembleEditorOptions(uploadMarkdownImage)}/>}
         {(userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <Button
           icon="edit"

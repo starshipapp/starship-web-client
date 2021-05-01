@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Alert, Button, ButtonGroup, Icon, Intent, Popover } from "@blueprintjs/core";
 import React, { useState } from "react";
-import ReactMarkdown from "react-markdown";
 import SimpleMDEEditor from "react-simplemde-editor";
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
 import Profile from "../../../profile/Profile";
@@ -29,6 +28,7 @@ import isMobile from "../../../util/isMobile";
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
 import { assembleEditorOptions } from "../../../util/editorOptions";
 import fixPFP from "../../../util/fixPFP";
+import Markdown from "../../../util/Markdown";
 
 interface IForumThreadItemProps {
   forumId: string
@@ -181,7 +181,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
             >
               Save
             </Button>
-          </div> : <ReactMarkdown>{props.post.content ?? ""}</ReactMarkdown>}
+          </div> : <Markdown>{props.post.content ?? ""}</Markdown>}
         </div>
         <div className="ForumThreadItem-bottom">
           <ButtonGroup>

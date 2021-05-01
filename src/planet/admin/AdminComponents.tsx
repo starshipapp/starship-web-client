@@ -14,6 +14,7 @@ interface IAdminComponentProps {
 
 function AdminComponent(props: IAdminComponentProps): JSX.Element {
   const [popoverId, setPopoverId] = useState<string>("");
+  const [deletePopoverId, setDeleteId] = useState<string>("");
   const [renameComponent] = useMutation<IRenameComponentMutationData>(renameComponentMutation);
   const [deleteComponent] = useMutation<IRemoveComponentMutationData>(removeComponentMutation);
   const [nameTextbox, setNameTextbox] = useState<string>("");
@@ -51,13 +52,19 @@ function AdminComponent(props: IAdminComponentProps): JSX.Element {
                     </div>
                   </Popover></td>
                   <td className="AdminComponents-table-action">
-                    <Button intent="danger" className="AdminComponents-action-button" small={true} icon="trash" onClick={() => {
-                      deleteComponent({variables: {planetId: props.planet.id, componentId: value.componentId}}).then(() => {
-                        GlobalToaster.show({message: `Sucessfully deleted ${value.name}.`, intent: Intent.SUCCESS});
-                      }).catch((err: Error) => {
-                        GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                      });
-                    }}/>
+                    <Popover isOpen={deletePopoverId === value.componentId} onClose={() => setDeleteId("")}>
+                      <Button intent="danger" className="AdminComponents-action-button" small={true} icon="trash" onClick={() => setDeleteId(value.componentId)}/>
+                      <div className="menu-form">
+                        <p>Are you sure?</p>
+                        <Button intent="danger" icon="trash" text="Delete" onClick={() => {
+                          deleteComponent({variables: {planetId: props.planet.id, componentId: value.componentId}}).then(() => {
+                            GlobalToaster.show({message: `Sucessfully deleted ${value.name}.`, intent: Intent.SUCCESS});
+                          }).catch((err: Error) => {
+                            GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                          });
+                        }}/>
+                      </div>
+                    </Popover>
                     {/* ComponentIndex.ComponentDataTypes[value.type].settingsComponent? && <Button small={true} className="AdminComponents-action-button" icon="settings"/>*/}
                   </td>
                 </tr>

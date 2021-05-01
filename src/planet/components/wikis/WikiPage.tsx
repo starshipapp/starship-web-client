@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Button, ButtonGroup, Intent, NonIdealState, Popover } from "@blueprintjs/core";
-import ReactMarkdown from "react-markdown";
 import SimpleMDEEditor from "react-simplemde-editor";
 import IPlanet from "../../../types/IPlanet";
 import { useMutation, useQuery } from "@apollo/client";
 import getWikiPage, { IGetWikiPageData } from "../../../graphql/queries/components/wikis/getWikiPage";
 import permissions from "../../../util/permissions";
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
-import editorOptions, { assembleEditorOptions } from "../../../util/editorOptions";
+import { assembleEditorOptions } from "../../../util/editorOptions";
 import updateWikiPageMutation, { IUpdateWikiPageData } from "../../../graphql/mutations/components/wikis/updateWikiPageMutation";
 import { GlobalToaster } from "../../../util/GlobalToaster";
 import renameWikiPageMutation, { IRenameWikiPageData } from "../../../graphql/mutations/components/wikis/renameWikiPageMutation";
@@ -15,6 +14,7 @@ import removeWikiPageMutation, { IRemoveWikiPageData } from "../../../graphql/mu
 import { useHistory } from "react-router-dom";
 import isMobile from "../../../util/isMobile";
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
+import Markdown from "../../../util/Markdown";
 
 interface IWikiPageProps {
   id: string,
@@ -57,7 +57,7 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
   return (
     <div className="bp3-dark PageComponent">
       <h1 className="WikiComponent-header">{data?.wikiPage.name ?? ""}</h1>
-      {data?.wikiPage && !isEditing && <ReactMarkdown>{data?.wikiPage?.content ?? ""}</ReactMarkdown>}
+      {data?.wikiPage && !isEditing && <Markdown>{data?.wikiPage?.content ?? ""}</Markdown>}
       {data?.wikiPage && isEditing && <SimpleMDEEditor onChange={(e) => setEditingContent(e)} value={editingContent} options={assembleEditorOptions(uploadMarkdownImage)}/>}
       {(data?.wikiPage && userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <div className="PageComponent-edit PageComponent-edit-button WikiComponent-buttons">
         <ButtonGroup minimal={true} >

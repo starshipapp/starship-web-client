@@ -17,11 +17,16 @@ const getCurrentUser = gql`
       following {
         id
         name
+        followerCount
+        description
       }
       memberOf {
         id
         name
       }
+      usedBytes
+      capWaived
+      tfaEnabled
     }
   }
 `;

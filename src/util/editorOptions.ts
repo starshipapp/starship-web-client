@@ -61,7 +61,6 @@ export function assembleEditorOptions(newFunction: (options?: MutationFunctionOp
         onSuccess(data.data?.uploadMarkdownImage.finalUrl ?? "");
       }).catch(function (error) {
         // handle error
-        console.log(error);
         onError("Unknown error while uploading image.");
       });
     }).catch((error: Error) => {

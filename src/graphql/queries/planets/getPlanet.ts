@@ -40,6 +40,7 @@ const getPlanet = gql`
         id
       }
       css
+      description
     }
   }
 `;

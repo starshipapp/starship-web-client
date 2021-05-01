@@ -1,10 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Alert, Button, Checkbox, Classes, Icon, Intent, Menu, MenuDivider, MenuItem, Popover, Position, Tooltip } from '@blueprintjs/core';
+import { Alert, Button, Checkbox, Classes, Icon, Intent, Menu, MenuDivider, MenuItem, Popover, Position, ProgressBar, Tooltip } from '@blueprintjs/core';
+import fileSize from 'filesize';
 import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import insertPlanetMutation, { IInsertPlanetMutationData } from '../graphql/mutations/planets/insertPlanetMutation';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
 import Profile from '../profile/Profile';
+import getCap from '../util/getCap';
+import getCapString from '../util/getCapString';
 import { GlobalToaster } from '../util/GlobalToaster';
 import isMobile from '../util/isMobile';
 import './css/MainSidebar.css';
@@ -105,6 +108,18 @@ function MainSidebar(): JSX.Element {
             setProfile(true);
             toggleHidden();  
           }}/>
+          <div className="MainSidebar-datacap">
+            <div className="MainSidebar-datacap-text">
+              {fileSize(data.currentUser.usedBytes ?? 0)} of {getCapString(data.currentUser)} used
+            </div>
+            <div className="MainSidebar-datacap-progress">
+              <ProgressBar
+                value={(data.currentUser.usedBytes ?? 0) / getCap(data.currentUser)}
+                stripes={false}
+                intent={(data.currentUser.usedBytes ?? 0) < getCap(data.currentUser) ? Intent.PRIMARY : Intent.DANGER}
+              />
+            </div>
+          </div>
           <Link to="/settings" className="link-button"><MenuItem onClick={toggleHidden} icon="settings" text="Settings"/></Link>
           <MenuItem icon="log-out" text="Logout" onClick={() => {
             localStorage.removeItem("token");

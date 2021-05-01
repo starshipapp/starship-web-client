@@ -14,5 +14,7 @@ export default interface IFileObject {
   component?: IFileComponent,
   type?: string,
   fileType?: string,
-  finishedUploading?: boolean
+  finishedUploading?: boolean,
+  shareId?: string,
+  size?: number
 }

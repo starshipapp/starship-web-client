@@ -5,8 +5,8 @@ export interface IDeleteFileObjectMutationData {
 }
 
 const deleteFileObjectMutation = gql`
-  mutation DeleteFileObject($objectId: ID!) {
-    deleteFileObject(objectId: $objectId)
+  mutation DeleteFileObject($objectIds: [ID]!) {
+    deleteFileObject(objectIds: $objectIds)
   }
 `;
 

@@ -17,6 +17,7 @@ const getFiles = gql`
       createdAt
       type
       fileType
+      size
       finishedUploading
     }
   }

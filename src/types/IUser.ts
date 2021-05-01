@@ -11,4 +11,7 @@ export default interface IUser {
   memberOf?: [IPlanet],
   banned?: boolean,
   admin?: boolean,
+  usedBytes?: number,
+  capWaived?: boolean,
+  tfaEnabled?: boolean
 }
