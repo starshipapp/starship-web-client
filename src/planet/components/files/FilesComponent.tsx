@@ -118,11 +118,12 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           if(file) {
             uploadFile(file, objectData?.fileObject.id ?? "root");
           }
-        } else if(e.dataTransfer.items[i].kind === "string") {
+        } else if(e.dataTransfer.items[0] && e.dataTransfer.items[0].kind === "string") {
+          const type = e.dataTransfer.items[0].type;
           e.dataTransfer.items[i].getAsString((stringValue) => {
             if(objectData?.fileObject.id) {
               const parent = toParent ? (objectData?.fileObject.parent?.id ?? "root") : objectData.fileObject.id;
-              if(e.dataTransfer.items[0].type === "text/plain") {
+              if(type === "text/plain") {
                 moveObject({variables: {objectIds: [stringValue], parent}}).then(() => {
                   void client.cache.gc();
                   void foldersRefetch();
@@ -130,7 +131,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
                 }).catch((err: Error) => {
                   GlobalToaster.show({message: err.message, intent: Intent.DANGER});
                 });
-              } else if (e.dataTransfer.items[0].type === "application/json") {
+              } else if (type === "application/json") {
                 const idArray: string[] = JSON.parse(stringValue) as string[] ?? [];
                 if(idArray && idArray.length > 0) {
                   moveObject({variables: {objectIds: idArray, parent}}).then(() => {
