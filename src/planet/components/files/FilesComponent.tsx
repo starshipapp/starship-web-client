@@ -83,7 +83,6 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           Object.values(uploading).map((value) => {return completed += value.progress;});
           setCompleted(completed);
           setUploadUpdateCounter(Math.random() * 300000000);
-          console.log(completed / total);
         }, cancelToken: uploading[currentIndex].cancelToken.token};
         setTotal(Object.keys(uploading).length);
         axios.put(data.data.uploadFileObject.uploadUrl, file, options).then(() => {
@@ -109,7 +108,6 @@ function FilesComponent(props: IComponentProps): JSX.Element {
     e.preventDefault();
     e.stopPropagation();
     setDragging(false);
-    console.log(e);
     if (e.dataTransfer.items) {
       // eslint-disable-next-line @typescript-eslint/prefer-for-of
       for (let i = 0; i < e.dataTransfer.items.length; i++) {
@@ -480,7 +478,6 @@ function FilesComponent(props: IComponentProps): JSX.Element {
                     <Icon className="FilesComponent-uploading-info-cancel" icon="cross" onClick={() => {
                       value.cancelToken.cancel();
                       cancelUpload({variables: {objectId: value.documentId}}).then(() => {
-                        console.log(value.documentId);
                         GlobalToaster.show({message: `Upload of ${value.name} canceled.`, intent: Intent.SUCCESS});
                         delete uploading[Object.keys(uploading)[index]];
                         setTotal(Object.keys(uploading).length);
