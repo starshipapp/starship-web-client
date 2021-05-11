@@ -107,9 +107,10 @@ function FileButton(props: IFileButtonProps): JSX.Element {
             onDrop={(e) => {
               e.preventDefault();
               e.stopPropagation();
-              if(e.dataTransfer.items[0].kind === "string") {
+              if(e.dataTransfer.items[0] && e.dataTransfer.items[0].kind === "string") {
+                const type = e.dataTransfer.items[0].type;
                 e.dataTransfer.items[0].getAsString((stringValue) => {
-                  if(e.dataTransfer.items[0].type === "text/plain") {
+                  if(type === "text/plain") {
                     if(stringValue !== props.object.id) {
                       moveObject({variables: {objectIds: [stringValue], parent: props.object.id}}).then(() => {
                         props.refetch();
@@ -118,7 +119,7 @@ function FileButton(props: IFileButtonProps): JSX.Element {
                         GlobalToaster.show({message: err.message, intent: Intent.DANGER});
                       });
                     }
-                  } else if (e.dataTransfer.items[0].type === "application/json") {
+                  } else if (type === "application/json") {
                     const idArray: string[] = JSON.parse(stringValue) as string[] ?? [];
                     if(idArray && idArray.length > 0 && !idArray.includes(props.object.id)) {
                       moveObject({variables: {objectIds: idArray, parent: props.object.id}}).then(() => {
