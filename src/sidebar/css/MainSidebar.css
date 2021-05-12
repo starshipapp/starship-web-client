@@ -129,3 +129,16 @@
   color: #BFCCD6;
   margin-bottom: 0.25rem;
 }
+
+.MainSidebar-notif-icon {
+  padding-left: 7px !important;
+  margin-right: 0 !important;
+}
+
+.MainSidebar-notification-item .bp3-menu-item-label {
+  margin-right: 0rem;
+}
+
+.MainSidebar-notification-item .bp3-icon-caret-right {
+  display: none;
+}

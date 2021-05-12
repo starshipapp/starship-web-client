@@ -1,0 +1,51 @@
+.Notifications {
+  padding: 0 0.35rem;
+  min-width: 15.2rem;
+  max-width: 15.2rem;
+}
+
+.Notifications-notification {
+  border-bottom: #293742 1px solid;
+  padding: 0.35rem 0;
+  min-width: 14.5rem;
+  max-width: 14.5rem;
+}
+
+.Notifications-notification-info {
+  margin-top: 0.3rem;
+  display: flex;
+  color: #8A9BA8;
+}
+
+.Notifications-notification-date {
+  margin-left: 0.35rem;
+  margin-top: 0.075rem;
+}
+
+.Notifications-notification-dismiss {
+  margin-top: -0.15rem;
+  margin-right: -0.35rem;
+  margin-left: auto;
+}
+
+.Notifications-bottom {
+  margin-top: 0.35rem;
+  display: flex;
+}
+
+.Notifications-bottom-clear {
+  margin-left: auto;
+  margin-right: -0.35rem;
+}
+
+.Notifications-bottom-all {
+  margin-left: -0.35rem;
+}
+
+.Notifications .bp3-non-ideal-state-visual {
+  margin-bottom: 0.15rem;
+}
+
+.Notifications .bp3-non-ideal-state {
+  margin-bottom: 0.5rem;
+}
