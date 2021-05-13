@@ -1,14 +1,14 @@
 .Notifications {
   padding: 0 0.35rem;
-  min-width: 15.2rem;
-  max-width: 15.2rem;
+  min-width: 15.7rem;
+  max-width: 15.7rem;
 }
 
 .Notifications-notification {
   border-bottom: #293742 1px solid;
   padding: 0.35rem 0;
-  min-width: 14.5rem;
-  max-width: 14.5rem;
+  min-width: 15rem;
+  max-width: 15em;
 }
 
 .Notifications-notification-info {

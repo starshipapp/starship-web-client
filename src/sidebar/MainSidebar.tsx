@@ -1,11 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client';
 import { Button, Checkbox, Classes, Icon, Intent, Menu, MenuDivider, MenuItem, Popover, Position, ProgressBar, Tag } from '@blueprintjs/core';
 import fileSize from 'filesize';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import insertPlanetMutation, { IInsertPlanetMutationData } from '../graphql/mutations/planets/insertPlanetMutation';
 import getNotifications, { IGetNotificationsData } from '../graphql/queries/misc/getNotifications';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
+import onNotificationRecieved from '../graphql/subscriptions/misc/onNotificationRecieved';
+import INotification from '../types/INotification';
 import getCap from '../util/getCap';
 import getCapString from '../util/getCapString';
 import { GlobalToaster } from '../util/GlobalToaster';
@@ -13,9 +15,11 @@ import isMobile from '../util/isMobile';
 import './css/MainSidebar.css';
 import Notifications from './Notifications';
 
+let hasSubscribed = false;
+
 function MainSidebar(): JSX.Element {
   const { client, loading, data, refetch } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const { data: notifications, refetch: refetchNotifs} = useQuery<IGetNotificationsData>(getNotifications, {errorPolicy: 'all'});
+  const { subscribeToMore, data: notifications, refetch: refetchNotifs} = useQuery<IGetNotificationsData>(getNotifications, {errorPolicy: 'all'});
   const [insertPlanet] = useMutation<IInsertPlanetMutationData>(insertPlanetMutation);
   const [planetName, setPlanetName] = useState<string>("");
   const [privatePlanet, setPrivate] = useState<boolean>(false);
@@ -24,6 +28,22 @@ function MainSidebar(): JSX.Element {
 
   const history = useHistory();
   const notifCount = notifications?.notifications ? notifications.notifications.filter((value) => value.isRead === false).length : 0;
+
+  useEffect(() => {
+    if(!hasSubscribed && notifications?.notifications) {
+      hasSubscribed = true;
+      subscribeToMore({
+        document: onNotificationRecieved,
+        updateQuery: (prev, {subscriptionData}) => {
+          const data = subscriptionData.data as unknown as {notificationRecieved: INotification};
+          if (!data.notificationRecieved) return prev;
+          return Object.assign({}, prev, {
+            notifications: [data.notificationRecieved, ...prev.notifications]            
+          });
+        }
+      });
+    }
+  });
 
   const createPlanet = function() {
     if(planetName === "") {
