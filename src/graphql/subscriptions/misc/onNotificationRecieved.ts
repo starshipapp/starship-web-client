@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 
 const onNotificationRecieved = gql`
-  subscription OnNotificaitonRecieved {
+  subscription OnNotificationRecieved {
     notificationRecieved {
       id
       createdAt

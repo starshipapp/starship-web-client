@@ -1,13 +1,10 @@
 import { useMutation, useQuery } from '@apollo/client';
-import { Button, Checkbox, Classes, Icon, Intent, Menu, MenuDivider, MenuItem, Popover, Position, ProgressBar, Tag } from '@blueprintjs/core';
+import { Button, Checkbox, Classes, Icon, Intent, Menu, MenuDivider, MenuItem, Popover, Position, ProgressBar } from '@blueprintjs/core';
 import fileSize from 'filesize';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import insertPlanetMutation, { IInsertPlanetMutationData } from '../graphql/mutations/planets/insertPlanetMutation';
-import getNotifications, { IGetNotificationsData } from '../graphql/queries/misc/getNotifications';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
-import onNotificationRecieved from '../graphql/subscriptions/misc/onNotificationRecieved';
-import INotification from '../types/INotification';
 import getCap from '../util/getCap';
 import getCapString from '../util/getCapString';
 import { GlobalToaster } from '../util/GlobalToaster';
@@ -15,11 +12,12 @@ import isMobile from '../util/isMobile';
 import './css/MainSidebar.css';
 import Notifications from './Notifications';
 
-let hasSubscribed = false;
+interface IMainSidebarProps {
+  forcefullyResetLink: () => void;
+}
 
-function MainSidebar(): JSX.Element {
+function MainSidebar(props: IMainSidebarProps): JSX.Element {
   const { client, loading, data, refetch } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const { subscribeToMore, data: notifications, refetch: refetchNotifs} = useQuery<IGetNotificationsData>(getNotifications, {errorPolicy: 'all'});
   const [insertPlanet] = useMutation<IInsertPlanetMutationData>(insertPlanetMutation);
   const [planetName, setPlanetName] = useState<string>("");
   const [privatePlanet, setPrivate] = useState<boolean>(false);
@@ -27,23 +25,7 @@ function MainSidebar(): JSX.Element {
   const [isHidden, setHidden] = useState<boolean>(isMobile());
 
   const history = useHistory();
-  const notifCount = notifications?.notifications ? notifications.notifications.filter((value) => value.isRead === false).length : 0;
 
-  useEffect(() => {
-    if(!hasSubscribed && notifications?.notifications) {
-      hasSubscribed = true;
-      subscribeToMore({
-        document: onNotificationRecieved,
-        updateQuery: (prev, {subscriptionData}) => {
-          const data = subscriptionData.data as unknown as {notificationRecieved: INotification};
-          if (!data.notificationRecieved) return prev;
-          return Object.assign({}, prev, {
-            notifications: [data.notificationRecieved, ...prev.notifications]            
-          });
-        }
-      });
-    }
-  });
 
   const createPlanet = function() {
     if(planetName === "") {
@@ -125,17 +107,7 @@ function MainSidebar(): JSX.Element {
             <Link onClick={toggleHidden} className="link-button" to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>
           ))}
           <MenuDivider/>
-          <MenuItem 
-            icon="user" 
-            className="MainSidebar-notification-item"
-            text={data.currentUser.username} 
-            labelElement={notifCount > 0 ? <Tag className="MainSidebar-notif-icon" round={true} intent="danger">{notifCount}</Tag> : null} 
-            onClick={() => {
-              toggleHidden();
-            }}
-          > 
-            {notifications && notifications.notifications && <Notifications notifications={notifications.notifications} refetch={() => refetchNotifs()}/>}
-          </MenuItem>
+          <Notifications currentUser={data.currentUser}/>
           <div className="MainSidebar-datacap">
             <div className="MainSidebar-datacap-text">
               {fileSize(data.currentUser.usedBytes ?? 0)} of {getCapString(data.currentUser)} used
@@ -151,6 +123,7 @@ function MainSidebar(): JSX.Element {
           <Link to="/settings" className="link-button"><MenuItem onClick={toggleHidden} icon="settings" text="Settings"/></Link>
           <MenuItem icon="log-out" text="Logout" onClick={() => {
             localStorage.removeItem("token");
+            props.forcefullyResetLink();
             void client.cache.gc();
             void client.resetStore();
             toggleHidden();

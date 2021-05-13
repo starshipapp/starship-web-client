@@ -18,7 +18,11 @@ import Activate from './login/Activate';
 
 const history = createBrowserHistory();
 
-function App(): JSX.Element {
+interface IAppProps {
+  forcefullyResetLink: () => void;
+}
+
+function App(props: IAppProps): JSX.Element {
   return (
     <Router history={history}>
       <div className="App bp3-dark">
@@ -28,10 +32,10 @@ function App(): JSX.Element {
           </Route>
           <Route>
             <Unsupported/>
-            <MainSidebar />
+            <MainSidebar forcefullyResetLink={props.forcefullyResetLink}/>
             <Switch>
               <Route path="/login">
-                <Login/>
+                <Login forcefullyResetLink={props.forcefullyResetLink}/>
               </Route>
               <Route path="/planet/:planet">
                 <Planet home={true}/>

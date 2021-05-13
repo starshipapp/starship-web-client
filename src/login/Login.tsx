@@ -16,7 +16,11 @@ import finalizeAuthorizationMutation, { IFinalizeAuthorizationMutationData } fro
 
 let tfaToken = "";
 
-function Login(): JSX.Element {
+interface ILoginProps {
+  forcefullyResetLink: () => void;
+}
+
+function Login(props: ILoginProps): JSX.Element {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [signIn] = useMutation<ISignInMutationData>(signInMutation);
@@ -101,6 +105,7 @@ function Login(): JSX.Element {
           localStorage.setItem("token", value.data.loginUser.token);
           GlobalToaster.show({ intent: "success", message: "Sucessfully logged in." });
           void client.resetStore();
+          props.forcefullyResetLink();
           setUsername("");
           setPassword("");
           history.push("/");
@@ -139,6 +144,7 @@ function Login(): JSX.Element {
                   localStorage.setItem("token", data.data.finalizeAuthorization.token);
                   GlobalToaster.show({ intent: "success", message: "Sucessfully logged in." });
                   void client.resetStore();
+                  props.forcefullyResetLink();
                   setUsername("");
                   setPassword("");
                   history.push("/");
