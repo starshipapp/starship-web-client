@@ -32,10 +32,10 @@ function Admin(props: IAdminProps): JSX.Element {
     <> 
       <div className="Admin bp3-dark">
         {loading ? <div></div> : data?.currentUser && permissions.checkFullWritePermission(data.currentUser, props.planet) ? <div>
-          <h1><Button icon="menu" onClick={toggleSidebar} minimal={true} className="Admin-mobile-button"/>Admin</h1>
+          <h1><Button icon="menu" onClick={toggleSidebar} minimal={true} className="sidebar-mobile-button"/>Admin</h1>
           {showSidebar && <div className="Admin-background" onClick={toggleSidebar}/>}
           <div className="Admin-container">
-            <div className={isMobile() ? (showSidebar ? "Admin-sidebar Admin-sidebar-mobile" : "Admin-sidebar Admin-sidebar-hidden") : "Admin-sidebar"}>
+            <div className={isMobile() ? (showSidebar ? "sidebar sidebar-mobile" : "sidebar sidebar-hidden") : "sidebar"}>
               <Menu>
                 <Link onClick={toggleSidebar} className="link-button" to={`/planet/${props.planet.id}/admin`}><MenuItem icon="wrench" text="General"/></Link>
                 <Link onClick={toggleSidebar} className="link-button" to={`/planet/${props.planet.id}/admin/components`}><MenuItem icon="document" text="Components"/></Link>

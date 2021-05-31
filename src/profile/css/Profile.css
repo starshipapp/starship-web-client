@@ -1,5 +1,21 @@
+.Profile {
+  padding-bottom: 0;
+}
+
+.Profile .bp3-dialog-body {
+  margin: 0;
+}
+
+.Profile-background {
+  background-color: #30404d;
+  width: 100%;
+  height: 6rem;
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
 .Profile-container {
-  display: flex;
+  /*display: flex;*/
 }
 
 .Profile-info {
@@ -7,9 +23,11 @@
 }
 
 .Profile-pfp {
+  position: relative;
   width: 6.5rem;
-  margin-right: 0.75rem;
-  height: 6.5rem;
+  top: -2.4rem;
+  left: 1.5rem;
+  height: 6.15rem;
   border-radius: 0.5rem;
   margin-bottom: 0.5rem;
   background-color: #394B59;
@@ -22,6 +40,9 @@
 }
 
 .Profile-name {
+  position: relative;
+  top: -5.9rem;
+  left: 8.75rem;
   font-weight: bold;
   font-size: 1.5rem;
   white-space: nowrap;
@@ -30,7 +51,9 @@
 }
 
 .Profile-tags {
-  margin-top: 0.5rem;
+  position: relative;
+  top: -10.75rem;
+  left: 8.75rem;
 }
 
 .Profile-tags, .bp3-tag {
@@ -38,8 +61,19 @@
 }
 
 .Profile-date {
-  margin-top: 0.25rem;
+  position: relative;
+  top: -5.65rem;
+  left: 8.75rem;
   font-size: 0.85rem;
   color: #8A9BA8;
   font-style: italic;
+}
+
+.Profile-header {
+  margin-bottom: -5rem;
+}
+
+.Profile-block {
+  margin: 1.5rem;
+  margin-top: 0;
 }

@@ -40,7 +40,7 @@ function WikiComponent(props: IComponentProps): JSX.Element {
 
   return (
     <div className="bp3-dark WikiComponent">
-      <h1><Button icon="menu" onClick={toggleSidebar} minimal={true} className="WikiComponent-mobile-button"/>{props.name}</h1>
+      <h1><Button icon="menu" onClick={toggleSidebar} minimal={true} className="sidebar-mobile-button"/>{props.name}</h1>
       {wikiData?.wiki && wikiData.wiki.pages?.length === 0 && <div>
         <NonIdealState
           icon="error"
@@ -57,7 +57,7 @@ function WikiComponent(props: IComponentProps): JSX.Element {
       </div>}
       {showSidebar && <div className="WikiComponent-background" onClick={toggleSidebar}/>}
       {wikiData?.wiki && wikiData.wiki.pages?.length !== 0 && <div className="WikiComponent-container">
-        <div className={isMobile() ? (showSidebar ? "WikiComponent-sidebar WikiComponent-sidebar-mobile" : "WikiComponent-sidebar WikiComponent-sidebar-hidden") : "WikiComponent-sidebar"}>
+        <div className={isMobile() ? (showSidebar ? "sidebar sidebar-mobile" : "sidebar sidebar-hidden") : "sidebar"}>
           <Menu>
             {wikiData?.wiki && wikiData.wiki.pages?.map((value) => (<Link onClick={toggleSidebar} className="link-button" key={value.id} to={`/planet/${props.planet.id}/${props.id}/${value.id ?? ""}`}><Menu.Item icon="document" text={value.name}/></Link>))}
             {hasWritePermission && <Popover isOpen={showNewPage}>

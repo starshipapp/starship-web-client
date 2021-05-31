@@ -133,3 +133,47 @@ blockquote {
 .bp3-multistep-dialog-left-panel {
   pointer-events: none;
 }
+
+.sidebar-mobile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: -2rem;
+  z-index: 2;
+  max-width: 16rem;
+}
+
+.sidebar-mobile-button {
+  display: none !important;
+}
+
+@media only screen and (max-width: 600px) {
+  .sidebar-hidden {
+    display: none;
+    height: 1rem !important;
+  }
+  
+  .sidebar-mobile-button {
+    display: inline-block;
+    margin-right: 0.5rem;
+    padding-left: 0.9rem;
+    margin-top: -0.075rem;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .sidebar {
+    min-width: 10rem;
+    border-right: 1px solid rgba(16, 22, 26, 0.3);
+  }
+
+  .sidebar .bp3-menu {
+    margin-top: -0.1rem;
+    margin-left: -0.5rem;
+    margin-right: 0.5rem;
+    min-width: 10rem;
+    max-width: 15rem;
+    padding: 0;
+    background-color: #00000000 !important;
+  }
+}
