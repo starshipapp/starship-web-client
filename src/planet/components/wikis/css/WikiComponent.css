@@ -18,6 +18,11 @@
 }
 
 .WikiComponent-buttons {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 0;
+  opacity: 0.75; 
   margin-top: 0.35rem;
 }
 
@@ -25,7 +30,30 @@
   margin-bottom: 0.5rem !important;
 }
 
+@media only screen and (min-width: 600px) {
+  .Planet-contentcontainer-redesign .WikiComponent-title {
+    font-size: 3.0rem; 
+    font-weight: bold;
+    margin-top: 1.25rem;
+    margin-bottom: 0.65rem;
+  } 
+  .Planet-contentcontainer-redesign .WikiComponent {
+    margin-top: 1rem;
+    max-width: 75vw;
+    min-width: 75vw;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 @media only screen and (max-width: 600px) {
+  .WikiComponent {
+    margin-top: 1rem;
+    max-width: 90vw;
+    min-width: 90vw;
+    margin-left: auto;
+    margin-right: auto;
+  }
   .WikiComponent-main {
     margin-left: 0 !important;
   }

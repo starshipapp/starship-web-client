@@ -28,7 +28,7 @@ function AdminComponent(props: IAdminComponentProps): JSX.Element {
   };
 
   return (
-    <div className="Admin bp3-dark">
+    <div className="Admin-page bp3-dark">
       <div>
         <h2>Components</h2>
         <div className="AdminComponents-container">

@@ -21,18 +21,18 @@ a.link-button {
 }
 
 h1 {
-  margin: 0 !important;
-  margin-bottom: 0.25rem;
+  margin: 0;
+  margin-bottom: 0.45rem;
 }
 
 h2 {
-  margin: 0  !important;
-  margin-bottom: 0.15rem;
+  margin: 0;
+  margin-bottom: 0.3rem;
 }
 
 h3 {
-  margin: 0  !important;
-  margin-bottom: 0.1rem;
+  margin: 0;
+  margin-bottom: 0.15rem;
 }
 
 img {
@@ -143,10 +143,6 @@ blockquote {
   max-width: 16rem;
 }
 
-.sidebar-mobile-button {
-  display: none !important;
-}
-
 @media only screen and (max-width: 600px) {
   .sidebar-hidden {
     display: none;
@@ -165,6 +161,10 @@ blockquote {
   .sidebar {
     min-width: 10rem;
     border-right: 1px solid rgba(16, 22, 26, 0.3);
+  }
+
+  .sidebar-mobile-button {
+    display: none !important;
   }
 
   .sidebar .bp3-menu {

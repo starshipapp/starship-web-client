@@ -8,6 +8,7 @@ interface IFileBreadcrumbsProps {
   path: string[],
   planetId: string,
   componentId: string,
+  name: string,
   resetSearch: () => void
 }
 
@@ -17,7 +18,7 @@ function FileBreadcrumbs(props: IFileBreadcrumbsProps): JSX.Element {
   const propsRef = props;
 
   const items: IBreadcrumbProps[] = [
-    {text: "Root", current: (props.path.length === 1), icon: "home", onClick: () => {history.push(`/planet/${props.planetId}/${props.componentId}`); propsRef.resetSearch();}}
+    {text: props.name, current: (props.path.length === 1), icon: "home", onClick: () => {history.push(`/planet/${props.planetId}/${props.componentId}`); propsRef.resetSearch();}}
   ];
 
   if(data?.fileObjectArray) {

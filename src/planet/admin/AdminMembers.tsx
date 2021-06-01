@@ -29,7 +29,7 @@ function AdminMembers(props: IAdminMembersProps): JSX.Element {
   };
  
   return (
-    <div className="Admin bp3-dark">
+    <div className="Admin-page  bp3-dark">
       <h2>Members</h2>
       <div className="AdminMembers-container">
         <div>

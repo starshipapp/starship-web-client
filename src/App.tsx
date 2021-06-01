@@ -30,18 +30,22 @@ function App(props: IAppProps): JSX.Element {
           <Route path="/gadmin">
             <GAdmin/>
           </Route>
+          <Route path="/planet/:planet">
+            <Unsupported/>
+            <MainSidebar forcefullyResetLink={props.forcefullyResetLink}/>
+            <Planet home={true}/>
+          </Route>
+          <Route path="/planet/:planet/:component">
+            <Unsupported/>
+            <MainSidebar forcefullyResetLink={props.forcefullyResetLink}/>
+            <Planet home={false}/>
+          </Route>
           <Route>
             <Unsupported/>
             <MainSidebar forcefullyResetLink={props.forcefullyResetLink}/>
             <Switch>
               <Route path="/login">
                 <Login forcefullyResetLink={props.forcefullyResetLink}/>
-              </Route>
-              <Route path="/planet/:planet">
-                <Planet home={true}/>
-              </Route>
-              <Route path="/planet/:planet/:component">
-                <Planet home={false}/>
               </Route>
               <Route path="/invite/:inviteId">
                 <Invite/>

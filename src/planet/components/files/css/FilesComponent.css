@@ -4,6 +4,14 @@
   min-height: 100%;
 }
 
+.Planet-contentcontainer-redesign .FilesComponent {
+  margin: 1.5rem;
+  margin-top: 1.15rem;
+  min-height: calc(100% - 1.15rem);
+  min-width: calc(100% - 3rem);
+  min-width: calc(100% - 3rem);
+}
+
 .FilesComponent-dragging {
   box-shadow: 0 0 3pt 2pt #3dcc91;
   padding: 1rem;
@@ -147,19 +155,32 @@
 
 .FilesComponent-readme .TextPreview {
   margin-top: 1rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.Planet-contentcontainer-redesign .FilesComponent-readme .TextPreview {
+  margin-top: 1rem;
+  margin-bottom: 3.25rem;
+}
+
+.Planet-contentcontainer-redesign .FilesComponent-statusbar {
+  min-width: calc(100% + 3rem);
+  max-width: calc(100% + 3rem);
+  margin-left: -1.5rem;
 }
 
 .FilesComponent-statusbar {
   display: flex;
+  margin-top: auto;
+  position: sticky;
   padding: 0.5rem;
-  position: absolute;
   bottom: 0rem;
-  min-width: calc(75vw + 3px);
-  max-width: calc(75vw + 3px);
+  min-width: calc(100% + 0.3rem);
+  max-width: calc(100% + 0.3rem);
   background-color: rgb(41, 55, 66);
   margin-left: -0.15rem;
   border-top: 1px #30404d solid;
+  z-index: 0;
 }
 
 .FilesComponent-statusbar-objectinfo .bp3-icon {
@@ -177,9 +198,6 @@
   margin-right: 0.5rem;
 }
 
-.FileComponent-status-spacer {
-  margin-bottom: 2rem;
-}
 
 .FilesComponent-drop-icon {
   display: block;
@@ -224,7 +242,7 @@
 
 @media only screen and (max-width: 600px) {
   .FilesComponent-statusbar {
-    min-width: calc(90vw + 3px);
-    max-width: calc(90vw + 3px);
+    min-width: calc(100vw - 3rem) !important;
+    max-width: calc(100vw - 3rem) !important;
   }
 }

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, ButtonGroup, Classes, Divider, H2, Icon, InputGroup, Intent, Menu, MenuItem, NonIdealState, Popover, ProgressBar, Text } from "@blueprintjs/core";
+import { Button, ButtonGroup, Classes, Divider, H2, Icon, InputGroup, Intent, Menu, MenuItem, NonIdealState, Popover, Position, ProgressBar, Text } from "@blueprintjs/core";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import completeUploadMutation, { ICompleteUploadMutationData } from "../../../graphql/mutations/components/files/completeUploadMutation";
@@ -305,7 +305,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           }}
           multiple
         />
-        {(objectData?.fileObject || !props.subId) && <FileBreadcrumbs path={objectData?.fileObject.path ? objectData.fileObject.path.concat([objectData.fileObject.id]) : ["root"]} componentId={props.id} planetId={props.planet.id} resetSearch={resetSearch}/>}
+        {(objectData?.fileObject || !props.subId) && <FileBreadcrumbs name={props.name} path={objectData?.fileObject.path ? objectData.fileObject.path.concat([objectData.fileObject.id]) : ["root"]} componentId={props.id} planetId={props.planet.id} resetSearch={resetSearch}/>}
         {(objectData?.fileObject || !props.subId) && (objectData?.fileObject.type === "folder" || !props.subId) && <InputGroup 
           leftIcon="search"
           value={searchTextbox}
@@ -363,8 +363,11 @@ function FilesComponent(props: IComponentProps): JSX.Element {
               }}/>
             </div>
           </Popover>
-          <Popover>
-            <Button icon="settings"/>
+          {/* props.subId && <Divider/>*/}
+          {/* this.props.subId && <Button text="Download Folder" icon="download" onClick={this.downloadZip}/>*/}
+        </ButtonGroup>}
+        <Popover>
+            <Button icon="settings" minimal={true}/>
             <Menu>
               <MenuItem icon={listView ? "tick" : "cross"} text="List View" onClick={() => {
                 setListView(!listView);
@@ -372,9 +375,6 @@ function FilesComponent(props: IComponentProps): JSX.Element {
               }}/>
             </Menu>
           </Popover>
-          {props.subId && <Divider/>}
-          {/* this.props.subId && <Button text="Download Folder" icon="download" onClick={this.downloadZip}/>*/}
-        </ButtonGroup>}
       </div>
       {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && !listView && <div className="FilesComponent-button-container">
         {props.subId && objectData && <Link to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
@@ -469,7 +469,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           {Object.values(uploading).length !== 0 && <div className="FilesComponent-uploading-container">
             <Icon className="FilesComponent-uploading-icon FilesComponent-uploading-icon-first" iconSize={16} icon="upload"/>
             <ProgressBar className="FilesComponent-uploading-progress" intent={Intent.PRIMARY} value={completed / total}/>
-            <Popover>
+            <Popover position={Position.TOP_LEFT}>
               <Icon className="FilesComponent-uploading-icon" iconSize={16} icon="chevron-up"/>
               <div className="FilesComponent-uploading-info-container">
                 {Object.values(uploading).map((value, index) => (<div key={index} className="FilesComponent-uploading-info">

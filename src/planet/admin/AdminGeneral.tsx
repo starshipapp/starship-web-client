@@ -52,7 +52,7 @@ function AdminGeneral(props: IAdminGeneralProps): JSX.Element {
   };
 
   return (
-    <div className="Admin bp3-dark">
+    <div className="Admin-page bp3-dark">
       <Alert
         isOpen={isOpen}
         onClose={() => setOpen(false)}

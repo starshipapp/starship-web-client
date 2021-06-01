@@ -18,7 +18,7 @@ function AdminExperimental(props: IAdminExperimentalProps): JSX.Element {
   const [setCSS] = useMutation<ISetCSSMutationData>(setCSSMutation);
 
   return (
-    <div className="Admin bp3-dark">
+    <div className="Admin-page bp3-dark">
       <div>
         <h2>Experimental</h2>
         <div className="AdminGeneral-container">

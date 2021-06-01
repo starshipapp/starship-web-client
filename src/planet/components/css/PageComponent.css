@@ -60,3 +60,43 @@
   border-right: 0px;
   background-color: rgba(138, 155, 168, 0.15);;
 }
+
+@media only screen and (min-width: 600px) {
+  .Planet-contentcontainer-redesign .PageComponent-edit-button {
+    position: static;
+    margin-bottom: 0.15rem;
+    margin-left: 0.5rem;
+    opacity: 1;
+  }
+
+  .PageComponent-title {
+    font-size: 3.0rem; 
+    font-weight: bold;
+    margin-top: 1.25rem;
+    margin-bottom: 0.65rem;
+  } 
+  .Planet-contentcontainer-redesign .PageComponent {
+    margin-top: 1rem;
+    max-width: 75vw;
+    min-width: 75vw;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .Planet-contentcontainer-redesign .PageComponent {
+    margin-top: 1rem;
+    max-width: 90vw;
+    min-width: 90vw;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .Planet-contentcontainer-redesign  .PageComponent-title {
+    max-width: 90vw;
+    min-width: 90vw;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+}

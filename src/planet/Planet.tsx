@@ -3,6 +3,7 @@ import {Alignment, Button, Classes, Navbar, NonIdealState} from "@blueprintjs/co
 import React from "react";
 import { Route, Switch, useParams, useRouteMatch } from "react-router-dom";
 import getPlanet, { IGetPlanetData } from "../graphql/queries/planets/getPlanet";
+import yn from 'yn';
 import "./css/Planet.css";
 import InfoStrip from "./InfoStrip";
 import PlanetContent from "./PlanetContent";
@@ -17,17 +18,18 @@ interface IPlanetProps {
 
 function Planet(props: IPlanetProps): JSX.Element {
   const match = useRouteMatch();
+  const useRedesign = yn(localStorage.getItem("superSecretSetting.useRedesign"));
   const {planet} = useParams<IPlanetParams>();
   const {loading, data} = useQuery<IGetPlanetData>(getPlanet, {variables: {planet}, errorPolicy: 'all'});
 
   return (
     <div className="Planet">
       {loading ? <>
-        <div className={"Planet-header"}>
+        {!useRedesign && <div className={"Planet-header"}>
           <div className={`Planet-header-name-skeleton ${Classes.SKELETON}`}/>
           <div className={`Planet-header-infostrip-skeleton ${Classes.SKELETON}`}/>
-        </div>
-        <Navbar className="Planet-navbar">
+        </div>}
+        {!useRedesign && <Navbar className="Planet-navbar">
           <div className="Planet-navbar-content">
             <Navbar.Group align={Alignment.LEFT}>
               <Button className={`Planet-navbar-button-skeleton ${Classes.SKELETON}`} outlined={props.home} small={true} icon="home" text="Home"/>
@@ -35,13 +37,13 @@ function Planet(props: IPlanetProps): JSX.Element {
               <Button className={`Planet-navbar-button-skeleton ${Classes.SKELETON}`} outlined={props.home} small={true} icon="home" text="Home"/>
             </Navbar.Group>
           </div>
-        </Navbar>
+        </Navbar>}
         <div className={`Planet-contentcontainer Planet-contentcontainer-skeleton ${Classes.SKELETON}`}/>
       </> : (data?.planet ? <>
-        <div className="Planet-header">
+        {!useRedesign && <div className="Planet-header">
           <div className="Planet-header-name">{data.planet.name}</div>
           <InfoStrip planet={data.planet}/>
-        </div>
+        </div>}
         <Switch>
           <Route path={`${match.path}/:component/:subId/:page`}>
             <PlanetContent home={false} planet={data.planet}/>

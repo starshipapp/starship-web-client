@@ -40,7 +40,7 @@ function WikiComponent(props: IComponentProps): JSX.Element {
 
   return (
     <div className="bp3-dark WikiComponent">
-      <h1><Button icon="menu" onClick={toggleSidebar} minimal={true} className="sidebar-mobile-button"/>{props.name}</h1>
+      <h1 className="WikiComponent-title"><Button icon="menu" onClick={toggleSidebar} minimal={true} className="sidebar-mobile-button"/>{props.name}</h1>
       {wikiData?.wiki && wikiData.wiki.pages?.length === 0 && <div>
         <NonIdealState
           icon="error"

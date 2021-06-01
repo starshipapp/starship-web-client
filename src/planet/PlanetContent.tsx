@@ -11,6 +11,8 @@ import permissions from "../util/permissions";
 import Admin from "./admin/Admin";
 import ComponentIndex from "./ComponentIndex";
 import "./css/Planet.css";
+import yn from 'yn';
+import PlanetSidebar from "../sidebar/PlanetSidebar";
 
 interface IPlanetContentParams {
   planet: string,
@@ -25,11 +27,14 @@ interface IPlanetContentProps {
 }
 
 function PlanetContent(props: IPlanetContentProps): JSX.Element {
+  const useRedesign = yn(localStorage.getItem("superSecretSetting.useRedesign"));
   const {planet, component, subId, page} = useParams<IPlanetContentParams>();
   const {data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [componentName, setComponentName] = useState<string>("");
   const [addComponent] = useMutation<IAddComponentMutationData>(addComponentMutation);
   const [forceStyling, enableStyling] = useState<boolean>(false);
+
+  console.log(useRedesign);
 
   useEffect(() => {
     if(component && props.planet.components) {
@@ -97,7 +102,7 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
   return (
     <>
       {props.planet.css && (component !== "admin" || forceStyling === true) && <style>{props.planet.css}</style>}
-      <Navbar className="Planet-navbar">
+      {!useRedesign && <Navbar className="Planet-navbar">
         <div className="Planet-navbar-content">
           <Navbar.Group align={Alignment.LEFT}>
             <Link className="link-button" to={`/planet/${planet}`}> <Button className="bp3-minimal" outlined={props.home} icon="home" text="Home"/> </Link>
@@ -134,8 +139,8 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
             </Popover>}
           </Navbar.Group>
         </div>
-      </Navbar>
-      {props.planet.components && <div className="Planet-contentcontainer">
+      </Navbar>}
+      {props.planet.components && <div className={useRedesign ? "Planet-contentcontainer-redesign" : "Planet-contentcontainer"}>
         {currentComponent}
       </div>}
     </>

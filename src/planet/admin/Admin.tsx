@@ -32,7 +32,7 @@ function Admin(props: IAdminProps): JSX.Element {
     <> 
       <div className="Admin bp3-dark">
         {loading ? <div></div> : data?.currentUser && permissions.checkFullWritePermission(data.currentUser, props.planet) ? <div>
-          <h1><Button icon="menu" onClick={toggleSidebar} minimal={true} className="sidebar-mobile-button"/>Admin</h1>
+          <h1 className="Admin-title"><Button icon="menu" onClick={toggleSidebar} minimal={true} className="sidebar-mobile-button"/>Admin</h1>
           {showSidebar && <div className="Admin-background" onClick={toggleSidebar}/>}
           <div className="Admin-container">
             <div className={isMobile() ? (showSidebar ? "sidebar sidebar-mobile" : "sidebar sidebar-hidden") : "sidebar"}>

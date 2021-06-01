@@ -13,6 +13,7 @@ import IComponentProps from "../IComponentProps";
 import "./css/ForumComponent.css";
 import ForumEditor from "./ForumEditor";
 import ForumItemContainer from "./ForumItemContainer";
+import yn from "yn";
 import ForumThread from "./ForumThread";
 
 const sortOptions = {
@@ -47,6 +48,7 @@ function ForumComponent(props: IComponentProps): JSX.Element {
   const [activeSort, setActiveSort] = useState<string>("recentlyUpdated");
   const {data: forumData, fetchMore, refetch} = useQuery<IGetForumData>(getForum, {variables: {forumId: props.id, tag: activeTag !== "" ? activeTag : null, sortMethod: activeSort ?? "recentlyUpdated", count: 25}});
   const history = useHistory();
+  const useRedesign = yn(localStorage.getItem("superSecretSetting.useRedesign"));
 
   const loadMore = function() {
     if(hasHitEnd) {
@@ -95,6 +97,7 @@ function ForumComponent(props: IComponentProps): JSX.Element {
 
   return (
     <div className="bp3-dark ForumComponent">
+      {useRedesign && <div className="ForumComponent-title">{props.name}</div>}
         <div className="ForumComponent-flex">
           <div className={"ForumComponent-container " + (((!props.subId && !creatingNewThread) && Classes.INTERACTIVE) as string)}>
             <div className="ForumComponent-header">

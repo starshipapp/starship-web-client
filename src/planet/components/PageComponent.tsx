@@ -13,6 +13,7 @@ import updatePageMutation, { IUpdatePageMutationData } from "../../graphql/mutat
 import { GlobalToaster } from "../../util/GlobalToaster";
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../graphql/mutations/misc/uploadMarkdownImageMutation";
 import Markdown from "../../util/Markdown";
+import yn from "yn";
 
 function PageComponent(props: IComponentProps): JSX.Element {
   const {data, loading } = useQuery<IGetPageData>(getPage, {variables: {page: props.id}});
@@ -21,6 +22,7 @@ function PageComponent(props: IComponentProps): JSX.Element {
   const {data: userData} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [updatePage] = useMutation<IUpdatePageMutationData>(updatePageMutation);
   const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
+  const useRedesign = yn(localStorage.getItem("superSecretSetting.useRedesign"));
 
   return (
     <div className="bp3-dark PageComponent">
@@ -36,9 +38,35 @@ function PageComponent(props: IComponentProps): JSX.Element {
           <p className={Classes.SKELETON}>Morbi id auctor ante. Nam et mauris eu nulla porttitor fringilla. Quisque velit erat, commodo id tempus venenatis, scelerisque viverra tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse rutrum erat cursus, tempor odio quis, ultrices velit. Maecenas quis auctor magna. Donec interdum a justo in maximus.</p>
           <p className={Classes.SKELETON}>Morbi non eros arcu. Nam ex justo, posuere vitae justo ac, feugiat pulvinar magna. Mauris libero mauris, eleifend hendrerit ligula et, tincidunt finibus velit. Aliquam erat volutpat. Integer nisi lorem, commodo ut auctor eu, ultricies at magna. Nunc eu suscipit metus. Donec ac lorem at elit blandit viverra. Pellentesque luctus felis est, fringilla posuere tellus condimentum vel. Etiam vel libero sit amet mauris euismod scelerisque. Sed iaculis luctus metus vel scelerisque.</p>
       </div> : (data?.page ? <>
+        {useRedesign && <div className="PageComponent-title">
+          <span>{props.name}</span>
+          {(userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <Button
+            icon="edit"
+            onClick={() => {
+              setEditing(true);
+              setEditorState(data?.page.content);
+            }}
+            minimal={true}
+            text="Edit"
+            className="PageComponent-edit PageComponent-edit-button"
+          /> : <Button
+            icon="saved"
+            onClick={() => {
+              console.log("a");
+              updatePage({variables: {pageId: props.id, content: editorState}}).then((value) => {
+                setEditing(false);
+              }).catch((error: Error) => {
+                GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+              });
+            }}
+            text="Save"
+            minimal={true}
+            className="PageComponent-edit PageComponent-edit-button"
+          />)}  
+        </div>}
         {!isEditing && <Markdown>{data.page.content}</Markdown>}
         {isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={assembleEditorOptions(uploadMarkdownImage)}/>}
-        {(userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <Button
+        {!useRedesign && (userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <Button
           icon="edit"
           onClick={() => {
             setEditing(true);
