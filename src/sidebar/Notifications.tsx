@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Icon, Intent, MenuItem, NonIdealState, Tag } from "@blueprintjs/core";
 import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import clearAllNotificationsMutation, { IClearAllNotificationsMutationData } from "../graphql/mutations/misc/clearAllNotificationsMutation";
 import clearNotificationMutation, { IClearNotificationMutationData } from "../graphql/mutations/misc/clearNotificationMutation";
 import markAllReadMutation, { IMarkAllReadMutationData } from "../graphql/mutations/misc/markAllRead";
@@ -23,6 +23,7 @@ function Notifications(props: INotificationsProps): JSX.Element {
   const [clearNotification] = useMutation<IClearNotificationMutationData>(clearNotificationMutation);
   const [clearAllNotifications] = useMutation<IClearAllNotificationsMutationData>(clearAllNotificationsMutation);
   const [markAllRead] = useMutation<IMarkAllReadMutationData>(markAllReadMutation);
+  const history = useHistory();
 
   const notifCount = notifications?.notifications ? notifications.notifications.filter((value) => value.isRead === false).length : 0;
 
@@ -56,6 +57,7 @@ function Notifications(props: INotificationsProps): JSX.Element {
           GlobalToaster.show({message: err.message, intent: Intent.DANGER});
         });
       }}}
+      onClick={() => history.push("/messages")}
     > 
       {notifications && notifications.notifications && <div className="Notifications">
         {notifications.notifications.map((value) => {
