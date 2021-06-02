@@ -18,6 +18,13 @@
   background-color: #30404d;
 }
 
+.Settings-page-header {
+  font-size: 3.0rem; 
+  font-weight: bold;
+  margin-top: 1.25rem;
+  margin-bottom: 0.65rem;
+} 
+
 .Settings-container {
   width: 75vw;
   margin-top: 1rem;

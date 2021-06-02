@@ -10,6 +10,10 @@ import { GlobalToaster } from "../util/GlobalToaster";
 import TFAPrompt from "../util/TFAPrompt";
 import "./css/Settings.css";
 import TFAWizard from "./TFAWizard";
+import yn from 'yn';
+import { Route, Switch, useRouteMatch } from "react-router";
+import ProfileSettings from "./ProfileSettings";
+import SecuritySettings from "./SecuritySettings";
 
 function Settings(): JSX.Element {
   const fileInput = useRef<HTMLInputElement>(null);
@@ -19,6 +23,21 @@ function Settings(): JSX.Element {
   const [disableTFA] = useMutation<IDisableTFAMutation>(disableTFAMutation);
   const [isTFAOpen, setTFAOpen] = useState<boolean>(false);
   const [isTFAPromptOpen, setTFAPromptOpen] = useState<boolean>(false);
+  const useRedesign = yn(localStorage.getItem("superSecretSetting.useRedesign"));
+  const match = useRouteMatch();
+
+  if(useRedesign && userData?.currentUser) {
+    return (
+      <Switch>
+        <Route path={`${match.path}/security`}>
+          <SecuritySettings user={userData.currentUser} refetch={() => refetch()}/>
+        </Route>
+        <Route path={`${match.path}`}>
+          <ProfileSettings user={userData.currentUser} refetch={() => refetch()}/>
+        </Route>
+      </Switch>
+    );
+  }
 
   return (
     <div className="Settings bp3-dark">

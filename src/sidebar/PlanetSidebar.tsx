@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Divider, Intent, Menu, MenuDivider, MenuItem, Position, Tag } from "@blueprintjs/core";
+import { Divider, Intent, Menu, MenuDivider, MenuItem, Tag } from "@blueprintjs/core";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import followMutation, { IFollowMutationData } from "../graphql/mutations/planets/followMutation";
@@ -23,7 +23,7 @@ interface IPlanetSidebarProps {
 }
 
 function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
-  const { client, loading: userLoading, data: userData, refetch: userRefetch } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });  
+  const { data: userData, refetch: userRefetch } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });  
   const { loading, data } = useQuery<IGetPlanetData>(getPlanet, {variables: {planet: props.planet}, errorPolicy: 'all'});
   const [follow] = useMutation<IFollowMutationData>(followMutation);
   const [componentName, setComponentName] = useState<string>("");
@@ -80,7 +80,7 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
             });
           }}
         />}
-        {userData?.currentUser && permissions.checkFullWritePermission(userData.currentUser, data.planet) && <Link to={`/planet/${props.planet}/admin`}><MenuItem
+        {userData?.currentUser && permissions.checkFullWritePermission(userData.currentUser, data.planet) && <Link className="link-button" to={`/planet/${props.planet}/admin`}><MenuItem
           text="Admin"
           intent={Intent.DANGER}
           icon="wrench"

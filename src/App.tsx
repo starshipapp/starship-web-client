@@ -26,23 +26,25 @@ function App(props: IAppProps): JSX.Element {
   return (
     <Router history={history}>
       <div className="App bp3-dark">
+        <Unsupported/>
         <Switch>
           <Route path="/gadmin">
             <GAdmin/>
           </Route>
           <Route path="/planet/:planet">
-            <Unsupported/>
-            <MainSidebar forcefullyResetLink={props.forcefullyResetLink}/>
+            <MainSidebar context="planet" forcefullyResetLink={props.forcefullyResetLink}/>
             <Planet home={true}/>
           </Route>
           <Route path="/planet/:planet/:component">
-            <Unsupported/>
-            <MainSidebar forcefullyResetLink={props.forcefullyResetLink}/>
+            <MainSidebar context="planet" forcefullyResetLink={props.forcefullyResetLink}/>
             <Planet home={false}/>
           </Route>
+          <Route path="/settings">
+            <MainSidebar context="settings" forcefullyResetLink={props.forcefullyResetLink}/>
+            <Settings/>
+          </Route>
           <Route>
-            <Unsupported/>
-            <MainSidebar forcefullyResetLink={props.forcefullyResetLink}/>
+            <MainSidebar context="home" forcefullyResetLink={props.forcefullyResetLink}/>
             <Switch>
               <Route path="/login">
                 <Login forcefullyResetLink={props.forcefullyResetLink}/>
@@ -64,9 +66,6 @@ function App(props: IAppProps): JSX.Element {
               </Route>
               <Route path="/verify/:activationdata">
                 <Activate/>
-              </Route>
-              <Route path="/settings">
-                <Settings/>
               </Route>
               <Route path="/">
                 <Home/>

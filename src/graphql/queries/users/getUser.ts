@@ -12,6 +12,8 @@ const getUser = gql`
       username
       admin
       profilePicture
+      profileBanner
+      profileBio
       banned
       createdAt
     }

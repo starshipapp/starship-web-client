@@ -5,7 +5,8 @@
 }
 
 .GAdminSidebar {
-  width: 12.5rem;
+  min-width: 12.5rem;
+  max-width: 12.5rem;
 }
 
 .GAdminSidebar-menu-logo {

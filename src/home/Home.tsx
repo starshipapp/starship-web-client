@@ -58,7 +58,7 @@ function Home(): JSX.Element {
             This iteration of the Starship UI is currently experimental. Please report bugs to @william341 or the Starship forums.<br/>
             In order to disable the redesign, open your browser's JS console in the development tools and run the following code:<br/>
             <Code>
-              localStorage.setItem("superSecretSetting.useRedesign", "true");
+              localStorage.removeItem("superSecretSetting.useRedesign");
             </Code>
           </Callout>}
         </div>

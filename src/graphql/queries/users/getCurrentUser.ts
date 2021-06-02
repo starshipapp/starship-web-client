@@ -12,6 +12,8 @@ const getCurrentUser = gql`
       username
       admin
       profilePicture
+      profileBanner
+      profileBio
       banned
       createdAt
       following {

@@ -6,6 +6,8 @@ export default interface IUser {
   username?: string,
   createdAt?: Date,
   profilePicture?: string,
+  profileBanner?: string,
+  profileBio?: string,
   emails?: [{address: string, verified: boolean}],
   following?: [IPlanet],
   memberOf?: [IPlanet],

@@ -1,26 +1,26 @@
-import { useMutation, useQuery } from '@apollo/client';
-import { Button, Checkbox, Classes, Divider, Icon, Intent, Menu, MenuDivider, MenuItem, Popover, Position, ProgressBar, Tooltip } from '@blueprintjs/core';
+import { useQuery } from '@apollo/client';
+import { Divider, Icon, Intent, Menu, MenuDivider, MenuItem, ProgressBar } from '@blueprintjs/core';
 import fileSize from 'filesize';
 import React, { useState } from 'react';
-import { Link, useHistory, useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import yn from 'yn';
-import insertPlanetMutation, { IInsertPlanetMutationData } from '../graphql/mutations/planets/insertPlanetMutation';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
 import getCap from '../util/getCap';
 import getCapString from '../util/getCapString';
-import { GlobalToaster } from '../util/GlobalToaster';
 import isMobile from '../util/isMobile';
 import './css/MainSidebar.css';
 import Notifications from './Notifications';
 import PlanetSidebar from './PlanetSidebar';
 import PlanetSwitcher from './PlanetSwitcher';
+import SettingsSidebar from './SettingsSidebar';
 
 interface IMainSidebarProps {
-  forcefullyResetLink: () => void;
+  forcefullyResetLink: () => void
+  context: string
 }
 
 interface IMainSidebarParams {
-  planet?: string,
+  planet?: string
   component?: string
 }
 
@@ -51,8 +51,9 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
           <Link className="link-button" to="/"><div className="MainSidebar-logo"/></Link>
         </div>
         <Icon onClick={toggleHidden} icon="menu" className="MainSidebar-show-button"/>
-        {data?.currentUser && (!useRedesign || !planet) && <PlanetSwitcher toggleHidden={toggleHidden}/>}
-        {useRedesign && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
+        {data?.currentUser && (!useRedesign || props.context === "home") && <PlanetSwitcher toggleHidden={toggleHidden}/>}
+        {useRedesign && props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
+        {useRedesign && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
         {loading ? <MenuItem text="Loading..."/> : (data?.currentUser ? <>
           <div className="MainSidebar-user-spacer"/>
           <MenuDivider/>
