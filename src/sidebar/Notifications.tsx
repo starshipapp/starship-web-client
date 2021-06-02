@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Icon, Intent, MenuItem, NonIdealState, Tag } from "@blueprintjs/core";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 import clearAllNotificationsMutation, { IClearAllNotificationsMutationData } from "../graphql/mutations/misc/clearAllNotificationsMutation";
 import clearNotificationMutation, { IClearNotificationMutationData } from "../graphql/mutations/misc/clearNotificationMutation";
 import markAllReadMutation, { IMarkAllReadMutationData } from "../graphql/mutations/misc/markAllRead";
@@ -90,7 +91,7 @@ function Notifications(props: INotificationsProps): JSX.Element {
           title="No new notifications."
         />}
         <div className="Notifications-bottom">
-          {<Button text="All Notifications" className="Notifications-bottom-all" minimal={true} small={true}/>}
+          {<Link to="/messages" className="link-button"><Button text="All Notifications" className="Notifications-bottom-all" minimal={true} small={true}/></Link>}
           {<Button text="Clear" className="Notifications-bottom-clear" minimal={true} small={true} onClick={() => {
             clearAllNotifications().then(() => {
               void refetchNotifs();

@@ -15,6 +15,7 @@ import Forgot from './login/Forgot';
 import GAdmin from './gadmin/GAdmin';
 import Settings from './settings/Settings';
 import Activate from './login/Activate';
+import Messages from './messages/Messages';
 
 const history = createBrowserHistory();
 
@@ -42,6 +43,10 @@ function App(props: IAppProps): JSX.Element {
           <Route path="/settings">
             <MainSidebar context="settings" forcefullyResetLink={props.forcefullyResetLink}/>
             <Settings/>
+          </Route>
+          <Route path="/messages">
+            <MainSidebar context="messages" forcefullyResetLink={props.forcefullyResetLink}/>
+            <Messages/>
           </Route>
           <Route>
             <MainSidebar context="home" forcefullyResetLink={props.forcefullyResetLink}/>
