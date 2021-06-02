@@ -53,7 +53,7 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
         <Icon onClick={toggleHidden} icon="menu" className="MainSidebar-show-button"/>
         {data?.currentUser && (!useRedesign || props.context === "home") && <PlanetSwitcher toggleHidden={toggleHidden}/>}
         {useRedesign && props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
-        {useRedesign && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
+        {data?.currentUser && useRedesign && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
         {loading ? <MenuItem text="Loading..."/> : (data?.currentUser ? <>
           <div className="MainSidebar-user-spacer"/>
           <MenuDivider/>

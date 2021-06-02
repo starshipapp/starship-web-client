@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, Icon, Intent } from "@blueprintjs/core";
+import { Button, Icon, Intent, NonIdealState } from "@blueprintjs/core";
 import axios from "axios";
 import React, { useRef, useState } from "react";
 import disableTFAMutation, { IDisableTFAMutation } from "../graphql/mutations/users/disableTFAMutation";
@@ -36,6 +36,15 @@ function Settings(): JSX.Element {
           <ProfileSettings user={userData.currentUser} refetch={() => refetch()}/>
         </Route>
       </Switch>
+    );
+  }
+
+  if(!userData?.currentUser) {
+    return (
+      <NonIdealState
+        icon="error"
+        title="You're not logged in."
+      />
     );
   }
 

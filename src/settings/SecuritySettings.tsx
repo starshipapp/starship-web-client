@@ -27,8 +27,8 @@ function SecuritySettings(props: ISecuritySettingsProps): JSX.Element {
         </div>
         <h1>Two Factor Authentication</h1>
         <div className="Settings-tfa">
-          <p>Two Factor Authentication <b>is{props.user.tfaEnabled && " not"}</b> enabled</p>
-          {props.user.tfaEnabled && <Button onClick={() => setTFAOpen(true)}>Enable 2FA</Button>}
+          <p>Two Factor Authentication <b>is{!props.user.tfaEnabled && " not"}</b> enabled</p>
+          {!props.user.tfaEnabled && <Button onClick={() => setTFAOpen(true)}>Enable 2FA</Button>}
           {props.user.tfaEnabled && <Button onClick={() => setTFAPromptOpen(true)}>Disable 2FA</Button>}
           <TFAPrompt 
             onSubmit={(key) => {
