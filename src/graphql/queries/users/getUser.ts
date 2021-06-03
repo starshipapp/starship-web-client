@@ -16,6 +16,7 @@ const getUser = gql`
       profileBio
       banned
       createdAt
+      online
     }
   }
 `;

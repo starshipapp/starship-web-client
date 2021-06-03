@@ -26,8 +26,6 @@ function Profile(props: IProfileProps): JSX.Element {
   const [toggleBan] = useMutation<IToggleBanMutationData>(toggleBanMutation);
   const creationDateText = (!loading && data?.user && data?.user.createdAt) ? new Date(Number(data.user.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : "loading";
 
-  console.log(data);
-
   return (
     <Dialog className="bp3-dark Profile" onClose={props.onClose} isOpen={props.isOpen}>
       {loading ? <div></div> : (data?.user && <>
@@ -82,6 +80,7 @@ function Profile(props: IProfileProps): JSX.Element {
             <div className="Profile-date">User since {creationDateText}</div>
             <div className="Profile-tags">
               {data.user.admin && <Tag intent={Intent.DANGER}>Global Admin</Tag>}
+              {data.user.online && <Tag intent={Intent.SUCCESS}>Online</Tag>}
               {data.user.banned && <Tag intent={Intent.DANGER}>Globally Banned</Tag>}
               {data.user.id.length === 17 && <Tag>Early Alpha Tester</Tag>}
             </div>

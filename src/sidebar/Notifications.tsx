@@ -30,7 +30,6 @@ function Notifications(props: INotificationsProps): JSX.Element {
   useEffect(() => {
     if(!hasSubscribed && notifications?.notifications) {
       hasSubscribed = true;
-      console.log("setting up notification handler");
       subscribeToMore({
         document: onNotificationRecieved,
         updateQuery: (prev, {subscriptionData}) => {

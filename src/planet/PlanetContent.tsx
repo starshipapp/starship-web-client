@@ -34,8 +34,6 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
   const [addComponent] = useMutation<IAddComponentMutationData>(addComponentMutation);
   const [forceStyling, enableStyling] = useState<boolean>(false);
 
-  console.log(useRedesign);
-
   useEffect(() => {
     if(component && props.planet.components) {
       const filteredComponents = props.planet.components.filter(value => value.componentId === component);

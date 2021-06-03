@@ -15,5 +15,6 @@ export default interface IUser {
   admin?: boolean,
   usedBytes?: number,
   capWaived?: boolean,
-  tfaEnabled?: boolean
+  tfaEnabled?: boolean,
+  online?: boolean
 }

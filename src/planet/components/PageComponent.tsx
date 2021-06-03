@@ -52,7 +52,6 @@ function PageComponent(props: IComponentProps): JSX.Element {
           /> : <Button
             icon="saved"
             onClick={() => {
-              console.log("a");
               updatePage({variables: {pageId: props.id, content: editorState}}).then((value) => {
                 setEditing(false);
               }).catch((error: Error) => {
