@@ -29,6 +29,8 @@ import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from ".
 import { assembleEditorOptions } from "../../../util/editorOptions";
 import fixPFP from "../../../util/fixPFP";
 import Markdown from "../../../util/Markdown";
+import generateEmojiMartEmojis from "../../../util/generateEmojiMartEmojis";
+import getSysInfo, { IGetSysInfoData } from "../../../graphql/queries/misc/getSysInfo";
 
 interface IForumThreadItemProps {
   forumId: string
@@ -42,6 +44,7 @@ interface IForumThreadItemProps {
 
 function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const {data} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+  const {data: sysData} = useQuery<IGetSysInfoData>(getSysInfo);
   const [textValue, setTextValue] = useState<string>(props.post.content ?? "");
   const [showEditor, setEditor] = useState<boolean>(false);
   const [showAlert, setAlert] = useState<boolean>(false);
@@ -71,7 +74,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const emojiTypeCheck = function (arg: any): arg is BaseEmoji {
     // find out if we have a correct emoji
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if(arg && arg.native) {
+    if(arg && (arg.native || arg.custom)) {
       return true;
     }
     return false;
@@ -221,27 +224,38 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
               intent={Intent.WARNING}
             />}
           </ButtonGroup>
-          <ButtonGroup className="ForumThreadItem-reactions">
+          {sysData?.sysInfo && <ButtonGroup className="ForumThreadItem-reactions">
             {props.post.reactions && props.post.reactions.map((value) => (<Button 
               key={value.emoji} 
               onClick={() => selectEmoji(value.emoji)} 
               minimal={(data?.currentUser ? !value.reactors.includes(data?.currentUser.id) : true)}
               small={true} 
-              icon={<Twemoji text={value.emoji} className="ForumThreadItem-twemoji"></Twemoji>} 
+              icon={value.emoji.startsWith("ceid:") ? 
+                <img className="ForumThreadItem-customemoji" src={(sysData.sysInfo.paths.emojiURL ?? "") + value.emoji.split(":")[1]} alt={value.emoji}/> : 
+                <Twemoji text={value.emoji} className="ForumThreadItem-twemoji"/>} 
               text={value.reactors.length}
             />))}
             <Popover isOpen={showEmojiPrompt} onClose={() => setEmojiPrompt(false)}>
               <Button minimal={true} small={true} icon="new-object" onClick={() => setEmojiPrompt(true)}/>
               <div>
-                <Picker theme="dark" skin={1} showPreview={false} set="twitter" title="Pick an emoji" emoji="smile" onSelect={(e) => {
-                  if(emojiTypeCheck(e)) {
-                    selectEmoji(e.native); 
-                    setEmojiPrompt(false);
-                  }
-                }}/>
+                <Picker
+                  theme="dark"
+                  skin={1}
+                  showPreview={false} 
+                  set="twitter"
+                  title="Pick an emoji"
+                  emoji="smile"
+                  custom={generateEmojiMartEmojis(props.planet.customEmojis, data?.currentUser.customEmojis)}
+                  onSelect={(e) => {
+                    if(emojiTypeCheck(e)) {
+                      selectEmoji(e.native ?? e.id); 
+                      setEmojiPrompt(false);
+                    }
+                  }}
+                />
               </div>
             </Popover>
-          </ButtonGroup>
+          </ButtonGroup>}
         </div>
       </div>
     </div>

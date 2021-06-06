@@ -6,7 +6,7 @@ export interface IGetSysInfoData {
 }
 
 const getSysInfo = gql`
-  mutation SysInfo {
+  query SysInfo {
     sysInfo {
       serverName
       version
