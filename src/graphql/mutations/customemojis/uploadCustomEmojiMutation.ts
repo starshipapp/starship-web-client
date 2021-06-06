@@ -5,7 +5,7 @@ export interface IUploadCustomEmojiData {
 }
 
 const uploadCustomEmojiMutation = gql`
-  mutation UploadCustomEmoji($name: String!, $size: Int!, $type: String!, planetId: ID) {
+  mutation UploadCustomEmoji($name: String!, $size: Int!, $type: String!, $planetId: ID) {
     uploadCustomEmoji(name: $name, size: $size, type: $type, planetId: $planetId)
   }
 `;

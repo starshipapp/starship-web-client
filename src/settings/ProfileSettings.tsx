@@ -9,6 +9,7 @@ import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/ge
 import IUser from "../types/IUser";
 import fixPFP from "../util/fixPFP";
 import { GlobalToaster } from "../util/GlobalToaster";
+import MimeTypes from "../util/validMimes";
 import "./css/ProfileSettings.css";
 
 interface IProfileSettingsProps {
@@ -80,6 +81,7 @@ function ProfileSettings(props: IProfileSettingsProps): JSX.Element {
         ref={fileInput}
         id="upload-button"
         style={{ display: "none" }}
+        accept={MimeTypes.imageTypes.join(",")}
         onChange={(e) => {
           if(!e.target.files) {
             return false;

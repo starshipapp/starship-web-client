@@ -41,7 +41,11 @@ const getPlanet = gql`
       }
       css
       description
-      customEmojis
+      customEmojis {
+        id
+        name
+        url
+      }
     }
   }
 `;
