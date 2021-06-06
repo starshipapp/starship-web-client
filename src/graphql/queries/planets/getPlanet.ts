@@ -41,6 +41,7 @@ const getPlanet = gql`
       }
       css
       description
+      customEmojis
     }
   }
 `;

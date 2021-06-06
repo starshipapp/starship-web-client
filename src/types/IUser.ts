@@ -1,3 +1,4 @@
+import ICustomEmoji from "./ICustomEmoji";
 import IPlanet from "./IPlanet";
 
 /* eslint-disable semi */
@@ -16,5 +17,6 @@ export default interface IUser {
   usedBytes?: number,
   capWaived?: boolean,
   tfaEnabled?: boolean,
-  online?: boolean
+  online?: boolean,
+  customEmojis?: [ICustomEmoji]
 }

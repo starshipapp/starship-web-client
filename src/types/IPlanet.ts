@@ -1,3 +1,4 @@
+import ICustomEmoji from "./ICustomEmoji";
 import IInvite from "./IInvite";
 import IUser from "./IUser";
 
@@ -19,5 +20,6 @@ export default interface IPlanet {
   banned?: [IUser],
   css?: string,
   invites?: [IInvite],
-  description?: string
+  description?: string,
+  customEmojis?: [ICustomEmoji]
 }

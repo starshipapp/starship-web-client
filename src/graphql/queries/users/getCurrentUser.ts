@@ -29,6 +29,11 @@ const getCurrentUser = gql`
       usedBytes
       capWaived
       tfaEnabled
+      customEmojis {
+        id
+        name
+        url
+      }
     }
   }
 `;

@@ -14,6 +14,7 @@ import yn from 'yn';
 import { Route, Switch, useRouteMatch } from "react-router";
 import ProfileSettings from "./ProfileSettings";
 import SecuritySettings from "./SecuritySettings";
+import EmojiSettings from "./EmojiSettings";
 
 function Settings(): JSX.Element {
   const fileInput = useRef<HTMLInputElement>(null);
@@ -31,6 +32,9 @@ function Settings(): JSX.Element {
       <Switch>
         <Route path={`${match.path}/security`}>
           <SecuritySettings user={userData.currentUser} refetch={() => refetch()}/>
+        </Route>
+        <Route path={`${match.path}/emojis`}>
+          <EmojiSettings user={userData.currentUser} refetch={() => refetch()}/>
         </Route>
         <Route path={`${match.path}`}>
           <ProfileSettings user={userData.currentUser} refetch={() => refetch()}/>
