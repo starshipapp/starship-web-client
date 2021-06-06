@@ -3,10 +3,9 @@
 }
 
 .AdminComponents-table {
-  width: 100%;
   margin-top: 0.5rem;
-  border: 1px solid #394B59;
-  border-radius: 0.25rem;
+  width: 100%;
+  border-bottom: 1px #202B33 solid;
 }
 
 .AdminComponents-table-type {
@@ -14,12 +13,9 @@
 }
 
 .AdminComponents-table td {
-  padding: 0.5rem;
-  border-bottom: 1px solid #394B59;
-}
-
-.AdminComponents-table tbody tr:last-child td {
-  border-bottom: none;
+  border-top: 1px #202B33 solid;
+  padding: 0.4rem 0.1rem;
+  width: 100%;
 }
 
 .AdminComponents-table-name-icon {
@@ -38,5 +34,5 @@
 
 .AdminComponents-action-button {
   display: inline-flex;
-  margin-left: 0.5rem;
+  margin-left: 0.15rem;
 }

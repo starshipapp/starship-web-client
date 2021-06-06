@@ -11,6 +11,7 @@ import AdminComponent from "./AdminComponents";
 import AdminExperimental from "./AdminExperimental";
 import AdminMembers from "./AdminMembers";
 import isMobile from "../../util/isMobile";
+import AdminEmojis from "./AdminEmojis";
 
 interface IAdminProps {
   planet: IPlanet,
@@ -40,6 +41,7 @@ function Admin(props: IAdminProps): JSX.Element {
                 <Link onClick={toggleSidebar} className="link-button" to={`/planet/${props.planet.id}/admin`}><MenuItem icon="wrench" text="General"/></Link>
                 <Link onClick={toggleSidebar} className="link-button" to={`/planet/${props.planet.id}/admin/components`}><MenuItem icon="document" text="Components"/></Link>
                 <Link onClick={toggleSidebar} className="link-button" to={`/planet/${props.planet.id}/admin/members`}><MenuItem icon="people" text="Members"/></Link>
+                <Link onClick={toggleSidebar} className="link-button" to={`/planet/${props.planet.id}/admin/emojis`}><MenuItem icon="emoji" text="Emojis"/></Link>
                 <Link onClick={toggleSidebar} className="link-button" to={`/planet/${props.planet.id}/admin/experimental`}><MenuItem icon="lab-test" text="Experimental"/></Link>
               </Menu>
             </div>
@@ -53,6 +55,9 @@ function Admin(props: IAdminProps): JSX.Element {
                 </Route>
                 <Route path={`/planet/${props.planet.id}/admin/members`}>
                   <AdminMembers planet={props.planet}/>
+                </Route>
+                <Route path={`/planet/${props.planet.id}/admin/emojis`}>
+                  <AdminEmojis planet={props.planet}/>
                 </Route>
                 <Route path={`/planet/${props.planet.id}/admin`}>
                   <AdminGeneral planet={props.planet}/>

@@ -39,7 +39,7 @@ function AdminMembers(props: IAdminMembersProps): JSX.Element {
               {props.planet.invites.map((value) => (
                 <tr key={value.id}>
                   <td className="AdminComponents-table-name"><a href={baseurl + value.id}>{baseurl + value.id}</a></td>
-                  <td className="AdminComponents-table-action"><Button intent="danger" small={true} icon="trash" onClick={() => {
+                  <td className="AdminComponents-table-action"><Button intent="danger" small={true} minimal={true} icon="trash" onClick={() => {
                     removeInvite({variables: {inviteId: value.id}}).then(() => {
                       GlobalToaster.show({message: "Sucessfully removed invite.", intent: Intent.SUCCESS});
                     }).catch((err: ApolloError) => {

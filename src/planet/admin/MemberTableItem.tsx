@@ -17,7 +17,7 @@ function MemberTableItem(props: IMemberTableItemProps): JSX.Element {
   return (
     <tr>
       <td className="AdminComponents-table-name">{data?.user ? (data?.user && data?.user.username) : <Spinner className="spinner-inline" size={Spinner.SIZE_SMALL}/>}</td>
-      {!loading && data?.user && <td className="AdminComponents-table-action"><Button intent="danger" small={true} icon="trash" onClick={() => {
+      {!loading && data?.user && <td className="AdminComponents-table-action"><Button intent="danger" small={true} minimal={true} icon="trash" onClick={() => {
         removeMember({variables: {planetId: props.planetId, userId: props.userId}}).then(() => {
           GlobalToaster.show({message: `Sucessfully removed ${data.user.username as unknown as string} from the planet.`, intent: Intent.SUCCESS});
         }).catch((err: Error) => {

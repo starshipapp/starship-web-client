@@ -53,7 +53,7 @@ function AdminComponent(props: IAdminComponentProps): JSX.Element {
                   </Popover></td>
                   <td className="AdminComponents-table-action">
                     <Popover isOpen={deletePopoverId === value.componentId} onClose={() => setDeleteId("")}>
-                      <Button intent="danger" className="AdminComponents-action-button" small={true} icon="trash" onClick={() => setDeleteId(value.componentId)}/>
+                      <Button intent="danger" className="AdminComponents-action-button" small={true} icon="trash" minimal={true} onClick={() => setDeleteId(value.componentId)}/>
                       <div className="menu-form">
                         <p>Are you sure?</p>
                         <Button intent="danger" icon="trash" text="Delete" onClick={() => {

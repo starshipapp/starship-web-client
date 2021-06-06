@@ -103,7 +103,8 @@ function EmojiSettings(props: IEmojiSettingsProps): JSX.Element {
               </div>
               <Button
                 className="EmojiSettings-emoji-button"
-                icon="cross"
+                icon="trash"
+                intent={Intent.DANGER}
                 minimal={true}
                 small={true}
                 onClick={() => {
