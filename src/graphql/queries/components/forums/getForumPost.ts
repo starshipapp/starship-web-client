@@ -17,6 +17,11 @@ const getForumPost = gql`
         admin
         banned
         createdAt
+        customEmojis {
+          id
+          name
+          url
+        }
       }
       reactions {
         emoji
@@ -45,6 +50,11 @@ const getForumPost = gql`
             admin
             banned
             createdAt
+            customEmojis {
+              id
+              name
+              url
+            }
           }
           reactions {
             emoji

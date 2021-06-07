@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Alert, Button, ButtonGroup, Icon, Intent, Popover } from "@blueprintjs/core";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import SimpleMDEEditor from "react-simplemde-editor";
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
 import Profile from "../../../profile/Profile";
@@ -60,6 +60,8 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const [updateForumPost] = useMutation<IUpdateForumPostMutationData>(updateForumPostMutation);
   const [updateForumReply] = useMutation<IUpdateForumReplyMutationData>(updateForumReplyMutation);
   const history = useHistory();
+  const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
+  const memoizedOptions = useMemo(() => assembleEditorOptions(uploadMarkdownImage), [uploadMarkdownImage]);
 
   const typeCheck = function (arg: any): arg is IForumPost {
     // this suits our needs for this specific use case
@@ -96,7 +98,6 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const creationDateText = creationDate.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
   const mobileCreationDateText = creationDate.toLocaleDateString(undefined, { weekday: "short", year: "numeric", month: "short", day: "numeric" });
   let canEdit = false;
-  const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
 
   if(props.post.owner && data?.currentUser && (props.post.owner.id === data.currentUser.id || permissions.checkFullWritePermission(data?.currentUser, props.planet))) {
     canEdit = true;
@@ -156,7 +157,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
         </div>}
         <div className="ForumThreadItem-text">
           {showEditor ? <div className="ForumThreadItem-editor">
-            <SimpleMDEEditor onChange={(value) => setTextValue(value)} value={textValue} options={assembleEditorOptions(uploadMarkdownImage)}/>
+            <SimpleMDEEditor onChange={(value) => setTextValue(value)} value={textValue} options={memoizedOptions}/>
             <Button
               icon="saved"
               onClick={() => {
@@ -184,7 +185,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
             >
               Save
             </Button>
-          </div> : <Markdown>{props.post.content ?? ""}</Markdown>}
+          </div> : <Markdown planetEmojis={props.planet.customEmojis} userEmojis={props.post.owner?.customEmojis}>{props.post.content ?? ""}</Markdown>}
         </div>
         <div className="ForumThreadItem-bottom">
           <ButtonGroup>

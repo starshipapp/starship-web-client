@@ -1,11 +1,12 @@
 import { useMutation } from "@apollo/client";
 import { Button, Classes, Intent, Menu, MenuItem, Popover } from "@blueprintjs/core";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import SimpleMDEEditor from "react-simplemde-editor";
 import insertForumPostMutation, { IInsertForumPostMutationData } from "../../../graphql/mutations/components/forums/insertForumPostMutation";
+import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
 import IForum from "../../../types/IForum";
-import editorOptions from "../../../util/editorOptions";
+import editorOptions, { assembleEditorOptions } from "../../../util/editorOptions";
 import { GlobalToaster } from "../../../util/GlobalToaster";
 import "./css/ForumEditor.css";
 
@@ -20,6 +21,9 @@ function ForumEditor(props: IForumEditorProps): JSX.Element {
   const [name, setName] = useState<string>("");
   const [insertPost] = useMutation<IInsertForumPostMutationData>(insertForumPostMutation);
   const history = useHistory();
+  const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
+
+  const memoizedOptions = useMemo(() => assembleEditorOptions(uploadMarkdownImage), [uploadMarkdownImage]);
 
   return (
     <div className="ForumEditor">
@@ -32,7 +36,7 @@ function ForumEditor(props: IForumEditorProps): JSX.Element {
           </Menu>
         </Popover>}
       </div>
-      <SimpleMDEEditor onChange={(e) => setEditingContent(e)} value={editingContent} options={editorOptions}/>
+      <SimpleMDEEditor onChange={(e) => setEditingContent(e)} value={editingContent} options={memoizedOptions}/>
       <Button text="Post" className="ForumEditor-button" onClick={() => {
         if(editingContent === "") {
           GlobalToaster.show({message: "You must have content in your post.", intent: Intent.DANGER});

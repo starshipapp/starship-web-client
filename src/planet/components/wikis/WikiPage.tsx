@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Button, ButtonGroup, Intent, NonIdealState, Popover } from "@blueprintjs/core";
 import SimpleMDEEditor from "react-simplemde-editor";
 import IPlanet from "../../../types/IPlanet";
@@ -45,6 +45,9 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
     prevRenderId = props.subId;
   }, [setIsEditing, props.subId]);
 
+
+  const memoizedOptions = useMemo(() => assembleEditorOptions(uploadMarkdownImage), [uploadMarkdownImage]);
+
   const renamePage = function() {
     renameWikiPage({variables: {pageId: props.subId, newName: renameTextbox}}).then(() => {
       GlobalToaster.show({message: "Successfully renamed page.", intent: Intent.SUCCESS});
@@ -57,8 +60,8 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
   return (
     <div className="bp3-dark WikiPage">
       <h1 className="WikiComponent-header">{data?.wikiPage.name ?? ""}</h1>
-      {data?.wikiPage && !isEditing && <Markdown>{data?.wikiPage?.content ?? ""}</Markdown>}
-      {data?.wikiPage && isEditing && <SimpleMDEEditor onChange={(e) => setEditingContent(e)} value={editingContent} options={assembleEditorOptions(uploadMarkdownImage)}/>}
+      {data?.wikiPage && !isEditing && <Markdown planetEmojis={props.planet.customEmojis}>{data?.wikiPage?.content ?? ""}</Markdown>}
+      {data?.wikiPage && isEditing && <SimpleMDEEditor onChange={(e) => setEditingContent(e)} value={editingContent} options={memoizedOptions}/>}
       {(data?.wikiPage && userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <div className="WikiComponent-buttons">
         <ButtonGroup minimal={true} >
           <Button

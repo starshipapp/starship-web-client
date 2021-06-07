@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Intent, NonIdealState, H1, H2, Classes } from "@blueprintjs/core";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import SimpleMDEEditor from "react-simplemde-editor";
 import getPage, { IGetPageData } from "../../graphql/queries/components/getPage";
 import getCurrentUser, { IGetCurrentUserData } from "../../graphql/queries/users/getCurrentUser";
@@ -23,6 +23,8 @@ function PageComponent(props: IComponentProps): JSX.Element {
   const [updatePage] = useMutation<IUpdatePageMutationData>(updatePageMutation);
   const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
   const useRedesign = yn(localStorage.getItem("superSecretSetting.useRedesign"));
+
+  const memoizedOptions = useMemo(() => assembleEditorOptions(uploadMarkdownImage), [uploadMarkdownImage]);
 
   return (
     <div className="bp3-dark PageComponent">
@@ -63,8 +65,8 @@ function PageComponent(props: IComponentProps): JSX.Element {
             className="PageComponent-edit PageComponent-edit-button"
           />)}  
         </div>}
-        {!isEditing && <Markdown>{data.page.content}</Markdown>}
-        {isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={assembleEditorOptions(uploadMarkdownImage)}/>}
+        {!isEditing && <Markdown planetEmojis={props.planet.customEmojis}>{data.page.content}</Markdown>}
+        {isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={memoizedOptions}/>}
         {!useRedesign && (userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <Button
           icon="edit"
           onClick={() => {

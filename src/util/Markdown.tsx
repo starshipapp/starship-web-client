@@ -16,9 +16,15 @@ import slug from "remark-slug";
 import hint from "remark-hint";
 // rehype plugins
 import katex from "rehype-katex";
+import customEmojiPlugin from "./remark/customEmojiPlugin";
+import ICustomEmoji from "../types/ICustomEmoji";
+
+import "./css/Markdown.css";
 
 interface IMarkdownProps {
   children: string
+  planetEmojis?: ICustomEmoji[]
+  userEmojis?: ICustomEmoji[]
 }
 
 function Markdown(props: IMarkdownProps): JSX.Element {
@@ -35,7 +41,7 @@ function Markdown(props: IMarkdownProps): JSX.Element {
   return ( 
     <ReactMarkdown
       children={props.children}
-      remarkPlugins={[math, emoji, footnotes, hint, toc, slug]}
+      remarkPlugins={[math, emoji, footnotes, hint, toc, slug, [customEmojiPlugin, {planetEmojis: props.planetEmojis, userEmojis: props.userEmojis}]]}
       rehypePlugins={[katex]}
       components={components}
     />
