@@ -51,6 +51,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const [showEmojiPrompt, setEmojiPrompt] = useState<boolean>(false);
   const [showProfile, setProfile] = useState<boolean>(false);
   const [showReport, setReport] = useState<boolean>(false);
+  const [showAnyways, setShowAnyways] = useState<boolean>(false);
   const [deleteForumPost] = useMutation<IDeleteForumPostMutationData>(deleteForumPostMutation);
   const [deleteForumReply] = useMutation<IDeleteForumReplyMutationData>(deleteForumReplyMutation);
   const [forumPostReact] = useMutation<IForumPostReactMutationData>(forumPostReactMutation);
@@ -101,6 +102,23 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
 
   if(props.post.owner && data?.currentUser && (props.post.owner.id === data.currentUser.id || permissions.checkFullWritePermission(data?.currentUser, props.planet))) {
     canEdit = true;
+  }
+
+  if(props.post.owner && !showAnyways && data?.currentUser.blockedUsers && (data?.currentUser.blockedUsers.filter((value) => value.id === props.post.owner?.id).length > 0)) {
+    return (
+      <div className="ForumThreadItem-blocked">
+        <div className="ForumThreadItem-blocked-text">
+          This post is from a blocked user. ({props.post.owner.username})
+        </div>
+        <Button
+          className="ForumThreadItem-blocked-button"
+          text="Show Anyways"
+          minimal={true}
+          small={true}
+          onClick={() => setShowAnyways(true)}
+        />
+      </div>
+    );
   }
 
   return (

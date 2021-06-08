@@ -165,6 +165,21 @@
   margin-left: auto;
 }
 
+.ForumThreadItem-blocked {
+  border: 1px #394B59 solid;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  display: flex;
+  background-color: #30404d;
+  padding: 0.5rem;
+  padding-left: 0.65rem;
+}
+.ForumThreadItem-blocked-text {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-right: auto;
+}
+
 @media only screen and (max-width: 600px) {
   .ForumThreadItem {
     flex-direction: column;
