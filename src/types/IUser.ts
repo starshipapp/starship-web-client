@@ -18,5 +18,6 @@ export default interface IUser {
   capWaived?: boolean,
   tfaEnabled?: boolean,
   online?: boolean,
+  blockedUsers?: [IUser],
   customEmojis?: [ICustomEmoji]
 }

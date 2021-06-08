@@ -34,6 +34,11 @@ const getCurrentUser = gql`
         name
         url
       }
+      blockedUsers {
+        id
+        username
+        profilePicture
+      }
     }
   }
 `;

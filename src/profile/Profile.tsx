@@ -1,8 +1,9 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { AnchorButton, Button, ButtonGroup, Classes, Dialog, Divider, Intent, Tag } from "@blueprintjs/core";
+import { Button, ButtonGroup, Classes, Dialog, Intent, Tag } from "@blueprintjs/core";
 import React from "react";
 import toggleBanMutation, { IToggleBanMutationData } from "../graphql/mutations/planets/toggleBanMutation";
 import banUserMutation, { IBanUserMutationData } from "../graphql/mutations/users/banUserMutation";
+import toggleBlockUserMutation, { IToggleBlockUserData } from "../graphql/mutations/users/toggleBlockUserMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import getUser, { IGetUserData } from "../graphql/queries/users/getUser";
 import IPlanet from "../types/IPlanet";
@@ -24,7 +25,10 @@ function Profile(props: IProfileProps): JSX.Element {
   const { data: currentData, loading: currentLoading } = useQuery<IGetCurrentUserData>(getCurrentUser, {errorPolicy: "all"});
   const [banUser] = useMutation<IBanUserMutationData>(banUserMutation);
   const [toggleBan] = useMutation<IToggleBanMutationData>(toggleBanMutation);
+  const [blockUser] = useMutation<IToggleBlockUserData>(toggleBlockUserMutation);
   const creationDateText = (!loading && data?.user && data?.user.createdAt) ? new Date(Number(data.user.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : "loading";
+
+  const isBlocked: boolean | undefined = currentData?.currentUser.blockedUsers && (currentData.currentUser.blockedUsers.filter((value) => value.id === props.userId).length > 0);
 
   return (
     <Dialog className="bp3-dark Profile" onClose={props.onClose} isOpen={props.isOpen}>
@@ -61,7 +65,14 @@ function Profile(props: IProfileProps): JSX.Element {
               />}
               {currentData?.currentUser && currentData.currentUser.id !== data.user.id && <Button
                 small={true}
-                text="Block"
+                text={isBlocked ? "Unblock" : "Block"}
+                onClick={() => {
+                  blockUser({variables: {userId: props.userId}}).then(() => {
+                    GlobalToaster.show({message: `${isBlocked ? "Unblocked" : "Blocked"} ${data.user.username ?? "unknown user"}.`, intent: Intent.SUCCESS});
+                  }).catch((error: Error) => {
+                    GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+                  });
+                }}
               />}
               {currentData?.currentUser && currentData.currentUser.id !== data.user.id && <Button
                 small={true}

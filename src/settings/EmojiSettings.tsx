@@ -29,8 +29,8 @@ function EmojiSettings(props: IEmojiSettingsProps): JSX.Element {
         Emojis
         </div>
         <div className="EmojiSettings">
-          <div className="EmojiSettings-topbar">
-            <div className="EmojiSettings-slots">
+          <div className="Settings-table-topbar">
+            <div className="Settings-table-number">
               {props.user.customEmojis?.length}/50 slots used
             </div>
             <Popover
@@ -95,14 +95,14 @@ function EmojiSettings(props: IEmojiSettingsProps): JSX.Element {
               </div>
             </Popover>
           </div>
-          <div className="EmojiSettings-table">
-            {props.user.customEmojis?.map((value) => (<div className="EmojiSettings-emoji">
-              <img className="EmojiSettings-emoji-icon" src={value.url} alt={value.name}/>
-              <div className="EmojiSettings-emoji-name">
+          <div className="Settings-table">
+            {props.user.customEmojis?.map((value) => (<div className="Settings-row">
+              <img className="Settings-row-icon" src={value.url} alt={value.name}/>
+              <div className="Settings-row-text">
                 :{value.name}:
               </div>
               <Button
-                className="EmojiSettings-emoji-button"
+                className="Settings-row-button"
                 icon="trash"
                 intent={Intent.DANGER}
                 minimal={true}

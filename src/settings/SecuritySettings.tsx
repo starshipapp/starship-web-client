@@ -1,8 +1,7 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useMutation } from "@apollo/client";
 import { Button, Intent } from "@blueprintjs/core";
 import React, { useState } from "react";
 import disableTFAMutation, { IDisableTFAMutation } from "../graphql/mutations/users/disableTFAMutation";
-import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import IUser from "../types/IUser";
 import { GlobalToaster } from "../util/GlobalToaster";
 import TFAPrompt from "../util/TFAPrompt";
@@ -25,7 +24,7 @@ function SecuritySettings(props: ISecuritySettingsProps): JSX.Element {
         <div className="Settings-page-header">
           Security
         </div>
-        <h1>Two Factor Authentication</h1>
+        <h1 className="Settings-subheader">Two Factor Authentication</h1>
         <div className="Settings-tfa">
           <p>Two Factor Authentication <b>is{!props.user.tfaEnabled && " not"}</b> enabled</p>
           {!props.user.tfaEnabled && <Button onClick={() => setTFAOpen(true)}>Enable 2FA</Button>}

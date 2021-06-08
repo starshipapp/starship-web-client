@@ -95,7 +95,7 @@ function ProfileSettings(props: IProfileSettingsProps): JSX.Element {
         <div className="Settings-page-header">
           Profile
         </div>
-        <h1>Profile Picture</h1>
+        <h1 className="Settings-subheader">Profile Picture</h1>
         <div className="ProfileSettings-profilepic" onClick={() => {
           setAction("profilepic");
           fileInput.current?.click();
@@ -104,7 +104,7 @@ function ProfileSettings(props: IProfileSettingsProps): JSX.Element {
           {props.user.profilePicture && <img alt="Change profile picture" src={fixPFP(props.user.profilePicture) + "?t=" + String(Number(Date.now()))} ref={image}/>}
           <Icon icon="upload" className="ProfileSettings-uploadpfp"/>
         </div>
-        <h1>Profile Banner</h1>
+        <h1 className="Settings-subheader">Profile Banner</h1>
         <div className="ProfileSettings-banner" onClick={() => {
           setAction("banner");
           fileInput.current?.click();
@@ -112,7 +112,7 @@ function ProfileSettings(props: IProfileSettingsProps): JSX.Element {
           {props.user && props.user.profileBanner && <img alt="Change profile banner" src={fixPFP(props.user.profileBanner) + "?t=" + String(Number(Date.now()))} ref={image}/>}
           <Icon icon="upload" className="ProfileSettings-uploadpfp"/>
         </div>
-        <h1>Bio</h1>
+        <h1 className="Settings-subheader">Bio</h1>
         <TextArea 
           className="ProfileSettings-bio"
           placeholder="Type up to 2000 characters about yourself. Markdown supported." 
