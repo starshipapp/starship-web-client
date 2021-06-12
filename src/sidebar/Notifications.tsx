@@ -10,6 +10,7 @@ import onNotificationRecieved from "../graphql/subscriptions/misc/onNotification
 import INotification from "../types/INotification";
 import IUser from "../types/IUser";
 import { GlobalToaster } from "../util/GlobalToaster";
+import Markdown from "../util/Markdown";
 import "./css/Notifications.css";
 
 interface INotificationsProps {
@@ -65,7 +66,7 @@ function Notifications(props: INotificationsProps): JSX.Element {
           return (
             <div className={`Notifications-notification ${value.isRead ? "Notifications-unread" : ""}`}>
               <div className="Notifications-notification-text">
-                {value.text}
+                <Markdown>{value.text ?? ""}</Markdown>
               </div>
               <div className="Notifications-notification-info">
                 <div className="Notifications-notification-icon">

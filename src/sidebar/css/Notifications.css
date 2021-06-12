@@ -49,3 +49,7 @@
 .Notifications .bp3-non-ideal-state {
   margin-bottom: 0.5rem;
 }
+
+.Notifications-notification-text p {
+  margin-bottom: 0;
+}

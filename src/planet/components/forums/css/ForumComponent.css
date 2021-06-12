@@ -35,6 +35,14 @@
   margin-left: 0.25rem
 }
 
+.ForumThreadItem-text p:last-of-type {
+  margin-bottom: 0;
+}
+
+.ForumThreadItem-mentioned {
+  background-color: rgba(217, 130, 43, 0.25);
+}
+
 @media only screen and (min-width: 600px) {
   .Planet-contentcontainer-redesign .ForumComponent-title {
     font-size: 3.0rem; 

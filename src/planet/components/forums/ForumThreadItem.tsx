@@ -166,14 +166,14 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
           <span className="ForumThreadItem-postinfo-date">{mobileCreationDateText}</span>
         </div>}
       </div>
-      <div className="ForumThreadItem-content">
+      <div className={`ForumThreadItem-content ${props.post.mentions && (props.post.mentions.filter((value) => value.id === data?.currentUser.id).length > 0) ? "ForumThreadItem-mentioned" : ""}`}>
         {!isMobile() && <div className="ForumThreadItem-postinfo">
           <div>
             <Icon icon="time" className="ForumThreadItem-postinfo-dateicon"/>
             <span className="ForumThreadItem-postinfo-date">{creationDateText}</span>
           </div>
         </div>}
-        <div className="ForumThreadItem-text">
+        <div className={`ForumThreadItem-text`}>
           {showEditor ? <div className="ForumThreadItem-editor">
             <SimpleMDEEditor onChange={(value) => setTextValue(value)} value={textValue} options={memoizedOptions}/>
             <Button

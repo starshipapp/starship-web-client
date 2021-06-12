@@ -7,6 +7,7 @@ import markAllReadMutation, { IMarkAllReadMutationData } from "../graphql/mutati
 import getNotifications, { IGetNotificationsData } from "../graphql/queries/misc/getNotifications";
 import IUser from "../types/IUser";
 import { GlobalToaster } from "../util/GlobalToaster";
+import Markdown from "../util/Markdown";
 import "./css/NotificationPanel.css";
 
 interface INotificationPanelProps {
@@ -40,7 +41,7 @@ function NotificationPanel(props: INotificationPanelProps): JSX.Element {
                 <Icon icon={value.icon}/>
               </div>
               <div className="NotificationsPanel-notification-text">
-                {value.text}
+                <Markdown>{value.text ?? ""}</Markdown>
               </div>
               <div className="NotificationsPanel-notification-date">
                 {date}

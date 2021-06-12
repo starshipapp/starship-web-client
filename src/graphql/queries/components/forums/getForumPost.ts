@@ -39,6 +39,9 @@ const getForumPost = gql`
       stickied
       locked
       createdAt
+      mentions {
+        id
+      }
       replies(limit: $count, cursor: $cursor) {
         forumReplies {
           id
@@ -63,6 +66,9 @@ const getForumPost = gql`
           stickied
           createdAt
           updatedAt
+          mentions {
+            id
+          }
         }
       }
     }

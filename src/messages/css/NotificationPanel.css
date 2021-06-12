@@ -52,3 +52,7 @@
 .NotificationsPanel-notification:last-of-type {
   border-bottom: 1px #202B33 solid;
 }
+
+.NotificationsPanel-notification-text p {
+  margin-bottom: 0;
+}

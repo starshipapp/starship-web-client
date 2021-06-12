@@ -20,6 +20,7 @@ import customEmojiPlugin from "./remark/customEmojiPlugin";
 import ICustomEmoji from "../types/ICustomEmoji";
 
 import "./css/Markdown.css";
+import mentionPlugin from "./remark/mentionPlugin";
 
 interface IMarkdownProps {
   children: string
@@ -41,7 +42,7 @@ function Markdown(props: IMarkdownProps): JSX.Element {
   return ( 
     <ReactMarkdown
       children={props.children}
-      remarkPlugins={[math, emoji, footnotes, hint, toc, slug, [customEmojiPlugin, {planetEmojis: props.planetEmojis, userEmojis: props.userEmojis}]]}
+      remarkPlugins={[math, emoji, footnotes, hint, toc, slug, mentionPlugin, [customEmojiPlugin, {planetEmojis: props.planetEmojis, userEmojis: props.userEmojis}]]}
       rehypePlugins={[katex]}
       components={components}
     />
