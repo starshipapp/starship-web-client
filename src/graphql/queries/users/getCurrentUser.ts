@@ -39,6 +39,7 @@ const getCurrentUser = gql`
         username
         profilePicture
       }
+      notificationSetting
     }
   }
 `;

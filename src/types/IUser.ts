@@ -19,5 +19,6 @@ export default interface IUser {
   tfaEnabled?: boolean,
   online?: boolean,
   blockedUsers?: [IUser],
-  customEmojis?: [ICustomEmoji]
+  customEmojis?: [ICustomEmoji],
+  notificationSetting?: number
 }
