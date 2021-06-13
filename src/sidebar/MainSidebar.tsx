@@ -52,9 +52,9 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
           <Link className="link-button" to="/"><div className="MainSidebar-logo"/></Link>
         </div>
         <Icon onClick={toggleHidden} icon="menu" className="MainSidebar-show-button"/>
-        {data?.currentUser && ((props.context !== "messages" && !useRedesign) || props.context === "home") && <PlanetSwitcher toggleHidden={toggleHidden}/>}
+        {data?.currentUser && ((!(props.context === "messages" || props.context === "settings") && !useRedesign) || props.context === "home") && <PlanetSwitcher toggleHidden={toggleHidden}/>}
         {useRedesign && props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
-        {data?.currentUser && useRedesign && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
+        {data?.currentUser && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
         {data?.currentUser && props.context === "messages" && <MessagesSidebar toggleHidden={toggleHidden}/>}
         {loading ? <MenuItem text="Loading..."/> : (data?.currentUser ? <>
           <div className="MainSidebar-user-spacer"/>
