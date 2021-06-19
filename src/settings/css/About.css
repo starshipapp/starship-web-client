@@ -1,0 +1,54 @@
+.About-logo {
+  width: auto;
+  height: 2.5rem;
+}
+
+.About-version-client {
+  font-size: 1.75rem;
+  line-height: 1.25rem;
+  font-weight: bold;
+  display: flex;
+}
+
+.About-version-server {
+  margin-top: 0.5rem;
+  font-style: italic;
+  color: #BFCCD6;
+}
+
+.About-copyright {
+  margin-top: auto;
+  color: #BFCCD6;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.About {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.About-debug-button {
+  margin-top: -0.25rem;
+  margin-left: auto;
+}
+
+.About-debug-entry {
+  margin-top: 0.5rem;
+}
+
+.About-debug-entry h2 {
+  margin-bottom: 0.5rem;
+}
+
+.About-env-variable {
+  display: block;
+  width: max-content;
+  margin-top: 0.25rem;
+}
+
+.About-debug-info {
+  margin-bottom: 0.75rem;
+  margin-top: 0.75rem;
+}

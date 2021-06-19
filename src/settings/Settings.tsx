@@ -16,6 +16,7 @@ import ProfileSettings from "./ProfileSettings";
 import SecuritySettings from "./SecuritySettings";
 import EmojiSettings from "./EmojiSettings";
 import NotificationSettings from "./NotificationSettings";
+import About from "./About";
 
 function Settings(): JSX.Element {
   const {data: userData, refetch} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
@@ -32,6 +33,9 @@ function Settings(): JSX.Element {
         </Route>
         <Route path={`${match.path}/notifications`}>
           <NotificationSettings user={userData.currentUser} refetch={() => refetch()}/>
+        </Route>
+        <Route path={`${match.path}/about`}>
+          <About/>
         </Route>
         <Route path={`${match.path}`}>
           <ProfileSettings user={userData.currentUser} refetch={() => refetch()}/>

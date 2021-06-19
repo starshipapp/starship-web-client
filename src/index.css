@@ -143,6 +143,26 @@ blockquote {
   max-width: 16rem;
 }
 
+div {
+  scrollbar-color: #5C7080 #293742;
+}
+
+div::-webkit-scrollbar-track {
+  border-radius: 10px;
+  margin: 2px;
+  background-color: #293742;
+}
+
+div::-webkit-scrollbar {
+  width: 8px;
+  background-color: #293742;
+}
+
+div::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #5C7080;
+}
+
 @media only screen and (max-width: 600px) {
   .sidebar-hidden {
     display: none;

@@ -28,6 +28,7 @@ function SettingsSidebar(props: ISettingsSidebarProps): JSX.Element {
     <Link className="link-button" to="/settings/security"><MenuItem text="Security" icon="lock"/></Link>
     <Link className="link-button" to="/settings/emojis"><MenuItem text="Emojis" icon="emoji"/></Link>
     <Link className="link-button" to="/settings/notifications"><MenuItem text="Notifications" icon="notifications"/></Link>
+    <Link className="link-button" to="/settings/about"><MenuItem text="About Starship" icon="info-sign"/></Link>
   </>);
 }
 
