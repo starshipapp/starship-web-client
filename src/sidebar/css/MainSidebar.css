@@ -148,3 +148,7 @@
 .MainSidebar-user-spacer {
   margin-top: auto;
 }
+
+.MainSidebar-user-spacer:first-of-type {
+  margin-top: auto;
+}
