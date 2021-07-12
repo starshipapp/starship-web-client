@@ -31,14 +31,14 @@ const customEmojiPlugin: Plugin<[ICustomEmojiPluginOptions]> = function(options)
     if(emojiSearch[0]) {
       return {
         type: 'text',
-        value: match,
+        value: match as string,
         data: {
           hName: 'img',
           hProperties: { className: "Markdown-custom-emoji", src: emojiSearch[0].url }
         },
       };
     } else {
-      return match;
+      return match as string;
     }
   };
 

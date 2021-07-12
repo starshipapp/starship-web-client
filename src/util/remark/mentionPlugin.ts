@@ -11,11 +11,11 @@ const mentionPlugin: Plugin = function() {
   const replace: ReplaceFunction = function(match) {
     return {
       type: 'text',
-      value: match,
+      value: match as string,
       data: {
         hName: 'span',
         hProperties: { className: "Markdown-mention" },
-        hChildren: [{ type: "text", value: match }]
+        hChildren: [{ type: "text", value: match as string }]
       }
     };
   };

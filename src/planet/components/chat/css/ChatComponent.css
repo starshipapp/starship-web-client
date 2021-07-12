@@ -1,0 +1,37 @@
+.ChatComponent {
+  width: 100%;
+  height: 100vh;
+  padding: 1rem;
+}
+
+.ChatComponent-header {
+  display: flex;
+  width: 100%;
+}
+
+.ChatComponent-header-left {
+  display: flex;
+  margin-right: auto;
+}
+
+.ChatComponent-header-topic {
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 0.6rem;
+}
+
+.ChatComponent-channel-switcher {
+  font-weight: bold;
+}
+
+.ChatComponent-unread {
+  border-radius: 50%;
+  height: 0.5rem;
+  width: 0.5rem;
+  margin-top: 0.425rem;
+  background-color: #738694;
+}
+
+.ChatComponent-mentioned {
+  background-color: #DB3737;
+}

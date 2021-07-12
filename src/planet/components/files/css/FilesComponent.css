@@ -7,6 +7,7 @@
 .Planet-contentcontainer-redesign .FilesComponent {
   margin: 1.5rem;
   margin-top: 1.15rem;
+  margin-bottom: 0rem;
   min-height: calc(100% - 1.15rem);
   min-width: calc(100% - 3rem);
   min-width: calc(100% - 3rem);

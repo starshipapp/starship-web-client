@@ -5,11 +5,12 @@ import IPlanet from "../types/IPlanet";
 import WikiComponent from "./components/wikis/WikiComponent";
 import ForumComponent from "./components/forums/ForumComponent";
 import FilesComponent from "./components/files/FilesComponent";
+import {IconName} from "@blueprintjs/core";
+import ChatComponent from "./components/chat/ChatComponent";
 
 export interface IComponentDataType {
   name: string,
-  // really dumb work around to allow icon rendering
-  icon: "document" | "applications" | "folder-open" | "comment",
+  icon: IconName,
   friendlyName: string,
   component?: (props: IComponentProps) => JSX.Element
 }
@@ -39,6 +40,12 @@ export default class ComponentIndex {
       icon: "comment",
       friendlyName: "Forum",
       component: ForumComponent
+    },
+    "chat": {
+      name: "chat",
+      icon: "chat",
+      friendlyName: "Chat",
+      component: ChatComponent
     }
   };
 

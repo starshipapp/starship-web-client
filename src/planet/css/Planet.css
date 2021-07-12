@@ -47,7 +47,7 @@
   box-shadow: none !important;
   background-color: #293742 !important;
   overflow-x: scroll;
-  overflow-y: hidden;
+  overflow-y: scroll;
   width: calc(75vw + 2rem);
   min-height: 3rem;
   padding-bottom: 1.75rem;
