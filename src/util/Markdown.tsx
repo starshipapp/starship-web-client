@@ -3,7 +3,8 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import {vs2015} from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { NormalComponents, SpecialComponents } from "react-markdown/src/ast-to-react";
+import { NormalComponents } from "react-markdown/lib/complex-types";
+import { SpecialComponents } from "react-markdown/lib/ast-to-react";
 
 // remark plugins
 import math from "remark-math";
@@ -30,13 +31,13 @@ interface IMarkdownProps {
 
 function Markdown(props: IMarkdownProps): JSX.Element {
   const components: Partial<NormalComponents & SpecialComponents> = {
-    code({node, className, ...props}) {
+    /* code({node, className, ...props}) {
       const match = /language-(\w+)/.exec(className as string || '');
       return match
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         ? <SyntaxHighlighter language={match[1]} PreTag="div" style={vs2015} {...props} />
         : <code className={className as string} {...props} />;
-    }
+    }*/
   };
 
   return ( 
