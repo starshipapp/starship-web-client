@@ -15,6 +15,7 @@ const getChat = gql`
         type
         unread
         mentioned
+        topic
       }
       unread
       mentioned

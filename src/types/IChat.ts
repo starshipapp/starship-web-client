@@ -8,7 +8,7 @@ export default interface IChat {
   createdAt?: string;
   owner?: IUser;
   planet?: IPlanet;
-  channel?: [IChannel];
+  channels?: [IChannel];
   unread?: boolean;
   mentioned?: boolean;
 }
