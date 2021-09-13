@@ -6,6 +6,7 @@ import deleteChannelMutation, { IDeleteChannelMutationData } from "../../../grap
 import renameChannelMutation, { IRenameChannelMutationData } from "../../../graphql/mutations/components/chats/renameChannelMutation";
 import IChannel from "../../../types/IChannel";
 import { GlobalToaster } from "../../../util/GlobalToaster";
+import "./css/ChannelManager.css";
 
 interface IChannelManagerProps {
   isOpen: boolean;
@@ -76,10 +77,11 @@ function ChannelManager(props: IChannelManagerProps): JSX.Element {
             icon="add"
             minimal={true}
             onClick={() => setShowCreate(true)}
+            className="ChannelManager-button"
           />
           <div className="ChannelManager-add-channel">
             <div className="menu-form">
-              <input 
+              <input ChatComponent-header-topic$
                 className={`menu-input ${Classes.INPUT}`}
                 placeholder="Channel Name" 
                 onKeyDown={(e) => {e.key === "Enter" && createChannel();}} 
@@ -93,7 +95,7 @@ function ChannelManager(props: IChannelManagerProps): JSX.Element {
           <div key={channel.id} className="ChannelManager-channel">
             <div className="ChannelManager-channel-top">
               <div className="ChannelManager-channel-name">{channel.name}</div>
-              <ButtonGroup>
+              <ButtonGroup minimal={true}>
                 <Popover
                   isOpen={showRename === channel.id}
                   onClose={() => setShowRename("")}
@@ -152,7 +154,6 @@ function ChannelManager(props: IChannelManagerProps): JSX.Element {
                 </Popover>
               </ButtonGroup>
             </div>
-            <div className="ChannelManager-channel-topic">{channel.topic}</div>
           </div>
         ))}
       </div>

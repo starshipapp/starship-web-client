@@ -76,7 +76,7 @@ function ChatComponent(props: IComponentProps): JSX.Element {
             </Menu>
           </Popover>
           <Divider/>
-          <div className="ChatComponent-header-topic">
+          <div className={`ChatComponent-header-topic${currentChannelObject?.topic ? "" : " ChatComponent-header-topic-unset"}`}>
             {currentChannelObject?.topic ? currentChannelObject.topic : "No topic set"}
           </div>
           {userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet) && currentChannelObject && <Popover
@@ -91,17 +91,18 @@ function ChatComponent(props: IComponentProps): JSX.Element {
                 setShowTopicText(true);
                 setTopicText(currentChannelObject.topic ?? "");
               }}
+              className="ChatComponent-header-topic-edit"
             />
             <div className="ChatComponent-header-change-topic">
               <div className="menu-form">
                 <input 
                   className={`menu-input ${Classes.INPUT}`}
-                  placeholder="Channel Name" 
+                  placeholder="Channel Topic" 
                   onKeyDown={(e) => {e.key === "Enter" && setTopic();}} 
                   value={topicText}
                   onChange={(e) => setTopicText(e.target.value)}
                 />
-                <Button className="menu-button" onClick={setTopic}>Create Channel</Button>
+                <Button className="menu-button" onClick={setTopic}>Set Topic</Button>
               </div>
             </div>
           </Popover>}

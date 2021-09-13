@@ -20,6 +20,10 @@
   margin-left: 0.6rem;
 }
 
+.ChatComponent-header-topic-unset {
+  color: #8A9BA8;
+}
+
 .ChatComponent-channel-switcher {
   font-weight: bold;
 }
@@ -34,4 +38,8 @@
 
 .ChatComponent-mentioned {
   background-color: #DB3737;
+}
+
+.ChatComponent-header-topic-edit {
+  margin-left: 0.3rem;
 }
