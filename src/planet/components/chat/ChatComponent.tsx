@@ -1,6 +1,8 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Classes, Divider, Intent, Menu, MenuDivider, MenuItem, Popover, PopoverInteractionKind } from "@blueprintjs/core";
 import { useEffect, useState } from "react";
+import { useHistory } from "react-router";
+import { Link } from "react-router-dom";
 import MessageView from "../../../chat/MessageView";
 import setChannelTopicMutation, { ISetChannelTopicMutationData } from "../../../graphql/mutations/components/chats/setChannelTopicMutation";
 import getChat, { IGetChatData } from "../../../graphql/queries/components/chat/getChat";
@@ -15,13 +17,13 @@ function ChatComponent(props: IComponentProps): JSX.Element {
   const {data: userData} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const {data, refetch} = useQuery<IGetChatData>(getChat, {variables: {id: props.id}});
   const [isOpen, setIsOpen] = useState(false);
-  const [currentChannel, setCurrentChannel] = useState<string>("");
   const [showTopicText, setShowTopicText] = useState(false);
   const [topicText, setTopicText] = useState("");
   const [setTopicM] = useMutation<ISetChannelTopicMutationData>(setChannelTopicMutation);
+  const history = useHistory();
 
   function setTopic(): void {
-    setTopicM({variables: {channelId: currentChannel, topic: topicText}}).then(() => {
+    setTopicM({variables: {channelId: props.subId, topic: topicText}}).then(() => {
       GlobalToaster.show({intent: Intent.SUCCESS, message: "Topic set succesfully."});
       setShowTopicText(false);
     }).catch((e: Error) => {
@@ -30,14 +32,14 @@ function ChatComponent(props: IComponentProps): JSX.Element {
   }
 
   useEffect(() => {
-    if (data?.chat?.channels && data.chat.channels.length > 0 && currentChannel === "") {
-      setCurrentChannel(data.chat.channels[0].id);
+    if (data?.chat?.channels && data.chat.channels.length > 0 && !props.subId) {
+      history.push(`/planet/${props.planet.id}/${props.id}/${data.chat.channels[0].id}`);
     }
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-  }, [data, currentChannel]);
+  }, [data, history, props.id, props.planet.id]);
 
-  const currentChannelObject = data?.chat?.channels?.find((channel) => channel.id === currentChannel);
+  const currentChannelObject = data?.chat?.channels?.find((channel) => channel.id === props.subId);
 
   return (
     <div className="ChatComponent">
@@ -59,13 +61,13 @@ function ChatComponent(props: IComponentProps): JSX.Element {
               className="ChatComponent-channel-switcher"
             />
             <Menu>
-              {data?.chat?.channels && data?.chat?.channels.map((channel, index) => (
-                <MenuItem 
-                  icon={channel.type === 1 ? "video" : "chat"}
-                  key={index}
-                  text={channel.name}
-                  onClick={() => setCurrentChannel(channel.id)}
-                />
+              {data?.chat?.channels && data?.chat?.channels.map((channel) => (
+                <Link to={`/planet/${props.planet.id}/${props.id}/${channel.id}`} key={channel.id} className="link-button">
+                  <MenuItem 
+                    icon={channel.type === 1 ? "video" : "chat"}
+                    text={channel.name}
+                  />
+                </Link>
               ))}
               {userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet) && <MenuDivider/>}
               {userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet) && <MenuItem
@@ -113,7 +115,7 @@ function ChatComponent(props: IComponentProps): JSX.Element {
           </Popover>
         </div>
       </div>
-      <MessageView currentUser={userData?.currentUser} channelId={currentChannel}/>
+      {props.subId && <MessageView currentUser={userData?.currentUser} channelId={props.subId} planet={props.planet}/>}
     </div>
   );
 }

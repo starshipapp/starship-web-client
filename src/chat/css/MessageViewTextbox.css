@@ -1,4 +1,9 @@
+.MessageViewTextbox {
+  margin-top: auto;
+}
+
 .MessageViewTextbox-textarea {
   width: 100%;
   resize: none;
+  margin-bottom: 0.8rem;
 }
