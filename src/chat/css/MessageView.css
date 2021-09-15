@@ -18,8 +18,8 @@
 .MessageView-messages {
   display: flex;
   flex-direction: column-reverse;
-  padding: 0.35rem 0 ;
   min-height: 100%;
+  margin: 0.75rem 0;
 }
 
 .MessageView-intro {

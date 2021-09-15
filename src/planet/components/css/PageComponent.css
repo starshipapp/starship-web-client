@@ -62,7 +62,7 @@
 }
 
 @media only screen and (min-width: 600px) {
-  .Planet-contentcontainer-redesign .PageComponent-edit-button {
+  .Planet-contentcontainer .PageComponent-edit-button {
     position: static;
     margin-bottom: 0.15rem;
     margin-left: 0.5rem;
@@ -75,7 +75,7 @@
     margin-top: 1.25rem;
     margin-bottom: 0.65rem;
   } 
-  .Planet-contentcontainer-redesign .PageComponent {
+  .Planet-contentcontainer .PageComponent {
     margin-top: 1rem;
     max-width: 75vw;
     min-width: 75vw;
@@ -85,7 +85,7 @@
 }
 
 @media only screen and (max-width: 600px) {
-  .Planet-contentcontainer-redesign .PageComponent {
+  .Planet-contentcontainer .PageComponent {
     margin-top: 1rem;
     max-width: 90vw;
     min-width: 90vw;
@@ -93,7 +93,7 @@
     margin-right: auto;
   }
 
-  .Planet-contentcontainer-redesign  .PageComponent-title {
+  .Planet-contentcontainer  .PageComponent-title {
     max-width: 90vw;
     min-width: 90vw;
     font-size: 1.5rem;

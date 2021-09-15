@@ -15,7 +15,6 @@ function Home(): JSX.Element {
   const { data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser);
   const [searchTextbox, setTextbox] = useState("");
   const [searchText, setText] = useState("");
-  const useRedesign = yn(localStorage.getItem("superSecretSetting.useRedesign"));
 
   useEffect(() => {
     document.title = "starship";
@@ -53,13 +52,6 @@ function Home(): JSX.Element {
           </Callout>
           {process.env.NODE_ENV === "development" && <Callout icon="warning-sign" intent={Intent.WARNING} className="Home-alpha-callout-padtop">
             This is not a production build. You may encounter performance issues.
-          </Callout>}
-          {useRedesign && <Callout icon="warning-sign" intent={Intent.WARNING} className="Home-alpha-callout-padtop" title="superSecretSetting.useRedesign is currently set to true.">
-            This iteration of the Starship UI is currently experimental. Please report bugs to @william341 or the Starship forums.<br/>
-            In order to disable the redesign, open your browser's JS console in the development tools and run the following code:<br/>
-            <Code>
-              localStorage.removeItem("superSecretSetting.useRedesign");
-            </Code>
           </Callout>}
         </div>
         {searchText === "" && userData?.currentUser && <div className="Home-featured">

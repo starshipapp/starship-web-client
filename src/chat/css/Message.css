@@ -2,9 +2,22 @@
   display: flex;
   position: relative;
   width: 100%;
-  padding-top: 0.55rem;
+  margin-top: 0.75rem;
+  padding-top: 0.1rem;
   padding-left: 1rem;
   padding-right: 1rem;
+  padding-bottom: 0.1rem;
+}
+
+.Message p {
+  margin: 0.1rem 0;
+}
+
+.Message-combined {
+  margin-top: 0;
+  padding-top: 0.1rem;
+  padding-bottom: 0.1rem;
+  padding-left: 3.8rem;
 }
 
 .Message-pfp {

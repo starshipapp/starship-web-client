@@ -27,7 +27,6 @@ interface IPlanetContentProps {
 }
 
 function PlanetContent(props: IPlanetContentProps): JSX.Element {
-  const useRedesign = yn(localStorage.getItem("superSecretSetting.useRedesign"));
   const {planet, component, subId, page} = useParams<IPlanetContentParams>();
   const {data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [componentName, setComponentName] = useState<string>("");
@@ -100,45 +99,7 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
   return (
     <>
       {props.planet.css && (component !== "admin" || forceStyling === true) && <style>{props.planet.css}</style>}
-      {!useRedesign && <Navbar className="Planet-navbar">
-        <div className="Planet-navbar-content">
-          <Navbar.Group align={Alignment.LEFT}>
-            <Link className="link-button" to={`/planet/${planet}`}> <Button className="bp3-minimal" outlined={props.home} icon="home" text="Home"/> </Link>
-            {props.planet.components && props.planet.components.map((value) => (<Link className="link-button" to={`/planet/${planet}/${value.componentId}`}>
-              <Button
-                className="bp3-minimal"
-                icon={ComponentIndex.ComponentDataTypes[value.type].icon}
-                text={value.name}
-                outlined={component !== undefined && component === value.componentId}
-                key={value.componentId}
-              />
-            </Link>))}
-            {!userLoading && props.planet.owner && permissions.checkFullWritePermission(userData?.currentUser as IUser, props.planet) && <Popover>
-              <Button className="bp3-minimal" icon="plus"/>
-              <div className="Planet-navbar-add-content">
-                <input className="bp3-input" placeholder="Name" value={componentName} onChange={(e) => setComponentName(e.target.value)}/>
-                <Menu>
-                  {Object.values(ComponentIndex.ComponentDataTypes).map((value) => (<MenuItem text={"Create new " + value.friendlyName} key={value.name} icon={value.icon} onClick={() => {
-                    if(componentName === "") {
-                      GlobalToaster.show({message: "Your component must have a name.", intent: Intent.DANGER});
-                      return;
-                    }
-
-                    addComponent({variables: {planetId: planet, name: componentName, type: value.name}}).then((value) => {
-                      if(value.data?.addComponent.id) {
-                        GlobalToaster.show({message: `Successfully added ${componentName}.`, intent: Intent.SUCCESS});
-                      }
-                    }).catch((error: Error) => {
-                      GlobalToaster.show({message: error.message, intent: Intent.DANGER});
-                    });
-                  }}/>))}
-                </Menu>
-              </div>
-            </Popover>}
-          </Navbar.Group>
-        </div>
-      </Navbar>}
-      {props.planet.components && <div className={useRedesign ? "Planet-contentcontainer-redesign" : "Planet-contentcontainer"}>
+      {props.planet.components && <div className={"Planet-contentcontainer"}>
         {currentComponent}
       </div>}
     </>

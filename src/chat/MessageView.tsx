@@ -8,7 +8,6 @@ import IMessage from "../types/IMessage";
 import { useEffect } from "react";
 import onMessageSent from "../graphql/subscriptions/components/onMessageSent";
 import IPlanet from "../types/IPlanet";
-import IChannel from "../types/IChannel";
 import { NonIdealState } from "@blueprintjs/core";
 import permissions from "../util/permissions";
 
@@ -19,15 +18,18 @@ interface IMessageViewProps {
 }
 
 let hasSubscribed = "";
+let unsubscribe: () => any = () => null;
 
 function MessageView(props: IMessageViewProps): JSX.Element {
   const {data, subscribeToMore} = useQuery<IGetChannelData>(getChannel, {variables: {id: props.channelId, count: 50, pinnedCount: 0}});
 
   useEffect(() => {
     if(hasSubscribed !== props.channelId && data?.channel.messages) {
-      console.log("subscribing to messages");
+      if(hasSubscribed !== "") {
+        unsubscribe();
+      }
       hasSubscribed = props.channelId;
-      subscribeToMore({
+      unsubscribe = subscribeToMore({
         document: onMessageSent,
         variables: {channelId: props.channelId},
         updateQuery: (prev, {subscriptionData}) => {
@@ -38,15 +40,17 @@ function MessageView(props: IMessageViewProps): JSX.Element {
           if(!data.messageSent) return prev;
           console.log(data.messageSent);
           
-          const newMessages = [...messageWorkaround, data.messageSent];
+          const newMessages = [data.messageSent, ...messageWorkaround];
 
           if(newMessages.length > 50) {
-            newMessages.shift();
+            newMessages.unshift();
           }
 
           return Object.assign({}, prev, {
             channel: {
+              ...prev.channel,
               messages: {
+                cursor: prev.channel.messages?.cursor ?? "0",
                 messages: newMessages
               }
             }
@@ -56,12 +60,14 @@ function MessageView(props: IMessageViewProps): JSX.Element {
     }
   }, [data, subscribeToMore, props.channelId]);
 
+  console.log("bruh");
+
   return (
     <div className="MessageView">
       <div className="MessageView-message-container">
         <div className="MessageView-messages">
-          {data?.channel?.messages && data.channel.messages.messages.map((message: IMessage) => (
-            <Message key={message.id} message={message} currentUser={props.currentUser} planet={props.planet}/>
+          {data?.channel?.messages && data.channel.messages.messages.map((message: IMessage, index) => (
+            <Message key={message.id} message={message} currentUser={props.currentUser} planet={props.planet} previousMessage={data.channel.messages?.messages[index + 1]} nextMessage={data.channel.messages?.messages[index - 1]}/>
           ))}
           {data?.channel?.messages && data?.channel?.messages?.messages.length < 50 && <NonIdealState
             icon="chat"

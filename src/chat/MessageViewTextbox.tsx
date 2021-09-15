@@ -18,7 +18,7 @@ function MessageViewTextbox(props: IMessageViewTextboxProps): JSX.Element {
   return (
     <div className="MessageViewTextbox">
       <TextareaAutosize 
-        className={`${Classes.INPUT} ${Classes.LARGE} MessageViewTextbox-textarea`}
+        className={`${Classes.INPUT} MessageViewTextbox-textarea`}
         placeholder="Type a message..."
         maxRows={4}
         value={message}

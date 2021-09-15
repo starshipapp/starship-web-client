@@ -30,7 +30,6 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
   const { client, loading, data, refetch } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [isHidden, setHidden] = useState<boolean>(isMobile());
   const {planet, component} = useParams<IMainSidebarParams>();
-  const useRedesign = yn(localStorage.getItem("superSecretSetting.useRedesign"));
 
 
   const toggleHidden = function() {
@@ -52,8 +51,7 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
           <Link className="link-button" to="/"><div className="MainSidebar-logo"/></Link>
         </div>
         <Icon onClick={toggleHidden} icon="menu" className="MainSidebar-show-button"/>
-        {data?.currentUser && ((!(props.context === "messages" || props.context === "settings") && !useRedesign) || props.context === "home") && <PlanetSwitcher toggleHidden={toggleHidden}/>}
-        {useRedesign && props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
+        {props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
         {data?.currentUser && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
         {data?.currentUser && props.context === "messages" && <MessagesSidebar toggleHidden={toggleHidden}/>}
         {loading ? <MenuItem text="Loading..."/> : (data?.currentUser ? <>

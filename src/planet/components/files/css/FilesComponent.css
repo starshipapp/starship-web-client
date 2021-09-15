@@ -4,7 +4,7 @@
   min-height: 100%;
 }
 
-.Planet-contentcontainer-redesign .FilesComponent {
+.Planet-contentcontainer .FilesComponent {
   margin: 1.5rem;
   margin-top: 1.15rem;
   margin-bottom: 0rem;
@@ -159,12 +159,12 @@
   margin-bottom: 1rem;
 }
 
-.Planet-contentcontainer-redesign .FilesComponent-readme .TextPreview {
+.Planet-contentcontainer .FilesComponent-readme .TextPreview {
   margin-top: 1rem;
   margin-bottom: 3.25rem;
 }
 
-.Planet-contentcontainer-redesign .FilesComponent-statusbar {
+.Planet-contentcontainer .FilesComponent-statusbar {
   min-width: calc(100% + 3rem);
   max-width: calc(100% + 3rem);
   margin-left: -1.5rem;

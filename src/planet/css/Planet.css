@@ -20,22 +20,13 @@
   background-color: #30404d;
 }
 
-.Planet-contentcontainer-redesign {
+.Planet-contentcontainer {
   min-height: 100%;
   width: 100%;
   overflow-x: hidden;
   margin: 0;
   padding: 0;
   display: flex;
-}
-
-.Planet-contentcontainer {
-  width: 75vw;
-  margin-left: auto;
-  margin-right: auto;
-  padding-top: 1rem;
-  height: 100%;
-  overflow-x: visible;
 }
 
 .Planet-contentcontainer-skeleton {

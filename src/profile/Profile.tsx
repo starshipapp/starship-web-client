@@ -28,7 +28,7 @@ function Profile(props: IProfileProps): JSX.Element {
   const [blockUser] = useMutation<IToggleBlockUserData>(toggleBlockUserMutation);
   const creationDateText = (!loading && data?.user && data?.user.createdAt) ? new Date(Number(data.user.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" }) : "loading";
 
-  const isBlocked: boolean | undefined = currentData?.currentUser.blockedUsers && (currentData.currentUser.blockedUsers.filter((value) => value.id === props.userId).length > 0);
+  const isBlocked: boolean | undefined = currentData?.currentUser?.blockedUsers && (currentData.currentUser.blockedUsers.filter((value) => value.id === props.userId).length > 0);
 
   return (
     <Dialog className="bp3-dark Profile" onClose={props.onClose} isOpen={props.isOpen}>
