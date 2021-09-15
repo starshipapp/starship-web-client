@@ -1,5 +1,5 @@
 .ChannelManager-channel:first-of-type {
-  border-top: 0.1rem solid #394B59;
+  border-top: 1px solid #394B59;
   padding-top: 0.35rem;
 }
 
@@ -8,7 +8,7 @@
   padding-right: 0.15rem;
   margin-top: 0.35rem;
   padding-bottom: 0.3rem;
-  border-bottom: 0.1rem solid #394B59;
+  border-bottom: 1px solid #394B59;
 }
 
 .ChannelManager-channel-top {

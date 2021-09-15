@@ -6,8 +6,8 @@ export interface ISendMessageMutationData {
 }
 
 const sendMessageMutation = gql`
-  mutation sendMessage($channelId: ID!, $message: String!, attachments: [ID]!, replyTo: ID) {
-    sendMessage(channelId: $channelId, message: $message, attachments: $attachments, replyTo: $replyTo) {
+  mutation sendMessage($channelId: ID!, $content: String!, $attachments: [ID], $replyTo: ID) {
+    sendMessage(channelId: $channelId, content: $content, attachments: $attachments, replyTo: $replyTo) {
       id
       content
       createdAt

@@ -113,7 +113,7 @@ function ChatComponent(props: IComponentProps): JSX.Element {
           </Popover>
         </div>
       </div>
-      <MessageView/>
+      <MessageView currentUser={userData?.currentUser} channelId={currentChannel}/>
     </div>
   );
 }

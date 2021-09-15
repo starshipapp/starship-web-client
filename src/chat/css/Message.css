@@ -1,0 +1,22 @@
+.Message {
+  display: flex;
+  margin-top: 0.5rem;
+}
+
+.Message-pfp {
+  height: 2.25rem;
+  width: 2.25rem;
+  margin-right: 0.5rem;
+  border-radius: 50%;
+}
+
+.Message-header-username {
+  margin-right: 0.35rem;
+  display: inline-block;
+  font-weight: bold;
+}
+
+.Message-header-date {
+  color: #BFCCD6;
+  display: inline-block;
+}

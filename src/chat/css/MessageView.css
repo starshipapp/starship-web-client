@@ -1,0 +1,18 @@
+.MessageView {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 2rem);
+}
+
+.MessageView-message-container {
+  display: block;
+  display: flex;
+  max-height:  100%;
+  flex-direction: column-reverse;
+  overflow: scroll;
+}
+
+.MessageView-messages {
+  display: flex;
+  flex-direction: column-reverse;
+}

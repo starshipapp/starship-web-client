@@ -16,18 +16,21 @@ const getChannel = gql`
       unread
       mentioned
       lastRead
-      pinnedMessages(count: $pinnedCount, cursor: $pinnedCursor) {
+      pinnedMessages(limit: $pinnedCount, cursor: $pinnedCursor) {
         cursor
         messages {
           id
           createdAt
-          type
           content
-          author {
+          owner {
             id
-            name
             username
             profilePicture
+            customEmojis {
+              id
+              name
+              url
+            }
           }
         }
       }

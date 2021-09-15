@@ -1,12 +1,16 @@
 .ChatComponent {
   width: 100%;
   height: 100vh;
-  padding: 1rem;
+  padding: 1rem 1.35rem;
 }
 
 .ChatComponent-header {
   display: flex;
-  width: 100%;
+  width: calc(100% + 0.75rem);
+  margin-left: -0.5rem;
+  margin-right: -0.25rem;
+  border-bottom: 1px solid #394B59;
+  padding-bottom: 0.5rem;
 }
 
 .ChatComponent-header-left {
