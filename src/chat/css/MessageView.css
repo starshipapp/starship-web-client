@@ -9,9 +9,10 @@
   display: flex;
   max-height:  100%;
   flex-direction: column-reverse;
-  overflow: scroll;
-  margin-bottom: -0.75rem;
+  overflow-y: scroll;
   height: 100%;
+  scrollbar-color: #394B59 #202B33;
+  overflow-x: hidden;
 }
 
 .MessageView-messages {

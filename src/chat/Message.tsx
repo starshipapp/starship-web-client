@@ -1,3 +1,4 @@
+import { Button, ButtonGroup } from "@blueprintjs/core";
 import IMessage from "../types/IMessage";
 import IPlanet from "../types/IPlanet";
 import IUser from "../types/IUser";
@@ -18,7 +19,7 @@ function Message(props: IMessageProps): JSX.Element {
     <div className="Message">
       <div className="Message-left">
         <div className="Message-pfp">
-          <img src={props.message.owner?.profilePicture} alt="pfp" className="Message-pfp" />
+          {props.message.owner?.profilePicture && <img src={props.message.owner?.profilePicture} alt="" className="Message-pfp" />}
         </div>
       </div>
       <div className="Message-right">
@@ -35,7 +36,34 @@ function Message(props: IMessageProps): JSX.Element {
             <Markdown planetEmojis={props.planet?.customEmojis} userEmojis={props.message.owner?.customEmojis}>{props.message.content || ""}</Markdown>
           </div>
         </div>
-        
+        <div className="Message-buttons">
+          <ButtonGroup>
+            <Button
+              icon="arrow-right"
+              small={true}
+            />
+            <Button
+              icon="emoji"
+              small={true}
+            />
+            <Button
+              icon="edit"
+              small={true}
+            />
+            <Button
+              icon="trash"
+              small={true}
+            />
+            <Button
+              icon="flag"
+              small={true}
+            />
+            <Button
+              icon="pin"
+              small={true}
+            />
+          </ButtonGroup>
+        </div>
       </div>
     </div>
   );

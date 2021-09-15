@@ -1,6 +1,10 @@
 .Message {
   display: flex;
-  margin-top: 0.5rem;
+  position: relative;
+  width: 100%;
+  padding-top: 0.55rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .Message-pfp {
@@ -8,6 +12,7 @@
   width: 2.3rem;
   margin-right: 0.5rem;
   border-radius: 50%;
+  background-color: #394B59;
 }
 
 .Message-header-username {
@@ -19,4 +24,19 @@
 .Message-header-date {
   color: #BFCCD6;
   display: inline-block;
+}
+
+.Message-buttons {
+  display: none;
+  position: absolute;
+  right: 1rem;
+  top: -0.5rem;
+}
+
+.Message:hover .Message-buttons {
+  display: block;
+}
+
+.Message:hover {
+  background-color: #202B33;
 }
