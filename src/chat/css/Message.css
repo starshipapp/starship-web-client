@@ -26,12 +26,18 @@
   margin-right: 0.5rem;
   border-radius: 50%;
   background-color: #394B59;
+  cursor: pointer;
+}
+
+.Message-header {
+  margin-bottom: 0.15rem;
 }
 
 .Message-header-username {
   margin-right: 0.35rem;
   display: inline-block;
   font-weight: bold;
+  cursor: pointer;
 }
 
 .Message-header-date {
@@ -52,4 +58,27 @@
 
 .Message:hover {
   background-color: #202B33;
+}
+
+.Message-edit-textarea {
+  width: 100%;
+  resize: none;
+}
+
+.Message-right {
+  width: 100%;
+}
+
+.Message-body {
+  width: 100%;
+}
+
+.Message-markdown-wrapper {
+  display: inline-block;
+}
+
+.Message-body-edited {
+  display: inline-block;
+  color: #BFCCD6;
+  margin-left: 0.25rem;
 }
