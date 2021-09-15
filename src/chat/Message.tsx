@@ -1,10 +1,12 @@
 import IMessage from "../types/IMessage";
+import IPlanet from "../types/IPlanet";
 import IUser from "../types/IUser";
 import Markdown from "../util/Markdown";
 import "./css/Message.css";
 
 interface IMessageProps {
   message: IMessage;
+  planet?: IPlanet;
   currentUser?: IUser;
 }
 
@@ -30,7 +32,7 @@ function Message(props: IMessageProps): JSX.Element {
         </div>
         <div className="Message-body">
           <div className="Message-body-text">
-            <Markdown>{props.message.content || ""}</Markdown>
+            <Markdown planetEmojis={props.planet?.customEmojis} userEmojis={props.message.owner?.customEmojis}>{props.message.content || ""}</Markdown>
           </div>
         </div>
         

@@ -61,7 +61,7 @@ function MessageView(props: IMessageViewProps): JSX.Element {
       <div className="MessageView-message-container">
         <div className="MessageView-messages">
           {data?.channel?.messages && data.channel.messages.messages.map((message: IMessage) => (
-            <Message key={message.id} message={message} currentUser={props.currentUser} />
+            <Message key={message.id} message={message} currentUser={props.currentUser} planet={props.planet}/>
           ))}
           {data?.channel?.messages && data?.channel?.messages?.messages.length < 50 && <NonIdealState
             icon="chat"
