@@ -27,7 +27,7 @@ interface IAppProps {
 function App(props: IAppProps): JSX.Element {
   return (
     <Router history={history}>
-      <div className="flex w-screen h-screen dark">
+      <div className="flex w-screen h-screen">
         <Unsupported/>
         <Switch>
           <Route path="/gadmin">

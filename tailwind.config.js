@@ -7,8 +7,11 @@ module.exports = {
   variants: {
     extend: {
       boxShadow: ['active'],
-      backgroundColor: ['active']
+      backgroundColor: ['active', 'checked'],
+      borderColor: ['checked'],
     },
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms'),
+  ],
 }
