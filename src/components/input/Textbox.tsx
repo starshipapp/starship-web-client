@@ -9,9 +9,9 @@ interface ITextboxProps extends HTMLProps<HTMLInputElement> {
 }
 
 function Textbox(props: ITextboxProps): JSX.Element {
-  let className = `bg-gray-100 duration-200 rounded-md text-gray-700 leading-tight 
-  outline-none focus:outline-none focus:ring-blue-300 focus:ring-2 focus:drop-shadow-xl dark:focus:ring-blue-600 
-  dark:bg-gray-800 dark:text-white ${props.className ?? ""}`;
+  let className = `bg-gray-200 transition-all duration-300 rounded text-black leading-tight shadow-inner
+  outline-none focus:outline-none focus:ring-blue-300 focus:ring-1 focus:shadow-md dark:focus:ring-blue-600 
+  dark:bg-gray-700 dark:text-white ${props.className ?? ""}`;
 
   if(props.large) {
     className += " text-xl py-2 px-3";
