@@ -4,7 +4,6 @@ import { Route, Switch, useParams, useRouteMatch } from "react-router-dom";
 import getPlanet, { IGetPlanetData } from "../graphql/queries/planets/getPlanet";
 import yn from 'yn';
 import "./css/Planet.css";
-import InfoStrip from "./InfoStrip";
 import PlanetContent from "./PlanetContent";
 
 interface IPlanetParams {

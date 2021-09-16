@@ -3,7 +3,6 @@ import { Divider, Icon, Intent, Menu, MenuDivider, MenuItem, ProgressBar } from 
 import fileSize from 'filesize';
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import yn from 'yn';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
 import getCap from '../util/getCap';
 import getCapString from '../util/getCapString';
@@ -41,16 +40,17 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
   let className = "MainSidebar";
 
   if(isHidden) {
-    className += " MainSidebar-hidden";
+    className += "MainSidebar-hidden";
   }
 
   return (
     <div className={className}>
-      <Menu className="MainSidebar-menu">
+      <div id="MainSidebar" className="w-52 overflow-y-scroll overflow-x-auto dark:bg-gray-900">
         <div className="MainSidebar-menu-logo" onClick={toggleHidden} >
           <Link className="link-button" to="/"><div className="MainSidebar-logo"/></Link>
         </div>
         <Icon onClick={toggleHidden} icon="menu" className="MainSidebar-show-button"/>
+        {props.context === "home" && <PlanetSwitcher toggleHidden={toggleHidden}/>}
         {props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
         {data?.currentUser && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
         {data?.currentUser && props.context === "messages" && <MessagesSidebar toggleHidden={toggleHidden}/>}
@@ -83,7 +83,7 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
           <Divider/>
           <Link className="link-button" to="/login"><MenuItem icon="log-in" text="Login"/></Link>
         </>)}
-      </Menu>
+      </div>
     </div>
   );
 }

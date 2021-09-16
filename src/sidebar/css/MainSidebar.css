@@ -1,13 +1,8 @@
-.MainSidebar {
-  min-width: 12.5rem;
-  max-width: 12.5rem;
-  overflow-y: scroll;
-  overflow-x: visible;
+#MainSidebar {
   scrollbar-width: none;
-  background-color: #394b59 !important;
 }
 
-.MainSidebar::-webkit-scrollbar {
+#MainSidebar::-webkit-scrollbar {
   display: none;
 }
 

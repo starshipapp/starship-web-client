@@ -16,6 +16,7 @@ import GAdmin from './gadmin/GAdmin';
 import Settings from './settings/Settings';
 import Activate from './login/Activate';
 import Messages from './messages/Messages';
+import ComponentsTesting from './components/ComponentsTesting';
 
 const history = createBrowserHistory();
 
@@ -26,7 +27,7 @@ interface IAppProps {
 function App(props: IAppProps): JSX.Element {
   return (
     <Router history={history}>
-      <div className="App bp3-dark">
+      <div className="flex w-screen h-screen dark">
         <Unsupported/>
         <Switch>
           <Route path="/gadmin">
@@ -47,6 +48,9 @@ function App(props: IAppProps): JSX.Element {
           <Route path="/messages">
             <MainSidebar context="messages" forcefullyResetLink={props.forcefullyResetLink}/>
             <Messages/>
+          </Route>
+          <Route path="/debug/components">
+            <ComponentsTesting/>
           </Route>
           <Route>
             <MainSidebar context="home" forcefullyResetLink={props.forcefullyResetLink}/>
