@@ -5,6 +5,7 @@ import { faIcons } from "@fortawesome/free-solid-svg-icons";
 import Button from "./controls/Button";
 import Checkbox from "./controls/Checkbox";
 import { useState } from "react";
+import Callout from "./text/Callout";
 
 function ComponentsTesting(): JSX.Element {
   const [dark, setDark] = useState(true);
@@ -149,6 +150,41 @@ function ComponentsTesting(): JSX.Element {
             <div className="mt-3">
               <Label intent={Intent.SUCCESS}>Success</Label>
               <Checkbox intent={Intent.SUCCESS}/>
+            </div>
+          </div>
+          <div className="mt-4" id="ComponentsTesting-callout">
+            <h1 className="text-2x1 font-bold mt-3 text-black dark:text-white">Callout</h1>
+            <div className="mt-2">
+              <Label>Regular</Label>
+              <Callout>Regular</Callout>
+            </div>
+            <div className="mt-3">
+              <Label>Icon</Label>
+              <Callout icon={faIcons}>Icon</Callout>
+            </div>
+            <div className="mt-3">
+              <Label>Title</Label>
+              <Callout title="Title">Regular</Callout>
+            </div>
+            <div className="mt-3">
+              <Label>Title And Icon</Label>
+              <Callout title="Title" icon={faIcons}>Regular</Callout>
+            </div>
+            <div className="mt-3">
+              <Label>Danger</Label>
+              <Callout title="Danger" icon={faIcons} intent={Intent.DANGER}>Danger</Callout>
+            </div>
+            <div className="mt-3">
+              <Label>Warning</Label>
+              <Callout title="Warning" icon={faIcons} intent={Intent.WARNING}>Warning</Callout>
+            </div>
+            <div className="mt-3">
+              <Label>Primary</Label>
+              <Callout title="Primary" icon={faIcons} intent={Intent.PRIMARY}>Primary</Callout>
+            </div>
+            <div className="mt-3">
+              <Label>Success</Label>
+              <Callout title="Success" icon={faIcons} intent={Intent.SUCCESS}>Success</Callout>
             </div>
           </div>
         </div>
