@@ -1,11 +1,15 @@
 import Intent from "./Intent";
 import Textbox from "./input/Textbox";
 import Label from "./text/Label";
-import { faIcons } from "@fortawesome/free-solid-svg-icons";
+import { faDotCircle, faIcons } from "@fortawesome/free-solid-svg-icons";
 import Button from "./controls/Button";
 import Checkbox from "./controls/Checkbox";
 import { useState } from "react";
 import Callout from "./text/Callout";
+import Menu from "./menu/Menu";
+import MenuItem from "./menu/MenuItem";
+import MenuHeader from "./menu/MenuHeader";
+import MenuCollapsed from "./menu/MenuCollapsed";
 
 function ComponentsTesting(): JSX.Element {
   const [dark, setDark] = useState(true);
@@ -185,6 +189,23 @@ function ComponentsTesting(): JSX.Element {
             <div className="mt-3">
               <Label>Success</Label>
               <Callout title="Success" icon={faIcons} intent={Intent.SUCCESS}>Success</Callout>
+            </div>
+          </div>
+          <div className="mt-4" id="ComponentsTesting-menu">
+            <h1 className="text-2x1 font-bold mt-3 text-black dark:text-white">Menu</h1>
+            <div className="mt-2">
+              <Menu className="w-56">
+                <MenuHeader>Items</MenuHeader>
+                <MenuItem>No Icon</MenuItem>
+                <MenuItem icon={faIcons}>Icon</MenuItem>
+                <MenuItem description="Description">Description</MenuItem>
+                <MenuItem icon={faIcons} description="Description">Icon And Description</MenuItem>
+                <MenuCollapsed title="Collapsed">
+                  <MenuItem icon={faDotCircle}>Collapsed 1</MenuItem>
+                  <MenuItem icon={faDotCircle}>Collapsed 2</MenuItem>
+                  <MenuItem icon={faDotCircle}>Collapsed 3</MenuItem>
+                </MenuCollapsed>
+              </Menu>
             </div>
           </div>
         </div>
