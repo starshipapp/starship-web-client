@@ -1,8 +1,13 @@
 import { useQuery } from '@apollo/client';
-import { Divider, Icon, Intent, Menu, MenuDivider, MenuItem, ProgressBar } from '@blueprintjs/core';
+import { Divider, Icon,  Menu, MenuDivider } from '@blueprintjs/core';
+import { faCog, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import fileSize from 'filesize';
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import ProgressBar from '../components/display/ProgressBar';
+import Intent from '../components/Intent';
+import MenuItem from '../components/menu/MenuItem';
+import Label from '../components/text/Label';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
 import getCap from '../util/getCap';
 import getCapString from '../util/getCapString';
@@ -13,6 +18,7 @@ import Notifications from './Notifications';
 import PlanetSidebar from './PlanetSidebar';
 import PlanetSwitcher from './PlanetSwitcher';
 import SettingsSidebar from './SettingsSidebar';
+import logo from '../assets/images/logo.svg';
 
 interface IMainSidebarProps {
   forcefullyResetLink: () => void
@@ -45,43 +51,40 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
 
   return (
     <div className={className}>
-      <div id="MainSidebar" className="w-52 overflow-y-scroll overflow-x-auto dark:bg-gray-900">
-        <div className="MainSidebar-menu-logo" onClick={toggleHidden} >
-          <Link className="link-button" to="/"><div className="MainSidebar-logo"/></Link>
+      <div id="MainSidebar" className="w-52 overflow-y-scroll py-1 overflow-x-auto bg-gray-200 dark:bg-gray-800 min-h-full flex flex-col">
+        <div className="px-3 py-1.5" onClick={toggleHidden} >
+          <Link className="link-button" to="/"><img src={logo} alt="logo" className="h-7"/></Link>
         </div>
         <Icon onClick={toggleHidden} icon="menu" className="MainSidebar-show-button"/>
         {props.context === "home" && <PlanetSwitcher toggleHidden={toggleHidden}/>}
         {props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
         {data?.currentUser && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
         {data?.currentUser && props.context === "messages" && <MessagesSidebar toggleHidden={toggleHidden}/>}
-        {loading ? <MenuItem text="Loading..."/> : (data?.currentUser ? <>
-          <div className="MainSidebar-user-spacer"/>
+        {loading ? <MenuItem>Loading...</MenuItem>: (data?.currentUser ? <>
+          <div className="mt-auto"/>
           <MenuDivider/>
           <Notifications currentUser={data.currentUser}/>
-          <div className="MainSidebar-datacap">
-            <div className="MainSidebar-datacap-text">
+          <div className="px-3 py-1.5">
+            <Label>
               {fileSize(data.currentUser.usedBytes ?? 0)} of {getCapString(data.currentUser)} used
-            </div>
-            <div className="MainSidebar-datacap-progress">
-              <ProgressBar
-                value={(data.currentUser.usedBytes ?? 0) / getCap(data.currentUser)}
-                stripes={false}
-                intent={(data.currentUser.usedBytes ?? 0) < getCap(data.currentUser) ? Intent.PRIMARY : Intent.DANGER}
-              />
-            </div>
+            </Label>
+            <ProgressBar
+              progress={(data.currentUser.usedBytes ?? 0) / getCap(data.currentUser)}
+              intent={(data.currentUser.usedBytes ?? 0) < getCap(data.currentUser) ? Intent.PRIMARY : Intent.DANGER}
+            />
           </div>
-          <Link to="/settings" className="link-button"><MenuItem onClick={toggleHidden} icon="settings" text="Settings"/></Link>
-          <MenuItem icon="log-out" text="Logout" onClick={() => {
+          <Link to="/settings" className="link-button"><MenuItem onClick={toggleHidden} icon={faCog}>Settings</MenuItem></Link>
+          <MenuItem icon={faSignOutAlt} onClick={() => {
             localStorage.removeItem("token");
             props.forcefullyResetLink();
             void client.cache.gc();
             void client.resetStore();
             toggleHidden();
-          }}/>
+          }}>Logout</MenuItem>
         </> : <>
-          <div className="MainSidebar-user-spacer"/>
+          <div className="mt-auto"/>
           <Divider/>
-          <Link className="link-button" to="/login"><MenuItem icon="log-in" text="Login"/></Link>
+          <Link className="link-button" to="/login"><MenuItem icon={faSignOutAlt}>Login</MenuItem></Link>
         </>)}
       </div>
     </div>

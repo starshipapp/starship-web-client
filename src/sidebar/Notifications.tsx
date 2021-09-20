@@ -1,12 +1,19 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, Icon, Intent, MenuItem, NonIdealState, Tag } from "@blueprintjs/core";
-import { useEffect } from "react";
+import { Intent as bpIntent, NonIdealState } from "@blueprintjs/core";
+import { faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import Button from "../components/controls/Button";
+import MenuItem from "../components/menu/MenuItem";
+import Popover from "../components/overlays/Popover";
+import PopperPlacement from "../components/PopperPlacement";
 import clearAllNotificationsMutation, { IClearAllNotificationsMutationData } from "../graphql/mutations/misc/clearAllNotificationsMutation";
 import clearNotificationMutation, { IClearNotificationMutationData } from "../graphql/mutations/misc/clearNotificationMutation";
 import markAllReadMutation, { IMarkAllReadMutationData } from "../graphql/mutations/misc/markAllRead";
 import getNotifications, { IGetNotificationsData } from "../graphql/queries/misc/getNotifications";
 import onNotificationRecieved from "../graphql/subscriptions/misc/onNotificationRecieved";
+import IconNameToProp from "../types/IconNameToProp";
 import INotification from "../types/INotification";
 import IUser from "../types/IUser";
 import { GlobalToaster } from "../util/GlobalToaster";
@@ -18,8 +25,10 @@ interface INotificationsProps {
 }
 
 let hasSubscribed = false;
+let isMouseIn = false;
 
 function Notifications(props: INotificationsProps): JSX.Element {
+  const [showPopover, setShowPopover] = useState(false);
   const { subscribeToMore, data: notifications, refetch: refetchNotifs} = useQuery<IGetNotificationsData>(getNotifications, {errorPolicy: 'all'});
   const [clearNotification] = useMutation<IClearNotificationMutationData>(clearNotificationMutation);
   const [clearAllNotifications] = useMutation<IClearAllNotificationsMutationData>(clearAllNotificationsMutation);
@@ -45,6 +54,88 @@ function Notifications(props: INotificationsProps): JSX.Element {
   });
 
   return (
+    <div 
+      onMouseEnter={() => {
+        isMouseIn = true;
+        setShowPopover(true);
+      }}
+      onMouseLeave={() => {
+        isMouseIn = false;
+        setTimeout(() => {
+          if(!isMouseIn) {
+            setShowPopover(false);
+          }
+        }, 100);
+      }}
+    >
+      <Popover 
+        open={showPopover}
+        onClose={() => setShowPopover(false)}
+        fullWidth={true}
+        placement={PopperPlacement.right}
+        popoverTarget={
+          <MenuItem 
+            icon={faUser}
+            rightElement={notifCount ?
+              <span className="rounded-full bg-red-400 text-black min-w-4 w-full dark:text-white dark:bg-red-600 px-2 py-0.5">
+                {notifCount}
+              </span>
+            : undefined}
+          >
+            {props.currentUser.username}
+          </MenuItem>
+        }
+      >
+        {notifications && notifications.notifications && <div className="">
+          {notifications.notifications.map((value) => {
+            const date = new Date(Number(value.createdAt)).toLocaleDateString();
+
+            return (
+              <div className="w-64 border-b border-gray-400 pb-1 mb-1.5">
+                <div className="">
+                  <Markdown>{value.text ?? ""}</Markdown>
+                </div>
+                <div className="flex -mt-1 text-gray-600 ">
+                  <div>
+                    <FontAwesomeIcon icon={IconNameToProp(value.icon ?? "warning-sign")}/>
+                  </div>
+                  <div className="ml-1">
+                    {date}
+                  </div>
+                  <div className="ml-auto -mt-1 -mr-1">
+                    <Button icon={faTimes} minimal={true} small={true} onClick={() => {
+                      clearNotification({variables: {notificationId: value.id}}).then(() => {
+                        void refetchNotifs();
+                      }).catch((err: Error) => {
+                        GlobalToaster.show({message: err.message, intent: bpIntent.DANGER});
+                      });
+                    }}/>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+          {notifications.notifications.length < 1 && <NonIdealState
+            icon="notifications"
+            title="No new notifications."
+          />}
+          <div className="-mb-1 -mt-0.5 flex">
+            {<Link to="/messages" className="link-button"><Button className="" minimal={true} small={true}>All Notifications</Button></Link>}
+            {<Button className="ml-auto" minimal={true} small={true} onClick={() => {
+              clearAllNotifications().then(() => {
+                void refetchNotifs();
+              }).catch((err: Error) => {
+                GlobalToaster.show({message: err.message, intent: bpIntent.DANGER});
+              });
+            }}>Clear</Button>}
+          </div>
+        </div>}
+      </Popover>
+      
+    </div>
+  );
+
+  /* return (
     <MenuItem
       icon="user" 
       className="MainSidebar-notification-item"
@@ -104,7 +195,7 @@ function Notifications(props: INotificationsProps): JSX.Element {
         </div>
       </div>}
     </MenuItem>
-  );
+  );*/
 }
 
 export default Notifications;

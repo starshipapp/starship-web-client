@@ -23,7 +23,7 @@ function MenuCollapsed(props: IMenuItemProps): JSX.Element {
       >
         {props.title}
       </MenuItem>
-      <div className={`bg-gray-100 transform dark:bg-gray-900 overflow-hidden ${!open ? "max-h-0 py-0" : "py-1"}`}>
+      <div className={`bg-gray-100 transform shadow-inner dark:bg-gray-900 overflow-hidden ${!open ? "max-h-0 py-0" : "py-1"}`}>
         {props.children}
       </div>
     </>

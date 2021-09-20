@@ -10,13 +10,15 @@ import Menu from "./menu/Menu";
 import MenuItem from "./menu/MenuItem";
 import MenuHeader from "./menu/MenuHeader";
 import MenuCollapsed from "./menu/MenuCollapsed";
+import Popover from "./overlays/Popover";
+import ProgressBar from "./display/ProgressBar";
 
 function ComponentsTesting(): JSX.Element {
   const [dark, setDark] = useState(true);
-
+  const [showPopover, setShowPopover] = useState(false);
   return (
     <div className={`${dark ? "dark": ""}`}>
-      <div className="bg-gray-50 dark:bg-gray-900 w-screen h-screen flex overflow-auto pb-10">
+      <div className="bg-gray-50 dark:bg-gray-900 w-screen h-screen flex overflow-auto pb-10 overflow-x-hidden">
         <div className="w-3/4 m-auto pb-6">
           <h1 className="text-5xl font-extrabold mt-6 text-black dark:text-white">Components Testing</h1>
           <div className="mt-4">
@@ -206,6 +208,44 @@ function ComponentsTesting(): JSX.Element {
                   <MenuItem icon={faDotCircle}>Collapsed 3</MenuItem>
                 </MenuCollapsed>
               </Menu>
+            </div>
+          </div>
+          <div className="mt-4" id="ComponentsTesting-popover">
+            <h1 className="text-2x1 font-bold mt-3 text-black dark:text-white">Popover</h1>
+            <div className="mt-2 w-min">
+              <Popover
+                popoverTarget={<Button onClick={() => setShowPopover(!showPopover)}>Popover</Button>}
+                open={showPopover}
+                onClose={() => setShowPopover(false)}
+              >
+                <div>
+                  <Textbox placeholder="Popover" />
+                  <Button className="ml-2">Button</Button>
+                </div>
+              </Popover>
+            </div>
+          </div>
+          <div className="mt-4" id="ComponentsTesting-progress">
+            <h1 className="text-2x1 font-bold mt-3 text-black dark:text-white">Progress</h1>
+            <div className="mt-2">
+              <Label>Regular</Label>
+              <ProgressBar progress={0.25} className="w-48"/>
+            </div>
+            <div className="mt-3">
+              <Label>Danger</Label>
+              <ProgressBar progress={0.50} intent={Intent.DANGER} className="w-48"/>
+            </div>
+            <div className="mt-3">
+              <Label>Warning</Label>
+              <ProgressBar progress={0.75} intent={Intent.WARNING} className="w-48"/>
+            </div>
+            <div className="mt-3">
+              <Label>Primary</Label>
+              <ProgressBar progress={1} intent={Intent.PRIMARY} className="w-48"/>
+            </div>
+            <div className="mt-3">
+              <Label>Success</Label>
+              <ProgressBar progress={0.25} intent={Intent.SUCCESS} className="w-48"/>
             </div>
           </div>
         </div>

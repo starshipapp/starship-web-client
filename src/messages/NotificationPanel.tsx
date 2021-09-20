@@ -1,10 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Icon, Intent, NonIdealState } from "@blueprintjs/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import clearAllNotificationsMutation, { IClearAllNotificationsMutationData } from "../graphql/mutations/misc/clearAllNotificationsMutation";
 import clearNotificationMutation, { IClearNotificationMutationData } from "../graphql/mutations/misc/clearNotificationMutation";
 import markAllReadMutation, { IMarkAllReadMutationData } from "../graphql/mutations/misc/markAllRead";
 import getNotifications, { IGetNotificationsData } from "../graphql/queries/misc/getNotifications";
+import IconNameToProp from "../types/IconNameToProp";
 import IUser from "../types/IUser";
 import { GlobalToaster } from "../util/GlobalToaster";
 import Markdown from "../util/Markdown";
@@ -38,7 +40,7 @@ function NotificationPanel(props: INotificationPanelProps): JSX.Element {
           return (
             <div className={`NotificationsPanel-notification ${value.isRead ? "NotificationsPanel-unread" : ""}`}>
               <div className="NotificationsPanel-notification-icon">
-                <Icon icon={value.icon}/>
+                <FontAwesomeIcon icon={IconNameToProp(value.icon ?? "warning-sign")}/>
               </div>
               <div className="NotificationsPanel-notification-text">
                 <Markdown>{value.text ?? ""}</Markdown>
