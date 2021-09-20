@@ -6,7 +6,7 @@ import clearAllNotificationsMutation, { IClearAllNotificationsMutationData } fro
 import clearNotificationMutation, { IClearNotificationMutationData } from "../graphql/mutations/misc/clearNotificationMutation";
 import markAllReadMutation, { IMarkAllReadMutationData } from "../graphql/mutations/misc/markAllRead";
 import getNotifications, { IGetNotificationsData } from "../graphql/queries/misc/getNotifications";
-import IconNameToProp from "../types/IconNameToProp";
+import IconNameToProp from "../util/IconNameToProp";
 import IUser from "../types/IUser";
 import { GlobalToaster } from "../util/GlobalToaster";
 import Markdown from "../util/Markdown";

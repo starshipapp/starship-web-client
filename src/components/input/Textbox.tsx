@@ -1,7 +1,7 @@
-import { HTMLProps } from "react";
+import { DetailedHTMLProps, InputHTMLAttributes } from "react";
 import Intent from "../Intent";
 
-interface ITextboxProps extends HTMLProps<HTMLInputElement> {
+interface ITextboxProps extends DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
   large?: boolean;
   small?: boolean;
   disabled?: boolean;

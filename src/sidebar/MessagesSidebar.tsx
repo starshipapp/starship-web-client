@@ -1,7 +1,11 @@
 import { useQuery } from "@apollo/client";
-import { MenuDivider, MenuItem } from "@blueprintjs/core";
+import { MenuDivider } from "@blueprintjs/core";
+import { faBell, faCommentDots } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import { Link } from "react-router-dom";
+import MenuCollapsed from "../components/menu/MenuCollapsed";
+import MenuHeader from "../components/menu/MenuHeader";
+import MenuItem from "../components/menu/MenuItem";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import permissions from "../util/permissions";
 import PlanetSwitcher from "./PlanetSwitcher";
@@ -13,17 +17,17 @@ interface IMessagesSidebarProps {
 function MessagesSidebar(props: IMessagesSidebarProps): JSX.Element {
   const { data: userData } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });  
   return (<>
-    <MenuItem
-      icon="chat"
-      text="Messages"
+    <MenuCollapsed
+      title="Messages"
+      icon={faCommentDots}
     >
-      {userData?.currentUser && permissions.checkAdminPermission(userData.currentUser) && <MenuDivider title="ADMIN TOOLS"/>}
-      {userData?.currentUser && <div className="PlanetSidebar-switcher">
+      {userData?.currentUser && permissions.checkAdminPermission(userData.currentUser) && <MenuHeader>Admin Tools</MenuHeader>}
+      {userData?.currentUser && <div>
         <PlanetSwitcher toggleHidden={props.toggleHidden}/>
       </div>}
-    </MenuItem>
-    <Link className="link-button" to="/messages"><MenuItem text="Notifications" icon="notifications"/></Link>
-    <MenuDivider title="DIRECT MESSAGES"/>
+    </MenuCollapsed>
+    <Link className="link-button" to="/messages"><MenuItem icon={faBell}>Notifications</MenuItem></Link>
+    <MenuHeader>Direct Messages</MenuHeader>
   </>);
 }
 

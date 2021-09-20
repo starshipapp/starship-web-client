@@ -7,10 +7,12 @@ import ForumComponent from "./components/forums/ForumComponent";
 import FilesComponent from "./components/files/FilesComponent";
 import {IconName} from "@blueprintjs/core";
 import ChatComponent from "./components/chat/ChatComponent";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { faComment, faCommentAlt, faCopy, faFileAlt, faFolderOpen } from "@fortawesome/free-solid-svg-icons";
 
 export interface IComponentDataType {
   name: string,
-  icon: IconName,
+  icon: IconProp,
   friendlyName: string,
   component?: (props: IComponentProps) => JSX.Element
 }
@@ -19,31 +21,31 @@ export default class ComponentIndex {
   static ComponentDataTypes: Record<string, IComponentDataType> = {
     "page": {
       name: "page",
-      icon: "document",
+      icon: faFileAlt,
       friendlyName: "Page",
       component: PageComponent
     },
     "wiki": {
       name: "wiki",
-      icon: "applications",
+      icon: faCopy,
       friendlyName: "Page Group",
       component: WikiComponent
     },
     "files": {
       name: "files",
-      icon: "folder-open",
+      icon: faFolderOpen,
       friendlyName: "Files",
       component: FilesComponent
     },
     "forum": {
       name: "forum",
-      icon: "comment",
+      icon: faComment,
       friendlyName: "Forum",
       component: ForumComponent
     },
     "chat": {
       name: "chat",
-      icon: "chat",
+      icon: faCommentAlt,
       friendlyName: "Chat",
       component: ChatComponent
     }

@@ -1,7 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, Checkbox, Classes, Intent, MenuDivider, MenuItem, Popover, Position } from "@blueprintjs/core";
+import { Button, Checkbox, Classes, Intent, MenuDivider } from "@blueprintjs/core";
+import { faExclamationTriangle, faGlobe, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import MenuHeader from "../components/menu/MenuHeader";
+import MenuItem from "../components/menu/MenuItem";
+import Popover from "../components/overlays/Popover";
+import PopperPlacement from "../components/PopperPlacement";
 import insertPlanetMutation, { IInsertPlanetMutationData } from "../graphql/mutations/planets/insertPlanetMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import { GlobalToaster } from "../util/GlobalToaster";
@@ -45,29 +50,26 @@ function PlanetSwitcher(props: IPlanetSwitcherProps): JSX.Element {
   return (
     <>
       {data?.currentUser && <>
-        {data.currentUser.admin && <Link className="link-button" to="/gadmin/"><MenuItem icon="warning-sign" text="Admin"/></Link>}
-        <MenuDivider title="MY PLANETS"/>
+        {data.currentUser.admin && <Link className="link-button" to="/gadmin/"><MenuItem icon={faExclamationTriangle}>Admin</MenuItem></Link>}
+        <MenuHeader>My Planets</MenuHeader>
         {data.currentUser.memberOf?.map((value) => (
-          <Link onClick={props.toggleHidden} className="link-button" to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>
+          <Link onClick={props.toggleHidden} className="link-button" to={"/planet/" + value.id}><MenuItem icon={faGlobe} key={value.id}>{value.name}</MenuItem></Link>
         ))}
-        <Popover 
-          className="MainSidebar-insert-planet-popover" 
-          modifiers={{preventOverflow: 
-            {boundariesElement: 'window'}, 
-            hide: {enabled: false}, 
-            flip: {behavior: isMobile() ? "flip" : "counterclockwise"}
-          }} 
-          position={Position.RIGHT} 
-          isOpen={showPopout}
+        <Popover
+          placement={PopperPlacement.right}
+          open={showPopout}
           onClose={() => setPopout(false)}
+          fullWidth
+          popoverTarget={
+            <MenuItem icon={faPlusCircle} onClick={() => {
+              setPopout(!showPopout);
+              props.toggleHidden();
+            }}>New Planet</MenuItem>
+          }
         >
-          <MenuItem icon="new-object" text="New Planet" className="MainSidebar-insert-planet-button" onClick={() => {
-            setPopout(!showPopout);
-            props.toggleHidden();
-          }}/>
-          <div className="MainSidebar-insert-planet-box">
+          <div>
             <input className={Classes.INPUT} value={planetName} onChange={(e) => setPlanetName(e.target.value)}/>
-            <div className="MainSidebar-insert-planet-bottom">
+            <div>
               <Checkbox label="Private" checked={privatePlanet} onChange={() => setPrivate(!privatePlanet)} className="MainSidebar-insert-planet-checkbox" onKeyPress={(e) => {
                 if(e.key === "Enter") {
                   createPlanet();
@@ -79,7 +81,7 @@ function PlanetSwitcher(props: IPlanetSwitcherProps): JSX.Element {
         </Popover>
         {data.currentUser.following && data.currentUser.following.length > 0 && <MenuDivider title="FOLLOWING"/>}
         {data.currentUser.following?.map((value) => (
-          <Link onClick={props.toggleHidden} className="link-button" to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>
+          <Link onClick={props.toggleHidden} className="link-button" to={"/planet/" + value.id}><MenuItem icon={faGlobe} key={value.id}>{value.name}</MenuItem></Link>
         ))}
       </>}
     </>

@@ -13,7 +13,7 @@ import clearNotificationMutation, { IClearNotificationMutationData } from "../gr
 import markAllReadMutation, { IMarkAllReadMutationData } from "../graphql/mutations/misc/markAllRead";
 import getNotifications, { IGetNotificationsData } from "../graphql/queries/misc/getNotifications";
 import onNotificationRecieved from "../graphql/subscriptions/misc/onNotificationRecieved";
-import IconNameToProp from "../types/IconNameToProp";
+import IconNameToProp from "../util/IconNameToProp";
 import INotification from "../types/INotification";
 import IUser from "../types/IUser";
 import { GlobalToaster } from "../util/GlobalToaster";
@@ -74,16 +74,18 @@ function Notifications(props: INotificationsProps): JSX.Element {
         fullWidth={true}
         placement={PopperPlacement.right}
         popoverTarget={
-          <MenuItem 
-            icon={faUser}
-            rightElement={notifCount ?
-              <span className="rounded-full bg-red-400 text-black min-w-4 w-full dark:text-white dark:bg-red-600 px-2 py-0.5">
-                {notifCount}
-              </span>
-            : undefined}
-          >
-            {props.currentUser.username}
-          </MenuItem>
+          <Link to="/messages" className="link-button">
+            <MenuItem 
+              icon={faUser}
+              rightElement={notifCount ?
+                <span className="rounded-full bg-red-400 text-black min-w-4 w-full dark:text-white dark:bg-red-600 px-2 py-0.5">
+                  {notifCount}
+                </span>
+              : undefined}
+            >
+              {props.currentUser.username}
+            </MenuItem>
+          </Link>
         }
       >
         {notifications && notifications.notifications && <div className="">

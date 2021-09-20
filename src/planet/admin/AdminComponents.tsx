@@ -1,5 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { Button, Classes, Icon, Intent, Popover } from "@blueprintjs/core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import removeComponentMutation, { IRemoveComponentMutationData } from "../../graphql/mutations/planets/removeComponentMutation";
 import renameComponentMutation, { IRenameComponentMutationData } from "../../graphql/mutations/planets/renameComponentMutation";
@@ -36,7 +37,7 @@ function AdminComponent(props: IAdminComponentProps): JSX.Element {
             <tbody>
               {props.planet.components?.map((value) => (
                 <tr key={value.componentId}>
-                  <td className="AdminComponents-table-name"><Icon className="AdminComponents-table-name-icon" icon={ComponentIndex.ComponentDataTypes[value.type].icon}/> {value.name} <Popover isOpen={popoverId === value.componentId} onClose={() => setPopoverId("")}>
+                  <td className="AdminComponents-table-name"><FontAwesomeIcon className="AdminComponents-table-name-icon" icon={ComponentIndex.ComponentDataTypes[value.type].icon}/> {value.name} <Popover isOpen={popoverId === value.componentId} onClose={() => setPopoverId("")}>
                     <Icon className="AdminComponents-table-name-icon" icon="edit" onClick={() => {
                       setPopoverId(value.componentId);
                       setNameTextbox(value.name);
