@@ -12,6 +12,9 @@ import MenuHeader from "./menu/MenuHeader";
 import MenuCollapsed from "./menu/MenuCollapsed";
 import Popover from "./overlays/Popover";
 import ProgressBar from "./display/ProgressBar";
+import NonIdealState from "./display/NonIdealState";
+import Tag from "./display/Tag";
+import Toasts from "./display/Toasts";
 
 function ComponentsTesting(): JSX.Element {
   const [dark, setDark] = useState(true);
@@ -246,6 +249,46 @@ function ComponentsTesting(): JSX.Element {
             <div className="mt-3">
               <Label>Success</Label>
               <ProgressBar progress={0.25} intent={Intent.SUCCESS} className="w-48"/>
+            </div>
+          </div>
+          <div className="mt-4" id="ComponentsTesting-nonidealstate">
+            <h1 className="text-2x1 font-bold mt-3 text-black dark:text-white">Non-ideal State</h1>
+            <div className="mt-2">
+              <Label>Regular</Label>
+              <NonIdealState
+                icon={faIcons}
+                title="Non-ideal State example"
+              >This is an example of the NonIdealState component. This text should wrap at a certain point.</NonIdealState>
+            </div>
+          </div>
+          <div className="mt=4" id="ComponentsTesting-tag">
+            <h1 className="text-2x1 font-bold mt-3 text-black dark:text-white">Tag</h1>
+            <div className="mt-2">
+              <Label>Regular</Label>
+              <Tag>Tag</Tag>
+            </div>
+            <div className="mt-3">
+              <Label>Danger</Label>
+              <Tag intent={Intent.DANGER}>Tag</Tag>
+            </div>
+            <div className="mt-3">
+              <Label>Warning</Label>
+              <Tag intent={Intent.WARNING}>Tag</Tag>
+            </div>
+            <div className="mt-3">
+              <Label>Primary</Label>
+              <Tag intent={Intent.PRIMARY}>Tag</Tag>
+            </div>
+            <div className="mt-3">
+              <Label>Success</Label>
+              <Tag intent={Intent.SUCCESS}>Tag</Tag>
+            </div>
+          </div>
+          <div className="mt-4" id="ComponentsTesting-toast">
+            <h1 className="text-2x1 font-bold mt-3 text-black dark:text-white">Toast</h1>
+            <div className="mt-2">
+              <Label>Regular</Label>
+              <Button onClick={() => Toasts.success("test")}>Show Toast</Button>
             </div>
           </div>
         </div>

@@ -25,7 +25,7 @@ function Popover(props: IPopoverProps): JSX.Element {
           altAxis: true,
           padding: 5,
           altBoundary: true,
-          
+          boundary: document.body
         },
       },
       {
@@ -83,10 +83,11 @@ function Popover(props: IPopoverProps): JSX.Element {
                 setPopperElement(element);
               }
               }
+              className="z-50"
               style={popper.styles.popper}
               {...popper.attributes.popper}
             >
-              <div className={`py-2 px-2 bg-gray-200 dark:bg-gray-700 rounded-sm shadow-md text-black dark:text-white ${props.className ?? ""}`}>
+              <div className={`py-2 px-2 bg-gray-100 dark:bg-gray-800 rounded shadow-md text-black dark:text-white ${props.className ?? ""}`}>
                 {props.children}
               </div>
             </div>

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Divider, MenuDivider, Tag, Intent as bpIntent } from "@blueprintjs/core";
+import { Intent as bpIntent } from "@blueprintjs/core";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import followMutation, { IFollowMutationData } from "../graphql/mutations/planets/followMutation";
@@ -22,6 +22,8 @@ import Popover from "../components/overlays/Popover";
 import Textbox from "../components/input/Textbox";
 import MenuHeader from "../components/menu/MenuHeader";
 import PopperPlacement from "../components/PopperPlacement";
+import Tag from "../components/display/Tag";
+import Divider from "../components/display/Divider";
 
 interface IPlanetSidebarProps {
   planet: string,
@@ -77,7 +79,7 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
         </MenuCollapsed>
         {userData?.currentUser && <MenuItem
           icon={(userData?.currentUser.following && userData?.currentUser.following.some(e => e.id === props.planet) ) ? faMinus : faPlus}
-          rightElement={<Tag className="MainSidebar-notif-icon">{data.planet.followerCount}</Tag>}
+          rightElement={<Tag>{data.planet.followerCount}</Tag>}
           onClick={() => {
             follow({variables: {planetId: props.planet}}).then(() => {
               void userRefetch();

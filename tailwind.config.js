@@ -15,6 +15,7 @@ module.exports = {
       boxShadow: ['active'],
       backgroundColor: ['active', 'checked'],
       borderColor: ['checked'],
+      display: ['dark']
     },
   },
   plugins: [

@@ -17,6 +17,7 @@ import Settings from './settings/Settings';
 import Activate from './login/Activate';
 import Messages from './messages/Messages';
 import ComponentsTesting from './components/ComponentsTesting';
+import { Toaster } from 'react-hot-toast';
 
 const history = createBrowserHistory();
 
@@ -28,6 +29,7 @@ function App(props: IAppProps): JSX.Element {
   return (
     <Router history={history}>
       <div className="flex w-screen h-screen">
+        <Toaster/>
         <Unsupported/>
         <Switch>
           <Route path="/gadmin">

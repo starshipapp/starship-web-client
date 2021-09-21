@@ -1,8 +1,11 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, Checkbox, Classes, Intent, MenuDivider } from "@blueprintjs/core";
+import { Intent } from "@blueprintjs/core";
 import { faExclamationTriangle, faGlobe, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
+import Button from "../components/controls/Button";
+import Checkbox from "../components/controls/Checkbox";
+import Textbox from "../components/input/Textbox";
 import MenuHeader from "../components/menu/MenuHeader";
 import MenuItem from "../components/menu/MenuItem";
 import Popover from "../components/overlays/Popover";
@@ -10,7 +13,6 @@ import PopperPlacement from "../components/PopperPlacement";
 import insertPlanetMutation, { IInsertPlanetMutationData } from "../graphql/mutations/planets/insertPlanetMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import { GlobalToaster } from "../util/GlobalToaster";
-import isMobile from "../util/isMobile";
 
 interface IPlanetSwitcherProps {
   toggleHidden: () => void
@@ -56,7 +58,7 @@ function PlanetSwitcher(props: IPlanetSwitcherProps): JSX.Element {
           <Link onClick={props.toggleHidden} className="link-button" to={"/planet/" + value.id}><MenuItem icon={faGlobe} key={value.id}>{value.name}</MenuItem></Link>
         ))}
         <Popover
-          placement={PopperPlacement.right}
+          placement={PopperPlacement.rightEnd}
           open={showPopout}
           onClose={() => setPopout(false)}
           fullWidth
@@ -68,18 +70,15 @@ function PlanetSwitcher(props: IPlanetSwitcherProps): JSX.Element {
           }
         >
           <div>
-            <input className={Classes.INPUT} value={planetName} onChange={(e) => setPlanetName(e.target.value)}/>
-            <div>
-              <Checkbox label="Private" checked={privatePlanet} onChange={() => setPrivate(!privatePlanet)} className="MainSidebar-insert-planet-checkbox" onKeyPress={(e) => {
-                if(e.key === "Enter") {
-                  createPlanet();
-                }
-              }}/>
-              <Button small={true} className="MainSidebar-insert-planet-submit" text="Create" onClick={createPlanet}/>
+            <Textbox className="mb-2" value={planetName} onChange={(e) => setPlanetName(e.target.value)}/>
+            <div className="flex">
+              <Checkbox className="mb-auto mt-1.5" checked={privatePlanet} onChange={(e) => setPrivate(!privatePlanet)}/>
+              <div className="ml-1 mt-1.5 mb-auto">Private</div>
+              <Button className="ml-auto" small={true} onClick={createPlanet}>Create</Button>
             </div>
           </div>
         </Popover>
-        {data.currentUser.following && data.currentUser.following.length > 0 && <MenuDivider title="FOLLOWING"/>}
+        {data.currentUser.following && data.currentUser.following.length > 0 && <MenuHeader>Following</MenuHeader>}
         {data.currentUser.following?.map((value) => (
           <Link onClick={props.toggleHidden} className="link-button" to={"/planet/" + value.id}><MenuItem icon={faGlobe} key={value.id}>{value.name}</MenuItem></Link>
         ))}

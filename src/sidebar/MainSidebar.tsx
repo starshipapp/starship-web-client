@@ -1,6 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Divider, Icon,  Menu, MenuDivider } from '@blueprintjs/core';
-import { faCog, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
+import { faCog, faGripLines, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import fileSize from 'filesize';
 import React, { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -19,6 +18,9 @@ import PlanetSidebar from './PlanetSidebar';
 import PlanetSwitcher from './PlanetSwitcher';
 import SettingsSidebar from './SettingsSidebar';
 import logo from '../assets/images/logo.svg';
+import blackLogo from '../assets/images/black-logo.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Divider from '../components/display/Divider';
 
 interface IMainSidebarProps {
   forcefullyResetLink: () => void
@@ -51,18 +53,21 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
 
   return (
     <div className={className}>
-      <div id="MainSidebar" className="w-52 overflow-y-scroll py-1 overflow-x-auto bg-gray-200 dark:bg-gray-800 min-h-full flex flex-col">
-        <div className="px-3 py-1.5" onClick={toggleHidden} >
-          <Link className="link-button" to="/"><img src={logo} alt="logo" className="h-7"/></Link>
+      <div id="MainSidebar" className="w-52 overflow-y-scroll py-1 overflow-x-visible bg-gray-200 dark:bg-gray-800 min-h-full flex flex-col">
+        <div className="px-3 py-2" onClick={toggleHidden} >
+          <Link className="link-button" to="/">
+            <img src={logo} alt="logo" className="h-7 hidden dark:block"/>  
+            <img src={blackLogo} alt="logo" className="h-7 dark:hidden"/>  
+          </Link>
         </div>
-        <Icon onClick={toggleHidden} icon="menu" className="MainSidebar-show-button"/>
+        <FontAwesomeIcon onClick={toggleHidden} icon={faGripLines} className="MainSidebar-show-button"/>
         {props.context === "home" && <PlanetSwitcher toggleHidden={toggleHidden}/>}
         {props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
         {data?.currentUser && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
         {data?.currentUser && props.context === "messages" && <MessagesSidebar toggleHidden={toggleHidden}/>}
         {loading ? <MenuItem>Loading...</MenuItem>: (data?.currentUser ? <>
           <div className="mt-auto"/>
-          <MenuDivider/>
+          <Divider/>
           <Notifications currentUser={data.currentUser}/>
           <div className="px-3 py-1.5">
             <Label>

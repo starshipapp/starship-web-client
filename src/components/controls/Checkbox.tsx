@@ -8,7 +8,7 @@ interface ICheckboxProps extends HTMLProps<HTMLInputElement> {
 }
 
 function Checkbox(props: ICheckboxProps): JSX.Element {
-  let className = `appearance-none form-tick bg-gray-200 dark:bg-gray-700 rounded ${props.className ?? ""}`;
+  let className = `appearance-none form-tick rounded  bg-gray-200 dark:bg-gray-700 ${props.className ?? ""}`;
 
   switch (props.intent) {
     case Intent.SUCCESS:
@@ -37,9 +37,10 @@ function Checkbox(props: ICheckboxProps): JSX.Element {
 
   return ( 
     <input
+
+      {...props}
       type="checkbox"
       className={className}
-      {...props}
     />
   );
 }
