@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Intent } from "@blueprintjs/core";
 import { faExclamationTriangle, faGlobe, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import Button from "../components/controls/Button";
 import Checkbox from "../components/controls/Checkbox";
+import Toasts from "../components/display/Toasts";
 import Textbox from "../components/input/Textbox";
 import MenuHeader from "../components/menu/MenuHeader";
 import MenuItem from "../components/menu/MenuItem";
@@ -12,7 +12,6 @@ import Popover from "../components/overlays/Popover";
 import PopperPlacement from "../components/PopperPlacement";
 import insertPlanetMutation, { IInsertPlanetMutationData } from "../graphql/mutations/planets/insertPlanetMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
-import { GlobalToaster } from "../util/GlobalToaster";
 
 interface IPlanetSwitcherProps {
   toggleHidden: () => void
@@ -30,22 +29,22 @@ function PlanetSwitcher(props: IPlanetSwitcherProps): JSX.Element {
 
   const createPlanet = function() {
     if(planetName === "") {
-      GlobalToaster.show({message: "Please enter a name.", intent: Intent.DANGER});
+      Toasts.danger("Please enter a name.");
       return;
     }
 
     insertPlanet({variables: {name: planetName, private: privatePlanet}}).then((value) => {
       if(value.data && value.data.insertPlanet) {
-        GlobalToaster.show({message: "Planet sucessfully created!", intent: Intent.SUCCESS});
+        Toasts.success("Planet sucessfully created!");
         void refetch();
         history.push("/planet/" + value.data.insertPlanet.id);
         setPopout(false);
         props.toggleHidden && props.toggleHidden();
       } else {
-        GlobalToaster.show({message: "An unknown data error occured.", intent: Intent.DANGER});
+        Toasts.danger("An unknown data error occured.");
       }
     }).catch((error) => {
-      GlobalToaster.show({message: "An unknown server error occured.", intent: Intent.DANGER});
+      Toasts.danger("An unknown server error occured.");
     });
   };
 

@@ -60,7 +60,7 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
             <img src={blackLogo} alt="logo" className="h-7 dark:hidden"/>  
           </Link>
         </div>
-        <FontAwesomeIcon onClick={toggleHidden} icon={faGripLines} className="MainSidebar-show-button"/>
+        <FontAwesomeIcon onClick={toggleHidden} icon={faGripLines} className="hidden"/>
         {props.context === "home" && <PlanetSwitcher toggleHidden={toggleHidden}/>}
         {props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
         {data?.currentUser && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}

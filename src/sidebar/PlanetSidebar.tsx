@@ -1,15 +1,12 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Intent as bpIntent } from "@blueprintjs/core";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import followMutation, { IFollowMutationData } from "../graphql/mutations/planets/followMutation";
 import getPlanet, { IGetPlanetData } from "../graphql/queries/planets/getPlanet";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import ComponentIndex from "../planet/ComponentIndex";
-import { GlobalToaster } from "../util/GlobalToaster";
 import permissions from "../util/permissions";
 import PlanetSwitcher from "./PlanetSwitcher";
-import "./css/PlanetSidebar.css";
 import addComponentMutation, { IAddComponentMutationData } from "../graphql/mutations/planets/addComponentMutation";
 import ReportDialog from "../planet/ReportDialog";
 import ModTools from "../planet/ModTools";
@@ -24,6 +21,7 @@ import MenuHeader from "../components/menu/MenuHeader";
 import PopperPlacement from "../components/PopperPlacement";
 import Tag from "../components/display/Tag";
 import Divider from "../components/display/Divider";
+import Toasts from "../components/display/Toasts";
 
 interface IPlanetSidebarProps {
   planet: string,
@@ -84,7 +82,7 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
             follow({variables: {planetId: props.planet}}).then(() => {
               void userRefetch();
             }).catch((error: Error) => {
-              GlobalToaster.show({message: error.message, intent: bpIntent.DANGER});
+              Toasts.danger(error.message);
             });
           }}
         >{(userData?.currentUser.following && userData?.currentUser.following.some(e => e.id === props.planet) ) ? "Unfollow" : "Follow"}</MenuItem>}
@@ -116,16 +114,16 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
             />
             {Object.values(ComponentIndex.ComponentDataTypes).map((value) => (<MenuItem key={value.name} icon={value.icon} onClick={() => {
                 if(componentName === "") {
-                  GlobalToaster.show({message: "Your component must have a name.", intent: bpIntent.DANGER});
+                  Toasts.danger("Component name cannot be empty.");
                   return;
                 }
                 addComponent({variables: {planetId: props.planet, name: componentName, type: value.name}}).then((value) => {
                   if(value.data?.addComponent.id) {
-                    GlobalToaster.show({message: `Successfully added ${componentName}.`, intent: bpIntent.SUCCESS});
+                    Toasts.success(`${componentName} added successfully.`);
                     props.toggleHidden();
                   }
                 }).catch((error: Error) => {
-                  GlobalToaster.show({message: error.message, intent: bpIntent.DANGER});
+                  Toasts.danger(error.message);
                 });
               }}>{"Create new " + value.friendlyName}</MenuItem>))}
           </Popover>

@@ -288,7 +288,23 @@ function ComponentsTesting(): JSX.Element {
             <h1 className="text-2x1 font-bold mt-3 text-black dark:text-white">Toast</h1>
             <div className="mt-2">
               <Label>Regular</Label>
-              <Button onClick={() => Toasts.success("test")}>Show Toast</Button>
+              <Button onClick={() => Toasts.regular("test" + String(Math.random()))}>Show Toast</Button>
+            </div>
+            <div className="mt-3">
+              <Label>Danger</Label>
+              <Button intent={Intent.DANGER} onClick={() => Toasts.danger("test" + String(Math.random()))}>Show Toast</Button>
+            </div>
+            <div className="mt-3">
+              <Label>Warning</Label>
+              <Button intent={Intent.WARNING} onClick={() => Toasts.warning("test" + String(Math.random()))}>Show Toast</Button>
+            </div>
+            <div className="mt-3">
+              <Label>Primary</Label>
+              <Button intent={Intent.PRIMARY} onClick={() => Toasts.primary("test" + String(Math.random()))}>Show Toast</Button>
+            </div>
+            <div className="mt-3">
+              <Label>Success</Label>
+              <Button intent={Intent.SUCCESS} onClick={() => Toasts.success("test" + String(Math.random()))}>Show Toast</Button>
             </div>
           </div>
         </div>

@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Intent as bpIntent } from "@blueprintjs/core";
 import { faBell, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
@@ -16,12 +15,11 @@ import onNotificationRecieved from "../graphql/subscriptions/misc/onNotification
 import IconNameToProp from "../util/IconNameToProp";
 import INotification from "../types/INotification";
 import IUser from "../types/IUser";
-import { GlobalToaster } from "../util/GlobalToaster";
 import Markdown from "../util/Markdown";
-import "./css/Notifications.css";
 import Tag from "../components/display/Tag";
 import NonIdealState from "../components/display/NonIdealState";
 import Intent from "../components/Intent";
+import Toasts from "../components/display/Toasts";
 
 interface INotificationsProps {
   currentUser: IUser
@@ -70,7 +68,7 @@ function Notifications(props: INotificationsProps): JSX.Element {
             markAllRead().then(() => {
               void refetchNotifs();
             }).catch((err: Error) => {
-              GlobalToaster.show({message: err.message, intent: bpIntent.DANGER});
+              Toasts.danger(err.message);
             });
           }
         }, 100);
@@ -115,7 +113,7 @@ function Notifications(props: INotificationsProps): JSX.Element {
                       clearNotification({variables: {notificationId: value.id}}).then(() => {
                         void refetchNotifs();
                       }).catch((err: Error) => {
-                        GlobalToaster.show({message: err.message, intent: bpIntent.DANGER});
+                        Toasts.danger(err.message);
                       });
                     }}/>
                   </div>
@@ -133,7 +131,7 @@ function Notifications(props: INotificationsProps): JSX.Element {
               clearAllNotifications().then(() => {
                 void refetchNotifs();
               }).catch((err: Error) => {
-                GlobalToaster.show({message: err.message, intent: bpIntent.DANGER});
+                Toasts.danger(err.message);
               });
             }}>Clear</Button>}
           </div>
