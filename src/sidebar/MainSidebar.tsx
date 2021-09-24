@@ -45,7 +45,7 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
     }
   };
 
-  let className = "MainSidebar";
+  let className = "MainSidebar w-64 overflow-y-scroll overflow-x-visible";
 
   if(isHidden) {
     className += "MainSidebar-hidden";
@@ -53,7 +53,7 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
 
   return (
     <div className={className}>
-      <div id="MainSidebar" className="w-52 overflow-y-scroll py-1 overflow-x-visible bg-gray-200 dark:bg-gray-800 min-h-full flex flex-col">
+      <div id="MainSidebar" className="max-w-5xl py-1 bg-gray-200 dark:bg-gray-800 min-h-full flex flex-col">
         <div className="px-3 py-2" onClick={toggleHidden} >
           <Link className="link-button" to="/">
             <img src={logo} alt="logo" className="h-7 hidden dark:block"/>  
