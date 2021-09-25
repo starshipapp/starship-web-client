@@ -71,17 +71,17 @@ function Home(): JSX.Element {
               </div>
             </Link>))}
           </div>}
-          {userLoading && <div className="Home-featured-list">
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+          {userLoading && <div className="grid grid-cols-auto-md gap-3">
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
           </div>}
         </div>}
         {searchText === "" && <div className="mt-3">
@@ -90,22 +90,22 @@ function Home(): JSX.Element {
             {data && data.featuredPlanets.map((value) => (<Link className="link-button" to={`/planet/` + value.id} key={value.id}>
               <div className="h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col">
                 <div className="font-bold text-2xl mb-1 overflow-ellipsis whitespace-nowrap overflow-hidden">{value.name}</div>
-                <div className="mb-auto">{value.description && value.description}</div>
+                <div className="mb-auto">{value.featuredDescription && value.featuredDescription}</div>
                 <div className="text-gray-700 dark:text-gray-300">{value.followerCount} {value.followerCount === 1 ? "Follower" : "Followers"}</div>
               </div>
             </Link>))}
           </div>}
-          {loading && <div className="Home-featured-list">
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+          {loading && <div className="grid grid-cols-auto-md gap-3">
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
           </div>}
         </div>}
         {searchText !== "" && <PlanetSearch searchText={searchText}/>}
