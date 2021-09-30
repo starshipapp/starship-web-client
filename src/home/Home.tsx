@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import './css/Home.css';
 import { useQuery } from '@apollo/client';
 import getFeaturedPlanets, { IGetFeaturedPlanetsData } from '../graphql/queries/planets/getFeaturedPlanets';
 import { Link } from 'react-router-dom';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
-import { GlobalToaster } from '../util/GlobalToaster';
 import PlanetSearch from './PlanetSearch';
 import logo from '../assets/images/logo.svg';
 import blackLogo from '../assets/images/black-logo.svg';
@@ -13,7 +11,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle, faSearch } from '@fortawesome/free-solid-svg-icons';
 import Callout from '../components/text/Callout';
 import Intent from '../components/Intent';
-import { Classes, Text } from '@blueprintjs/core';
 import Toasts from '../components/display/Toasts';
 
 
