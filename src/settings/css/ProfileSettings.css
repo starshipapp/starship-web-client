@@ -1,59 +1,7 @@
-.ProfileSettings-banner {
-  background-color: #30404d;
-  width: 500px;
-  height: 6rem;
-  border-radius: 6px;
-  margin: 0.75rem 0;
-  cursor: pointer;
-  position: relative;
-  background-color: #394B59;
+.ProfileSettings-profilepic:hover .ProfileSettings-profilepic-icon {
+  opacity: 100;
 }
 
-.ProfileSettings-banner img {
-  width: 500px;
-  height: 6rem;
-  border-radius: 6px;
-  margin-bottom: 0.5rem;
-  object-fit: cover;
-}
-
-.ProfileSettings-profilepic {
-  width: 8.5rem;
-  margin: 0.75rem 0;
-  height: 8.5rem;
-  border-radius: 0.5rem;
-  background-color: #394B59;
-  cursor: pointer;
-  position: relative;
-}
-
-.ProfileSettings-profilepic img {
-  width: 8.5rem;
-  height: 8.5rem;
-  border-radius: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-
-.ProfileSettings-uploadpfp {
-  display: none;
-  color: #ffffff;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
-.ProfileSettings-profilepic:hover .ProfileSettings-uploadpfp {
-  display: block;
-}
-
-.ProfileSettings-banner:hover .ProfileSettings-uploadpfp {
-  display: block;
-}
-.ProfileSettings-bio {
-  width: 100%;
-  margin: 0.5rem 0;
-  height: 11.45rem !important;
-  resize: none;
+.ProfileSettings-banner:hover .ProfileSettings-profilepic-icon {
+  opacity: 100;
 }
