@@ -20,7 +20,7 @@ import PageContainer from "./layout/PageContainer";
 import PageHeader from "./layout/PageHeader";
 import PageSubheader from "./layout/PageSubheader";
 import TextArea from "./input/TextArea";
-
+import Option from "./controls/Option";
 
 function ComponentsTesting(): JSX.Element {
   const [dark, setDark] = useState(true);
@@ -349,6 +349,35 @@ function ComponentsTesting(): JSX.Element {
                 <TextArea intent={Intent.SUCCESS} placeholder="Textarea" className="w-full"/>
               </div>
             </div>
+            <div id="ComponentsTesting-options">
+              <PageSubheader>Option</PageSubheader>
+              <div>
+                <Label>Regular</Label>
+                <Option>Test Option</Option>
+              </div>
+              <div className="mt-3">
+                <Label>Description</Label>
+                <Option description="Click anywhere to toggle.">Test Option</Option>
+              </div>
+              <div className="mt-3">
+                <Label>Danger</Label>
+                <Option intent={Intent.DANGER} description="Click anywhere to toggle.">Test Option</Option>
+              </div>
+              <div className="mt-3">
+                <Label>Warning</Label>
+                <Option intent={Intent.WARNING} description="Click anywhere to toggle.">Test Option</Option>
+              </div>
+              <div className="mt-3">
+                <Label>Primary</Label>
+                <Option intent={Intent.PRIMARY} description="Click anywhere to toggle.">Test Option</Option>
+              </div>
+              <div className="mt-3">
+                <Label>Success</Label>
+                <Option intent={Intent.SUCCESS} description="Click anywhere to toggle.">Test Option</Option>
+              </div>
+            </div>
+            {/* wow this sure is stupid */}
+            <div className="h-10"/>
           </PageContainer>
         </Page>
       </div>

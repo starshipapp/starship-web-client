@@ -1,7 +1,6 @@
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { toast } from "react-hot-toast";
-import Button from "../controls/Button";
 
 // a
 function success(message: string): void {

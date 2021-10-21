@@ -4,11 +4,12 @@ import Intent from "../Intent";
 interface ICheckboxProps extends HTMLProps<HTMLInputElement> {
   intent?: Intent;
   large?: boolean;
+  minimal?: boolean;
   disabled?: boolean;
 }
 
 function Checkbox(props: ICheckboxProps): JSX.Element {
-  let className = `appearance-none form-tick rounded  bg-gray-200 dark:bg-gray-700 ${props.className ?? ""}`;
+  let className = `appearance-none form-tick rounded bg-gray-200 dark:bg-gray-700 ${props.className ?? ""}`;
 
   switch (props.intent) {
     case Intent.SUCCESS:
@@ -26,7 +27,7 @@ function Checkbox(props: ICheckboxProps): JSX.Element {
   }
 
   if (props.large) {
-    className += " w6 h-6";
+    className += " w-6 h-6";
   } else {
     className += " w-4 h-4";
   }
@@ -35,9 +36,12 @@ function Checkbox(props: ICheckboxProps): JSX.Element {
     className += " disabled opacity-75 cursor-not-allowed";
   }
 
+  if (props.minimal) {
+    className += " bg-opacity-0 dark:bg-opacity-0 border-0";
+  }
+
   return ( 
     <input
-
       {...props}
       type="checkbox"
       className={className}

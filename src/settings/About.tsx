@@ -1,70 +1,32 @@
 import { useQuery } from "@apollo/client";
-import React, { useState } from "react";
 import getSysInfo, { IGetSysInfoData } from "../graphql/queries/misc/getSysInfo";
-import "./css/About.css";
-import logo from "../assets/images/logo.svg";
-import { Button, Code, Collapse } from "@blueprintjs/core";
 import { Link } from "react-router-dom";
+import Page from "../components/layout/Page";
+import PageContainer from "../components/layout/PageContainer";
+import logo from '../assets/images/logo.svg';
+import blackLogo from '../assets/images/black-logo.svg';
 
 function About(): JSX.Element {
   const {data: sysData} = useQuery<IGetSysInfoData>(getSysInfo);
-  const [isOpen, setOpen] = useState<boolean>(false);
-  const envKeys = Object.keys(process.env);
-  const envValues = Object.values(process.env);
 
   return (
-    <div className="Settings bp3-dark">
-      <div className="Settings-container">
-        <div className="Settings-page-header">
-          <img className="About-logo" src={logo} alt="Starship logo"/>
+    <Page>
+      <PageContainer className="h-full flex flex-col">
+        <div className="mt-6 mb-2">
+          <img src={logo} alt="logo" className="h-12 hidden dark:block"/>  
+          <img src={blackLogo} alt="logo" className="h-12 dark:hidden"/>  
         </div>
-        <div className="About">
-          <div className="About-version-client">
-            <div>
-              Starship 0.9
-            </div>
-            <Button
-              className="About-debug-button"
-              text={`${isOpen ? "Hide": "Show"} debug info`}
-              minimal={true}
-              icon="info-sign"
-              onClick={() => setOpen(!isOpen)}
-            />
+        <div className="flex">
+          <div className="text-3xl font-extrabold">
+            Starship 0.9
           </div>
-          {sysData?.sysInfo && <>
-            <div className="About-version-server">
-              {sysData.sysInfo.serverName} {sysData.sysInfo.version}, schema {sysData.sysInfo.schemaVersion}
-            </div>
-          </>}
-          <Collapse isOpen={isOpen}>
-            <div className="About-debug-info">
-              <h1>Server Info</h1>
-              <div className="About-debug-entry">
-                <h2>Client Flags</h2>
-                <Code><span>{sysData?.sysInfo.clientFlags.join(", ")}</span></Code>
-              </div>
-              <div className="About-debug-entry">
-                <h2>Supported Components</h2>
-                <Code><span>{sysData?.sysInfo.supportedComponents.join(", ")}</span></Code>
-              </div>
-              <div className="About-debug-entry">
-                <h2>Supported Features</h2>
-                <Code><span>{sysData?.sysInfo.supportedFeatures.join(", ")}</span></Code>
-              </div>
-              <div className="About-debug-entry">
-                <h2>Paths</h2>
-                <p>Emoji URL: <Code>{sysData?.sysInfo.paths.emojiURL}</Code></p>
-                <p>Banner URL: <Code>{sysData?.sysInfo.paths.bannerURL}</Code></p>
-                <p>Profile Pictures URL: <Code>{sysData?.sysInfo.paths.pfpURL}</Code></p>
-              </div>
-              <h1>Client Info</h1>
-              <div className="About-debug-entry">
-                <h2>Build Environment Variables</h2>
-                {envValues.map((value, index) => (<Code className="About-env-variable">{envKeys[index]}={value}</Code>))}
-              </div>
-            </div>
-          </Collapse>
-          <div className="Home-footer">
+        </div>
+        {sysData?.sysInfo && <>
+          <div className="mt-1 italic text-gray-600 dark:text-gray-300">
+            {sysData.sysInfo.serverName} {sysData.sysInfo.version}, schema {sysData.sysInfo.schemaVersion}
+          </div>
+        </>}
+        <div className="mt-auto">
           <span className="Home-footer-copyright">© Starship 2020 - 2021. All rights reserved.</span>
           <span className="Home-footer-links">
             <Link className="Home-footer-link" to="/terms">Terms</Link>
@@ -72,9 +34,8 @@ function About(): JSX.Element {
             <Link className="Home-footer-link" to="/rules">Rules</Link>
           </span>
         </div>
-        </div>
-      </div>
-    </div>
+      </PageContainer>
+    </Page>
   );
 }
 

@@ -18,7 +18,7 @@ import Activate from './login/Activate';
 import Messages from './messages/Messages';
 import ComponentsTesting from './components/ComponentsTesting';
 import { Toaster } from 'react-hot-toast';
-
+import Debug from "./debugger/Debug";
 const history = createBrowserHistory();
 
 interface IAppProps {
@@ -31,6 +31,7 @@ function App(props: IAppProps): JSX.Element {
       <div className="flex w-screen h-screen">
         <Toaster/>
         <Unsupported/>
+        <Debug/>
         <Switch>
           <Route path="/gadmin">
             <GAdmin/>

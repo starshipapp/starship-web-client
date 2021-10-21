@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import React from "react";
 
 function Unsupported(): JSX.Element {
   let isUnsupported = false;
