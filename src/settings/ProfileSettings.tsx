@@ -1,8 +1,8 @@
-import { ApolloQueryResult, useMutation, useQuery } from "@apollo/client";
+import { ApolloQueryResult, useMutation } from "@apollo/client";
 import { faSave, faUpload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import React, { useRef, useState, } from "react";
+import { useRef, useState, } from "react";
 import Button from "../components/controls/Button";
 import Toasts from "../components/display/Toasts";
 import TextArea from "../components/input/TextArea";
@@ -13,7 +13,7 @@ import PageSubheader from "../components/layout/PageSubheader";
 import updateProfileBioMutation, { IUpdateProfileBioMutationData } from "../graphql/mutations/users/updateProfileBioMutation";
 import uploadProfileBannerMutation, { IUploadProfileBannerMutationData } from "../graphql/mutations/users/uploadProfileBannerMutation";
 import uploadProfilePictureMutation, { IUploadProfilePictureMutationData } from "../graphql/mutations/users/uploadProfilePictureMutation";
-import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
+import { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import IUser from "../types/IUser";
 import fixPFP from "../util/fixPFP";
 import MimeTypes from "../util/validMimes";
@@ -48,8 +48,8 @@ function ProfileSettings(props: IProfileSettingsProps): JSX.Element {
         }).catch(() => {
           Toasts.danger("Unable to fetch new user data.");
         });
-      }).catch(function (error) {
-        // handle error
+      }).catch(function () {
+        Toasts.danger("Unable to upload profile picture.");
       });
     }).catch((error: Error) => {
       Toasts.danger(error.message);
@@ -72,8 +72,8 @@ function ProfileSettings(props: IProfileSettingsProps): JSX.Element {
         }).catch(() => {
           Toasts.danger("Unable to fetch new user data.");
         });
-      }).catch(function (error) {
-        // handle error
+      }).catch(function () {
+        Toasts.danger("Unable to upload profile banner");
       });
     }).catch((error: Error) => {
       Toasts.danger(error.message);

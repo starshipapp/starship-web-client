@@ -8,25 +8,24 @@ interface IOptionProps extends HTMLProps<HTMLDivElement> {
   description?: string;
 }
 
-
 function Option(props: IOptionProps): JSX.Element {
-  let className = `w-full p-3 rounded shadow-md flex text-black dark:text-white ${props.className ?? ""}`;
+  let className = `transition-all duration-200 w-full p-3 mb-2.5 rounded shadow-md active:shadow-sm flex text-black dark:text-white ${props.className ?? ""}`;
 
   switch (props.intent) {
     case Intent.SUCCESS:
-      className += " bg-green-300 dark:bg-green-700";
+      className += " bg-green-300 dark:bg-green-700 hover:bg-green-500 dark:hover:bg-green-600 active:bg-green-600 dark:active:bg-green-800";
       break;
     case Intent.WARNING:
-      className += " bg-yellow-300 dark:bg-yellow-700";
+      className += " bg-yellow-300 dark:bg-yellow-700 hover:bg-yellow-500 dark:hover:bg-yellow-600 active:bg-yellow-600 dark:active:bg-yellow-800";
       break;
     case Intent.DANGER:
-      className += " bg-red-300 dark:bg-red-700";
+      className += " bg-red-300 dark:bg-red-700 hover:bg-red-500 dark:hover:bg-red-600 active:bg-red-600 dark:active:bg-red-800";
       break;
     case Intent.PRIMARY:
-      className += " bg-blue-300 dark:bg-blue-700";
+      className += " bg-blue-300 dark:bg-blue-700 hover:bg-blue-500 dark:hover:bg-blue-600 active:bg-blue-600 dark:active:bg-blue-800";
       break;
     default:
-      className += " bg-gray-200 dark:bg-gray-700";
+      className += " bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 active:bg-gray-400 dark:active:bg-gray-800";
   }
 
   return (
@@ -40,7 +39,7 @@ function Option(props: IOptionProps): JSX.Element {
         </div>}
       </div>
       <div className="mt-auto mb-auto mr-1">
-        <Checkbox large minimal intent={props.intent}/>
+        <Checkbox large minimal checked={props.checked} intent={props.intent}/>
       </div>
     </div>
   );

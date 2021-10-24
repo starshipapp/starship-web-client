@@ -1,10 +1,18 @@
 import { useMutation } from "@apollo/client";
-import { Button, Intent, Radio, RadioGroup } from "@blueprintjs/core";
-import React, { useState } from "react";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import Button from "../components/controls/Button";
+import Option from "../components/controls/Option";
+import Toasts from "../components/display/Toasts";
+import Intent from "../components/Intent";
+import Page from "../components/layout/Page";
+import PageContainer from "../components/layout/PageContainer";
+import PageHeader from "../components/layout/PageHeader";
+import PageSubheader from "../components/layout/PageSubheader";
+import List from "../components/list/List";
+import ListItem from "../components/list/ListItem";
 import setNotificationSettingMutation, { ISetNotificationSettingData } from "../graphql/mutations/users/setNotificationSettingMutation";
 import toggleBlockUserMutation, { IToggleBlockUserData } from "../graphql/mutations/users/toggleBlockUserMutation";
 import IUser from "../types/IUser";
-import { GlobalToaster } from "../util/GlobalToaster";
 import MentionSettings from "../util/MentionSettings";
 import "./css/NotificationSettings.css";
 
@@ -17,62 +25,82 @@ function NotificationSettings(props: INotificationSettingsProps): JSX.Element {
   const [blockUser] = useMutation<IToggleBlockUserData>(toggleBlockUserMutation);
   const [setNotificationSetting] = useMutation<ISetNotificationSettingData>(setNotificationSettingMutation);
 
+  const setSetting = function(setting: MentionSettings) {
+    setNotificationSetting({variables: {option: setting}}).then(() => {
+      props.refetch();
+      Toasts.success("Successfully updated notification settings.");
+    }).catch((error: Error) => {
+      Toasts.danger(error.message);
+    });
+  };
+
   return (
-    <div className="Settings bp3-dark">
-      <div className="Settings-container">
-        <div className="Settings-page-header">
+    <Page>
+      <PageContainer>
+        <PageHeader>
           Notifications
-        </div>
-        <h1 className="Settings-subheader">Mentions</h1>
-        <RadioGroup
-          label="Recieve mention notifications from:"
-          onChange={(e) => {
-            setNotificationSetting({variables: {option: Number(e.currentTarget.value)}}).then(() => {
-              props.refetch();
-              GlobalToaster.show({message: "Successfully updated notification settings.", intent: Intent.SUCCESS});
-            }).catch((error: Error) => {
-              GlobalToaster.show({message: error.message, intent: Intent.DANGER});
-            });
-          }}
-          selectedValue={props.user.notificationSetting ?? 0}
+        </PageHeader>
+        <PageSubheader>Mentions</PageSubheader>
+        <Option
+          description="Recieve all notifications. (default)"
+          checked={props.user.notificationSetting ? props.user.notificationSetting === MentionSettings.allMentions : true}
+          onClick={() => setSetting(MentionSettings.allMentions)}
         >
-          <Radio value={MentionSettings.allMentions} label="Everything"/>
-          <Radio value={MentionSettings.following} label="Followed & My Planets"/>
-          <Radio value={MentionSettings.membersOnly} label="My Planets only"/>
-          <Radio value={MentionSettings.messagesOnly} label="Direct Messages only"/>
-          <Radio value={MentionSettings.none} label="Nothing"/>
-        </RadioGroup>
-        <h1 className="Settings-subheader">Blocked Users</h1>
+          Everything
+        </Option>
+        <Option
+          description="Recieve notifications from followed planets, planets you're a member of and direct messages."
+          checked={props.user.notificationSetting === MentionSettings.following}
+          onClick={() => setSetting(MentionSettings.following)}
+        >
+          Followed
+        </Option>
+        <Option 
+          description="Recieve notifications from planets you're a member of and direct messages."
+          checked={props.user.notificationSetting === MentionSettings.membersOnly}
+          onClick={() => setSetting(MentionSettings.membersOnly)}
+        >
+          My Planets
+        </Option>
+        <Option
+          description="Recieve only direct message notifications."
+          checked={props.user.notificationSetting === MentionSettings.messagesOnly}
+          onClick={() => setSetting(MentionSettings.messagesOnly)}
+        >
+          Direct Messages
+        </Option>
+        <Option
+          description="Do not receive any notifications (except for system messages)."
+          checked={props.user.notificationSetting === MentionSettings.none}
+          onClick={() => setSetting(MentionSettings.none)}
+        >
+          Nothing
+        </Option>
+        <PageSubheader>Blocked Users</PageSubheader>
         <p>Blocked Users can't message or mention you, and their forum posts and chat messages will be hidden.</p>
-        <div className="Settings-table-topbar">
-          <div className="Settings-table-number">
-            {props.user.blockedUsers?.length} blocked user{(props.user.blockedUsers?.length ?? 0) !== 1 && "s"}
-          </div>
-        </div>
-        <div className="Settings-table">
-          {props.user.blockedUsers?.map((value) => (<div className="Settings-row">
-            <img className="Settings-row-icon NotificationSettings-pfp" src={value.profilePicture} alt={value.username}/>
-            <div className="Settings-row-text">
-              {value.username}
-            </div>
-            <Button
-              className="Settings-row-button"
-              icon="cross"
+        <List
+          name={`${String(props.user.blockedUsers?.length)} blocked user${((props.user.blockedUsers?.length ?? 0) !== 1) ? "s" : ""}`}
+        >
+          {props.user.blockedUsers?.map((value) => <ListItem
+            actions={<Button
+              icon={faTimes}
               intent={Intent.DANGER}
-              minimal={true}
-              small={true}
+              minimal
+              small
               onClick={() => {
                 blockUser({variables: {userId: value.id}}).then(() => {
-                  GlobalToaster.show({message: `$Unblocked ${value.username ?? "unknown user"}.`, intent: Intent.SUCCESS});
+                  Toasts.success(`Unblocked ${value.username ?? "unknown user"}.`);
                 }).catch((error: Error) => {
-                  GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+                  Toasts.danger(error.message);
                 });
               }}
-            />
-          </div>))}
-        </div>
-      </div>
-    </div>
+            />}
+          >
+            {value.username}
+          </ListItem>)}
+        </List>
+      </PageContainer>
+    </Page>
   );
 }
 

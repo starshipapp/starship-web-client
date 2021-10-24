@@ -21,6 +21,9 @@ import PageHeader from "./layout/PageHeader";
 import PageSubheader from "./layout/PageSubheader";
 import TextArea from "./input/TextArea";
 import Option from "./controls/Option";
+import List from "./list/List";
+import ListItem from "./list/ListItem";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function ComponentsTesting(): JSX.Element {
   const [dark, setDark] = useState(true);
@@ -375,6 +378,28 @@ function ComponentsTesting(): JSX.Element {
                 <Label>Success</Label>
                 <Option intent={Intent.SUCCESS} description="Click anywhere to toggle.">Test Option</Option>
               </div>
+            </div>
+            <div id="ComponentsTesting-list">
+              <PageSubheader>List</PageSubheader>
+              <List
+                name="Example List"
+                actions={<Button small minimal icon={faIcons}>Example Action</Button>}
+              >
+                <ListItem>
+                  Regular
+                </ListItem>
+                <ListItem
+                  icon={<FontAwesomeIcon icon={faIcons}/>}
+                >
+                  Icon
+                </ListItem>
+                <ListItem
+                  icon={<FontAwesomeIcon icon={faIcons}/>}
+                  actions={<Button small icon={faIcons} intent={Intent.DANGER}>Action</Button>}
+                >
+                  Icon and Actions
+                </ListItem>
+              </List>
             </div>
             {/* wow this sure is stupid */}
             <div className="h-10"/>

@@ -104,7 +104,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
     canEdit = true;
   }
 
-  if(props.post.owner && !showAnyways && data?.currentUser.blockedUsers && (data?.currentUser.blockedUsers.filter((value) => value.id === props.post.owner?.id).length > 0)) {
+  if(props.post.owner && !showAnyways && data?.currentUser && data?.currentUser.blockedUsers && (data?.currentUser.blockedUsers.filter((value) => value.id === props.post.owner?.id).length > 0)) {
     return (
       <div className="ForumThreadItem-blocked">
         <div className="ForumThreadItem-blocked-text">
@@ -264,7 +264,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
                   set="twitter"
                   title="Pick an emoji"
                   emoji="smile"
-                  custom={generateEmojiMartEmojis(props.planet.customEmojis, data?.currentUser.customEmojis)}
+                  custom={generateEmojiMartEmojis(props.planet.customEmojis, data?.currentUser && data?.currentUser.customEmojis)}
                   onSelect={(e) => {
                     if(emojiTypeCheck(e)) {
                       selectEmoji(e.native ?? e.id); 

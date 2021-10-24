@@ -14,16 +14,16 @@ interface IButtonProps extends DetailedHTMLProps<React.ButtonHTMLAttributes<HTML
 }
 
 function Button(props: IButtonProps): JSX.Element {
-  let className = `transition-all duration-200 rounded text-black leading-tight
+  let className = `transition-all duration-200 text-black leading-tight
   outline-none focus:outline-none focus:ring-blue-300 focus:ring-1 dark:focus:ring-blue-600 
   dark:text-white ${props.className ?? ""}`;
 
   if(props.large) {
-    className += " px-4 py-2 text-lg";
+    className += " px-4 py-2 text-lg rounded";
   } else if(props.small) {
-    className += " px-1.5 py-1";
+    className += " px-1.5 py-1 rounded-sm";
   } else {
-    className += " px-4 py-2";
+    className += " px-4 py-2 rounded-sm";
   }
 
   if(props.disabled) {
