@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import followMutation, { IFollowMutationData } from "../graphql/mutations/planets/followMutation";
 import getPlanet, { IGetPlanetData } from "../graphql/queries/planets/getPlanet";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
-import ComponentIndex from "../planet/ComponentIndex";
+import ComponentIndex, { getComponentQualityTag } from "../planet/ComponentIndex";
 import permissions from "../util/permissions";
 import PlanetSwitcher from "./PlanetSwitcher";
 import addComponentMutation, { IAddComponentMutationData } from "../graphql/mutations/planets/addComponentMutation";
@@ -22,6 +22,12 @@ import PopperPlacement from "../components/PopperPlacement";
 import Tag from "../components/display/Tag";
 import Divider from "../components/display/Divider";
 import Toasts from "../components/display/Toasts";
+import Dialog from "../components/dialog/Dialog";
+import DialogBody from "../components/dialog/DialogBody";
+import DialogHeader from "../components/dialog/DialogHeader";
+import Option from "../components/controls/Option";
+import Label from "../components/text/Label";
+import Button from "../components/controls/Button";
 
 interface IPlanetSidebarProps {
   planet: string,
@@ -39,6 +45,7 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
   const [showReport, setReport] = useState<boolean>(false);
   const [showTools, setTools] = useState<boolean>(false);
   const [showAddComponent, setAddComponent] = useState<boolean>(false);
+  const [component, setComponent] = useState<string | null>(null);
 
   if(loading) {
     return (<></>);
@@ -100,33 +107,59 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
           >{value.name}</MenuItem>
         </Link>))}
         {userData?.currentUser && permissions.checkFullWritePermission(userData.currentUser, data.planet) && <>
-          <Popover
-            popoverTarget={<MenuItem icon={faPlus} onClick={() => setAddComponent(true)}>Add Component</MenuItem>}
+          <MenuItem icon={faPlus} onClick={() => setAddComponent(true)}>Add Component</MenuItem>
+          <Dialog
             open={showAddComponent}
-            onClose={() => setAddComponent(false)}
-            fullWidth
-            placement={PopperPlacement.right}
+            onClose={() => {
+              setComponent(null);
+              setComponentName("");
+              setAddComponent(false);
+            }}
           >
-            <Textbox
-              placeholder="Name"
-              value={componentName}
-              onChange={(e) => setComponentName(e.target.value)}
-            />
-            {Object.values(ComponentIndex.ComponentDataTypes).map((value) => (<MenuItem key={value.name} icon={value.icon} onClick={() => {
-                if(componentName === "") {
-                  Toasts.danger("Component name cannot be empty.");
-                  return;
-                }
-                addComponent({variables: {planetId: props.planet, name: componentName, type: value.name}}).then((value) => {
-                  if(value.data?.addComponent.id) {
-                    Toasts.success(`${componentName} added successfully.`);
-                    props.toggleHidden();
+            <DialogBody>
+              <DialogHeader>Add Component</DialogHeader>
+              <Label className="mt-1">Name your component:</Label>
+              <Textbox
+                placeholder="Name"
+                value={componentName}
+                onChange={(e) => setComponentName(e.target.value)}
+                className="mb-3"
+              />
+              <Label>Select a component type: </Label>
+              {Object.values(ComponentIndex.ComponentDataTypes).map((value) => (<Option
+                icon={value.icon}
+                checked={component === value.name}
+                onClick={() => setComponent(value.name)}
+              >
+                <span>{value.friendlyName}</span>
+                {getComponentQualityTag(value.quality)}
+              </Option>))}
+              <Button
+                className="ml-auto mt-2"
+                onClick={() => {
+                  if(componentName === "") {
+                    Toasts.danger("Component name cannot be empty.");
+                    return;
                   }
-                }).catch((error: Error) => {
-                  Toasts.danger(error.message);
-                });
-              }}>{"Create new " + value.friendlyName}</MenuItem>))}
-          </Popover>
+                  if(!component) {
+                    Toasts.danger("Please select a component type.");
+                  }
+                  addComponent({variables: {planetId: props.planet, name: componentName, type: component}}).then((value) => {
+                    if(value.data?.addComponent.id) {
+                      Toasts.success(`${componentName} added successfully.`);
+                      props.toggleHidden();
+                    }
+                  }).catch((error: Error) => {
+                    Toasts.danger(error.message);
+                  });
+
+                  setComponent(null);
+                  setComponentName("");
+                  setAddComponent(false);
+                }}
+              >Add {component ? ComponentIndex.ComponentDataTypes[component].friendlyName : "Component"}</Button>
+            </DialogBody>
+          </Dialog>
         </>}
       </>}
     </>);

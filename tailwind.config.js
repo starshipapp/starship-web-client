@@ -15,7 +15,15 @@ module.exports = {
         'auto-xl': 'repeat(auto-fill, minmax(28rem, 1fr))',
         'auto-2xl': 'repeat(auto-fill, minmax(32rem, 1fr))'
       },
-        
+      spacing: {
+        'md': '28rem',
+        'lg': '32rem',
+        'xl': '36rem',
+        '2xl': '42rem'
+      },
+      outline: {
+        'actual-none': 'none'
+      }
     },
   },
   variants: {

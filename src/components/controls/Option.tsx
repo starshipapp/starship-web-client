@@ -1,3 +1,5 @@
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HTMLProps } from "react";
 import Intent from "../Intent";
 import Checkbox from "./Checkbox";
@@ -6,6 +8,7 @@ interface IOptionProps extends HTMLProps<HTMLDivElement> {
   intent?: Intent;
   checked?: boolean;
   description?: string;
+  icon?: IconProp;
 }
 
 function Option(props: IOptionProps): JSX.Element {
@@ -30,8 +33,13 @@ function Option(props: IOptionProps): JSX.Element {
 
   return (
     <div {...props} className={className}>
-      <div className="m-auto ml-1">
-        <div className="text-lg font-bold">
+      {props.icon && <div className={`ml-1 mr-1 my-auto flex items-center text-center content-center `}>
+        <div className={`text-center content-center ${props.description ? "w-8": "w-4"}`}>
+          <FontAwesomeIcon icon={props.icon} size={props.description ? "2x" : undefined}/>
+        </div> 
+      </div>}
+      <div className="mr-auto ml-1">
+        <div className="text-lg font-bold flex">
           {props.children}
         </div>
         {props.description && <div className="mb-0.5">

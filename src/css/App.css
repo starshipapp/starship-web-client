@@ -74,3 +74,17 @@
   border-right: 0px;
   background-color: rgba(138, 155, 168, 0.15);;
 }
+
+/* animations for the dialogs */
+.ReactModal__Overlay {
+    opacity: 0;
+    transition: opacity 150ms ease;
+}
+
+.ReactModal__Overlay--after-open{
+    opacity: 1;
+}
+
+.ReactModal__Overlay--before-close{
+    opacity: 0;
+}

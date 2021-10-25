@@ -24,10 +24,15 @@ import Option from "./controls/Option";
 import List from "./list/List";
 import ListItem from "./list/ListItem";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Dialog from "./dialog/Dialog";
+import DialogBody from "./dialog/DialogBody";
+import DialogHeader from "./dialog/DialogHeader";
 
 function ComponentsTesting(): JSX.Element {
   const [dark, setDark] = useState(true);
   const [showPopover, setShowPopover] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
+
   return (
     <div className={`${dark ? "dark": ""}`}>
       <div className="w-screen h-screen flex overflow-x-hidden">
@@ -358,25 +363,29 @@ function ComponentsTesting(): JSX.Element {
                 <Label>Regular</Label>
                 <Option>Test Option</Option>
               </div>
+              <div>
+                <Label>Icon</Label>
+                <Option icon={faIcons}>Icon</Option>
+              </div>
               <div className="mt-3">
                 <Label>Description</Label>
-                <Option description="Click anywhere to toggle.">Test Option</Option>
+                <Option icon={faIcons} description="Click anywhere to toggle.">Test Option</Option>
               </div>
               <div className="mt-3">
                 <Label>Danger</Label>
-                <Option intent={Intent.DANGER} description="Click anywhere to toggle.">Test Option</Option>
+                <Option icon={faIcons} intent={Intent.DANGER} description="Click anywhere to toggle.">Test Option</Option>
               </div>
               <div className="mt-3">
                 <Label>Warning</Label>
-                <Option intent={Intent.WARNING} description="Click anywhere to toggle.">Test Option</Option>
+                <Option icon={faIcons} intent={Intent.WARNING} description="Click anywhere to toggle.">Test Option</Option>
               </div>
               <div className="mt-3">
                 <Label>Primary</Label>
-                <Option intent={Intent.PRIMARY} description="Click anywhere to toggle.">Test Option</Option>
+                <Option icon={faIcons} intent={Intent.PRIMARY} description="Click anywhere to toggle.">Test Option</Option>
               </div>
               <div className="mt-3">
                 <Label>Success</Label>
-                <Option intent={Intent.SUCCESS} description="Click anywhere to toggle.">Test Option</Option>
+                <Option icon={faIcons} intent={Intent.SUCCESS} description="Click anywhere to toggle.">Test Option</Option>
               </div>
             </div>
             <div id="ComponentsTesting-list">
@@ -400,6 +409,28 @@ function ComponentsTesting(): JSX.Element {
                   Icon and Actions
                 </ListItem>
               </List>
+            </div>
+            <div id="ComponentsTesting-dialog">
+              <PageSubheader>Dialog</PageSubheader>
+              <div>
+                <Label>Click the button to open the dialog.</Label>
+                <Button
+                  onClick={() => setShowDialog(true)}
+                >Open Dialog</Button>
+                <Dialog
+                  open={showDialog}
+                  onClose={() => setShowDialog(false)}
+                >
+                  <DialogBody>
+                    <DialogHeader>
+                      Example Dialog
+                    </DialogHeader>
+                    <div>
+                      This is an example dialog
+                    </div>
+                  </DialogBody>
+                </Dialog>
+              </div> 
             </div>
             {/* wow this sure is stupid */}
             <div className="h-10"/>
