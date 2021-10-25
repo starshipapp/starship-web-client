@@ -30,3 +30,47 @@
 .Unsupported-link {
   pointer-events: all;
 }
+
+.CodeMirror-line {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.editor-preview-full {
+  background-color: #30404d !important;
+}
+
+/* TODO: remove and replace with Slate based editor */
+
+.dark .CodeMirror {
+  color: #ffffff;
+  caret-color: #ffffff;
+  background-color: #30404d00;
+  border: 1px #394B59 solid !important;
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0.5rem
+}
+
+.dark .editor-toolbar {
+  border-top: 1px #394B59 solid;
+  border-left: 1px #394B59 solid;
+  border-right: 1px #394B59 solid;
+  background-color: #30404d00;
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 0.5rem
+}
+
+.dark .editor-toolbar i.separator {
+  border: 0 !important;
+  margin: 0px;
+  width: 0;
+}
+
+.dark .editor-toolbar button:hover {
+  border-bottom: 0px;
+  border-left: 0px;
+  border-top: 0px;
+  border-right: 0px;
+  background-color: rgba(138, 155, 168, 0.15);;
+}

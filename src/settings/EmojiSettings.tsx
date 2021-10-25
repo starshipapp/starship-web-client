@@ -1,5 +1,4 @@
 import { useMutation } from "@apollo/client";
-import { Classes, FileInput } from "@blueprintjs/core";
 import { faTrash, faUpload } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useRef, useState } from "react";
@@ -17,7 +16,6 @@ import deleteCustomEmojiMutation, { IDeleteCustomEmojiData } from "../graphql/mu
 import uploadCustomEmojiMutation, { IUploadCustomEmojiData } from "../graphql/mutations/customemojis/uploadCustomEmojiMutation";
 import IUser from "../types/IUser";
 import MimeTypes from "../util/validMimes";
-import "./css/EmojiSettings.css";
 
 interface IEmojiSettingsProps {
   user: IUser

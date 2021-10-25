@@ -14,7 +14,6 @@ import setNotificationSettingMutation, { ISetNotificationSettingData } from "../
 import toggleBlockUserMutation, { IToggleBlockUserData } from "../graphql/mutations/users/toggleBlockUserMutation";
 import IUser from "../types/IUser";
 import MentionSettings from "../util/MentionSettings";
-import "./css/NotificationSettings.css";
 
 interface INotificationSettingsProps {
   user: IUser
