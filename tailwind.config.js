@@ -31,7 +31,9 @@ module.exports = {
       boxShadow: ['active'],
       backgroundColor: ['active', 'checked'],
       borderColor: ['checked'],
-      display: ['dark']
+      display: ['dark'],
+      padding: ['dark'],
+      borderRadius: ['dark']
     },
   },
   plugins: [

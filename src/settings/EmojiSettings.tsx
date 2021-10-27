@@ -74,7 +74,7 @@ function EmojiSettings(props: IEmojiSettingsProps): JSX.Element {
               />
               <Button
                 intent={emojiFile ? Intent.SUCCESS : undefined}
-                className="mb-2 w-full block"
+                className="mb-3 w-full block"
                 icon={faUpload}
                 onClick={() => {
                   inputRef?.current && inputRef.current.click();

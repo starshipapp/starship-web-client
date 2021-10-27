@@ -23,7 +23,7 @@ function Button(props: IButtonProps): JSX.Element {
   } else if(props.small) {
     className += " px-1.5 py-1 rounded-sm";
   } else {
-    className += " px-4 py-2 rounded-sm";
+    className += " px-3 py-1.5 rounded-sm";
   }
 
   if(props.disabled) {

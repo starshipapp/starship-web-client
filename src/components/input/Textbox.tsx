@@ -33,9 +33,9 @@ function Textbox(props: ITextboxProps): JSX.Element {
   if(props.large) {
     className += " text-xl py-2 px-3";
   } else if(props.small) {
-    className += " py-1.5 px-2";
+    className += " py-1 px-1.5";
   } else {
-    className += " py-2 px-3";
+    className += " py-1.5 px-2";
   }
 
   if(props.disabled) {

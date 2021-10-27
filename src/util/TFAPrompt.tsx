@@ -1,5 +1,6 @@
-import { Alert, Classes } from "@blueprintjs/core";
 import React, { useState } from "react";
+import Dialog from "../components/dialog/Dialog";
+import Textbox from "../components/input/Textbox";
 import "./css/TFAPrompt.css";
 
 interface ITFAPromptProps {
@@ -12,31 +13,27 @@ function TFAPrompt(props: ITFAPromptProps): JSX.Element {
   const [keyTextbox, setTextbox] = useState<string>("");
 
   return (
-    <Alert
+    <Dialog
+      open={props.isOpen}
       onClose={props.onClose}
-      canOutsideClickCancel={true}
-      onConfirm={() => {
-        props.onSubmit(Number(keyTextbox));
-        setTextbox("");
-      }}
-      className={`TFAPrompt ${Classes.DARK}`}
-      isOpen={props.isOpen}
     >
-      <div className="TFAPrompt-text">
-        Enter 6-digit authenticator code or 9-digit backup code
+      <div className="p-4 w-72">
+        <div className="font-bold text-center">Enter the 6-digit code from your authenticator app or a 9-digit backup code.</div>
+        <Textbox
+          placeholder="000000"
+          className="font-mono text-center mt-2 w-full"
+          large
+          onChange={(e) => setTextbox(e.target.value)}
+          onKeyDown={(e) => {
+            if(e.key === "Enter") {
+              console.log(keyTextbox);
+              console.log(Number(keyTextbox));
+              props.onSubmit(Number(keyTextbox));
+            }
+          }}
+        />
       </div>
-      <input
-        className={`${Classes.INPUT} ${Classes.LARGE} TFAPrompt-textbox`}
-        value={keyTextbox}
-        onChange={(e) => setTextbox(e.target.value)}
-        onKeyDown={(e) => {
-          if(e.key === "Enter") {
-            props.onSubmit(Number(keyTextbox));
-            setTextbox("");
-          }
-        }}
-      />
-    </Alert>
+    </Dialog>
   );
 }
 

@@ -1,9 +1,13 @@
 import { useMutation } from "@apollo/client";
-import { Button, Intent } from "@blueprintjs/core";
 import React, { useState } from "react";
+import Option from "../components/controls/Option";
+import Toasts from "../components/display/Toasts";
+import Page from "../components/layout/Page";
+import PageContainer from "../components/layout/PageContainer";
+import PageHeader from "../components/layout/PageHeader";
+import PageSubheader from "../components/layout/PageSubheader";
 import disableTFAMutation, { IDisableTFAMutation } from "../graphql/mutations/users/disableTFAMutation";
 import IUser from "../types/IUser";
-import { GlobalToaster } from "../util/GlobalToaster";
 import TFAPrompt from "../util/TFAPrompt";
 import "./css/Settings.css";
 import TFAWizard from "./TFAWizard";
@@ -19,33 +23,40 @@ function SecuritySettings(props: ISecuritySettingsProps): JSX.Element {
   const [isTFAPromptOpen, setTFAPromptOpen] = useState<boolean>(false);
 
   return (
-    <div className="Settings bp3-dark">
-      <div className="Settings-container">
-        <div className="Settings-page-header">
+    <Page>
+      <PageContainer>
+        <PageHeader>
           Security
-        </div>
-        <h1 className="Settings-subheader">Two Factor Authentication</h1>
-        <div className="Settings-tfa">
-          <p>Two Factor Authentication <b>is{!props.user.tfaEnabled && " not"}</b> enabled</p>
-          {!props.user.tfaEnabled && <Button onClick={() => setTFAOpen(true)}>Enable 2FA</Button>}
-          {props.user.tfaEnabled && <Button onClick={() => setTFAPromptOpen(true)}>Disable 2FA</Button>}
-          <TFAPrompt 
-            onSubmit={(key) => {
-              disableTFA({variables: {token: key}}).then(() => {
-                GlobalToaster.show({message: "Disabled two factor authentication.", intent: Intent.SUCCESS});
-                props.refetch();
-                setTFAPromptOpen(false);
-              }).catch((err: Error) => {
-                GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-              });
-            }}
-            onClose={() => {setTFAPromptOpen(false);}}
-            isOpen={isTFAPromptOpen}
-          />
-          <TFAWizard isOpen={isTFAOpen} onClose={() => setTFAOpen(false)} onComplete={() => props.refetch()}/>
-        </div>
-      </div>
-    </div>
+        </PageHeader>
+        <PageSubheader>Login</PageSubheader>
+        <Option
+          description="Use an authenticator app on your mobile device to confirm logins."
+          onClick={() => {
+            if(props.user.tfaEnabled) {
+              setTFAPromptOpen(true);
+            } else {
+              setTFAOpen(true);
+            }
+          }}
+          checked={props.user.tfaEnabled}
+        >Two Factor Authentication</Option>
+        <TFAPrompt 
+          onSubmit={(key) => {
+            console.log(key);
+            disableTFA({variables: {token: key}}).then(() => {
+              Toasts.success("Disabled two factor authentication.");
+              props.refetch();
+              setTFAPromptOpen(false);
+            }).catch((err: Error) => {
+              Toasts.danger(err.message);
+            });
+          }}
+          onClose={() => {setTFAPromptOpen(false);}}
+          isOpen={isTFAPromptOpen}
+        />
+        <TFAWizard isOpen={isTFAOpen} onClose={() => setTFAOpen(false)} onComplete={() => props.refetch()}/>
+      </PageContainer>
+    </Page>
   );
 }
 

@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+a {
+  @apply dark:text-blue-400
+}
+
 /* Disable link-highlighting for buttons */
 a.link-button {
   color: inherit !important;
