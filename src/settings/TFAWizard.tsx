@@ -47,13 +47,13 @@ function TFAWizard(props: ITFAWizardProps): JSX.Element {
       open={props.isOpen}
       onClose={() => {
         setSecret("");
-        setPage("");
+        setPage("start");
         setCodes([]);
-        hasGeneratedTOTP = false;
         props.onClose();
         if(page === "finished") {
           props.onComplete();
         }
+        hasGeneratedTOTP = false;
       }}
     >
       <DialogBody>

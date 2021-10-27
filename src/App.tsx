@@ -29,7 +29,7 @@ function App(props: IAppProps): JSX.Element {
   return (
     <Router history={history}>
       <div className="flex w-screen h-screen">
-        <Toaster/>
+        <Toaster position="bottom-right"/>
         <Unsupported/>
         <Debug/>
         <Switch>
