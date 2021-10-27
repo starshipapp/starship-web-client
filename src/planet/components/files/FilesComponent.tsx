@@ -28,6 +28,8 @@ import FileSearch from "./FileSearch";
 import ReadmeWrapper from "./ReadmeWrapper";
 import fileSize from "filesize";
 import cancelUploadMutation, { ICancelUploadMutationData } from "../../../graphql/mutations/components/files/cancelUploadMutation";
+import createMultiObjectDownloadTicketMutation, { ICreateMultiObjectDownloadTicketMutationData } from "../../../graphql/mutations/components/files/createMultiObjectDownloadTicketMutation";
+import Toasts from "../../../components/display/Toasts";
 
 const uploading: Record<string, {name: string, progress: number, documentId: string, cancelToken: CancelTokenSource}> = {};
 
@@ -42,6 +44,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
   const [moveObject] = useMutation<IMoveObjectMutationData>(moveObjectMutation);
   const [createFolder] = useMutation<ICreateFolderMutationData>(createFolderMutation);
   const [cancelUpload] = useMutation<ICancelUploadMutationData>(cancelUploadMutation);
+  const [createTicket] = useMutation<ICreateMultiObjectDownloadTicketMutationData>(createMultiObjectDownloadTicketMutation);
   const fileInput = useRef<HTMLInputElement>(null);
   const [showReport, setReport] = useState<boolean>(false);
   const [newFolderTextbox, setNewFolderTextbox] = useState<string>("");
@@ -340,6 +343,22 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           }}/>
           {userData?.currentUser && <Button text="Report" icon="flag" onClick={() => setReport(true)}/>}
         </ButtonGroup>}
+        {objectData?.fileObject && objectData?.fileObject.type === "folder" && filesData?.files && <Button
+          text="Download Folder"
+          icon="download"
+          minimal
+          onClick={() => {
+            const files: string[] = filesData.files.map((value) => value.id);
+
+            createTicket({variables: {objectIds: files, zipName: objectData.fileObject.name}}).then((data) => {
+              if(data.data) {
+                window.open(`http://localhost:4000/files/download/${data.data.createMultiObjectDownloadTicket}`, "_self");
+              } 
+            }).catch((e: Error) => {
+              Toasts.danger(e.message);
+            });
+          }}
+        />}
         {userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet) && ((objectData?.fileObject && objectData.fileObject.type === "folder") || !props.subId) && <ButtonGroup minimal={true} className="FilesComponent-top-actions">
           <Button text={!isMobile() ? "Upload Files": ""} icon="upload" onClick={() => {
             if(fileInput) {
