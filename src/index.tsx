@@ -7,7 +7,11 @@ import { getMainDefinition } from '@apollo/client/utilities';
 import { setContext } from '@apollo/client/link/context';
 import { WebSocketLink } from '@apollo/client/link/ws';
 import { MessageTypes, SubscriptionClient } from 'subscriptions-transport-ws';
+import yn from 'yn';
 
+if(yn(localStorage.getItem("useDarkTheme")) ?? true) {
+  document.body.classList.add("dark");
+}
 
 const wsClient = new SubscriptionClient(process.env.REACT_APP_SUBSCRIPTIONS_ENDPOINT ?? "", {
   lazy: true,

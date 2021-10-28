@@ -8,6 +8,7 @@ import NotificationSettings from "./NotificationSettings";
 import About from "./About";
 import NonIdealState from "../components/display/NonIdealState";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import AppearanceSettings from "./AppearanceSettings";
 
 function Settings(): JSX.Element {
   const {data: userData, refetch} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
@@ -24,6 +25,9 @@ function Settings(): JSX.Element {
         </Route>
         <Route path={`${match.path}/notifications`}>
           <NotificationSettings user={userData.currentUser} refetch={() => refetch()}/>
+        </Route>
+        <Route path={`${match.path}/appearance`}>
+          <AppearanceSettings/>
         </Route>
         <Route path={`${match.path}/about`}>
           <About/>

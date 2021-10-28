@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { faBell, faCog, faInfoCircle, faLock, faSmile, faUser } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
+import { faBell, faCog, faInfoCircle, faLock, faPalette, faSmile, faUser } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import Divider from "../components/display/Divider";
 import MenuCollapsed from "../components/menu/MenuCollapsed";
@@ -30,6 +29,7 @@ function SettingsSidebar(props: ISettingsSidebarProps): JSX.Element {
     <Link className="link-button" to="/settings/security"><MenuItem icon={faLock}>Security</MenuItem></Link>
     <Link className="link-button" to="/settings/emojis"><MenuItem icon={faSmile}>Emojis</MenuItem></Link>
     <Link className="link-button" to="/settings/notifications"><MenuItem icon={faBell}>Notifications</MenuItem></Link>
+    <Link className="link-button" to="/settings/appearance"><MenuItem icon={faPalette}>Appearance</MenuItem></Link>
     <Divider/>
     <Link className="link-button" to="/settings/about"><MenuItem icon={faInfoCircle}>About Starship</MenuItem></Link>
   </>);

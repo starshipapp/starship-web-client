@@ -1,5 +1,4 @@
 import { Switch, Route, Router } from 'react-router-dom';
-import React from 'react';
 import './css/App.css';
 import { createBrowserHistory } from "history";
 import Home from './home/Home';
@@ -28,7 +27,7 @@ interface IAppProps {
 function App(props: IAppProps): JSX.Element {
   return (
     <Router history={history}>
-      <div className="flex w-screen h-screen">
+      <div className="flex w-screen h-screen dark:bg-gray-900">
         <Toaster position="bottom-right"/>
         <Unsupported/>
         <Debug/>
