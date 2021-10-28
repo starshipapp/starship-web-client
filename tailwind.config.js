@@ -17,6 +17,7 @@ module.exports = {
       },
       spacing: {
         'md': '28rem',
+        'registration-with-recaptcha': '29.5rem', // google is special
         'lg': '32rem',
         'xl': '36rem',
         '2xl': '42rem'

@@ -162,7 +162,7 @@ function Login(props: ILoginProps): JSX.Element {
           <img src={blackLogo} alt="logo" className="h-10 dark:hidden"/>  
         </div>
         <div className="bg-transparent rounded-xl shadow-lg flex">
-          <div className={`w-96 p-5 bg-gray-100 dark:bg-gray-800 rounded-lg transition-all overflow-hidden ${isRegistering ? "h-96" : "h-64"}`}>
+          <div className={`w-96 p-5 bg-gray-100 dark:bg-gray-800 rounded-lg transition-all overflow-hidden flex flex-col ${isRegistering ? (process.env.REACT_APP_RECAPTCHA_KEY ? "h-registration-with-recaptcha" : "h-96") : "h-64"}`}>
             {!isRegistering && <div>
               <div className="text-4xl font-extrabold -mt-1">Login</div>
               <Label className="mt-3">Username</Label>
@@ -201,7 +201,7 @@ function Login(props: ILoginProps): JSX.Element {
                 >Login</Button> 
               </div>
             </div>}
-            {isRegistering && <div>
+            {isRegistering && <div className="flex flex-col">
               <div className="text-4xl font-extrabold -mt-1">Register</div>
               <Label className="mt-3">Username</Label>
               <Textbox
@@ -238,7 +238,7 @@ function Login(props: ILoginProps): JSX.Element {
                   }
                 }}
               />
-              {process.env.REACT_APP_RECAPTCHA_KEY && <div className="Login-recaptcha">
+              {process.env.REACT_APP_RECAPTCHA_KEY && <div className="mx-auto mt-4">
                 <ReCAPTCHA
                   sitekey={process.env.REACT_APP_RECAPTCHA_KEY}
                   onChange={(value) => setRecaptcha(value ?? "")}
