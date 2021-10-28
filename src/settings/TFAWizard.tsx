@@ -29,7 +29,7 @@ function TFAWizard(props: ITFAWizardProps): JSX.Element {
   const [confirmTFA] = useMutation<IConfirmTFAMutation>(confirmTFAMutation);
  
   useEffect(() => {
-    if(!hasGeneratedTOTP && totpSecret === "") {
+    if(props.isOpen && !hasGeneratedTOTP && totpSecret === "") {
       hasGeneratedTOTP = true;
       generateTOTPSecret().then((data) => {
         if(data.data) {
@@ -53,7 +53,13 @@ function TFAWizard(props: ITFAWizardProps): JSX.Element {
         if(page === "finished") {
           props.onComplete();
         }
-        hasGeneratedTOTP = false;
+
+        // Reset the hasGeneratedTOTP flag
+        // We don't want to generate a new TOTP secret instantly because
+        // that would regenerate the secret.
+        setTimeout(() => {
+          hasGeneratedTOTP = false;
+        }, 200);
       }}
     >
       <DialogBody>
@@ -150,6 +156,13 @@ function TFAWizard(props: ITFAWizardProps): JSX.Element {
               if(page === "finished") {
                 props.onComplete();
               }
+              
+              // Reset the hasGeneratedTOTP flag
+              // We don't want to generate a new TOTP secret instantly because
+              // that would regenerate the secret.
+              setTimeout(() => {
+                hasGeneratedTOTP = false;
+              }, 200);
             }}
           >Finish</Button>            
         </div>}

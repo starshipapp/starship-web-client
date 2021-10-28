@@ -9,7 +9,7 @@ interface INonIdealStateProps extends HTMLProps<HTMLDivElement> {
 
 function NonIdealState(props: INonIdealStateProps): JSX.Element {
   return (
-    <div className={`w-full h-full flex ${props.className ?? ""}`} {...props}>
+    <div {...props} className={`w-full h-full flex ${props.className ?? ""}`}>
       <div className="m-auto">
         <div className="flex items-center flex-col">
           <div className="text-gray-500 dark:text-gray-400 mb-3">

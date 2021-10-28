@@ -1,22 +1,13 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { Button, Icon, Intent, NonIdealState } from "@blueprintjs/core";
-import axios from "axios";
-import React, { useRef, useState } from "react";
-import disableTFAMutation, { IDisableTFAMutation } from "../graphql/mutations/users/disableTFAMutation";
-import uploadProfilePictureMutation, { IUploadProfilePictureMutationData } from "../graphql/mutations/users/uploadProfilePictureMutation";
+import { useQuery } from "@apollo/client";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
-import fixPFP from "../util/fixPFP";
-import { GlobalToaster } from "../util/GlobalToaster";
-import TFAPrompt from "../util/TFAPrompt";
-import "./css/Settings.css";
-import TFAWizard from "./TFAWizard";
-import yn from 'yn';
 import { Route, Switch, useRouteMatch } from "react-router";
 import ProfileSettings from "./ProfileSettings";
 import SecuritySettings from "./SecuritySettings";
 import EmojiSettings from "./EmojiSettings";
 import NotificationSettings from "./NotificationSettings";
 import About from "./About";
+import NonIdealState from "../components/display/NonIdealState";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 function Settings(): JSX.Element {
   const {data: userData, refetch} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
@@ -45,7 +36,8 @@ function Settings(): JSX.Element {
   } else {
     return (
       <NonIdealState
-        icon="error"
+        className="dark:bg-gray-900"
+        icon={faExclamationTriangle}
         title="You're not logged in."
       />
     );

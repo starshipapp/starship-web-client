@@ -55,12 +55,12 @@ function App(props: IAppProps): JSX.Element {
           <Route path="/debug/components">
             <ComponentsTesting/>
           </Route>
+          <Route path="/login">
+            <Login forcefullyResetLink={props.forcefullyResetLink}/>
+          </Route>
           <Route>
             <MainSidebar context="home" forcefullyResetLink={props.forcefullyResetLink}/>
             <Switch>
-              <Route path="/login">
-                <Login forcefullyResetLink={props.forcefullyResetLink}/>
-              </Route>
               <Route path="/invite/:inviteId">
                 <Invite/>
               </Route>

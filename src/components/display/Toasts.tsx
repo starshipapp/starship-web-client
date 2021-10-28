@@ -4,7 +4,7 @@ import { toast } from "react-hot-toast";
 
 // a
 function success(message: string): void {
-  const toastId = toast.custom(<div className="max-w-xl px-2.5 py-1.5 bg-green-600 text-white flex shadow-lg rounded-full">
+  const toastId = toast.custom(<div className="max-w-xl pr-2.5 pl-3.5 py-1.5 bg-green-600 text-white flex shadow-lg rounded-full">
     <div>
       {message}
     </div>
@@ -15,7 +15,7 @@ function success(message: string): void {
 }
 
 function warning(message: string): void {
-  const toastId = toast.custom(<div className="max-w-xl px-2.5 py-1.5 bg-yellow-600 text-white flex shadow-lg rounded-full">
+  const toastId = toast.custom(<div className="max-w-xl pr-2.5 pl-3.5 py-1.5 bg-yellow-600 text-white flex shadow-lg rounded-full">
     <div>
       {message}
     </div>
@@ -26,7 +26,7 @@ function warning(message: string): void {
 }
 
 function danger(message: string): void {
-  const toastId = toast.custom(<div className="max-w-xl px-2.5 py-1.5 bg-red-600 text-white flex shadow-lg rounded-full">
+  const toastId = toast.custom(<div className="max-w-xl pr-2.5 pl-3.5 py-1.5 bg-red-600 text-white flex shadow-lg rounded-full">
     <div>
       {message}
     </div>
@@ -37,7 +37,7 @@ function danger(message: string): void {
 }
 
 function primary(message: string): void {
-  const toastId = toast.custom(<div className="max-w-xl px-2.5 py-1.5 bg-blue-600 text-white flex shadow-lg rounded-full">
+  const toastId = toast.custom(<div className="max-w-xl pr-2.5 pl-3.5 py-1.5 bg-blue-600 text-white flex shadow-lg rounded-full">
     <div>
       {message}
     </div>
@@ -48,7 +48,7 @@ function primary(message: string): void {
 }
 
 function regular(message: string): void {
-  const toastId = toast.custom(<div className="max-w-xl px-2.5 py-1.5 bg-gray-600 text-white flex shadow-lg rounded-full">
+  const toastId = toast.custom(<div className="max-w-xl pr-2.5 pl-3.5 py-1.5 bg-gray-600 text-white flex shadow-lg rounded-full">
     <div>
       {message}
     </div>

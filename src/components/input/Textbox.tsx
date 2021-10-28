@@ -35,14 +35,14 @@ function Textbox(props: ITextboxProps): JSX.Element {
   } else if(props.small) {
     className += " py-1 px-1.5";
   } else {
-    className += " py-1.5 px-2";
+    className += " py-1.5 px-2 text-sm";
   }
 
   if(props.disabled) {
     className += " disabled opacity-75 cursor-not-allowed";
   }
 
-  return <input {...props} type="input" className={className} />;
+  return <input {...props} type={props.type === "password" ? "password": "textbox"} className={className} />;
 }
 
 export default Textbox;

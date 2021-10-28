@@ -1,15 +1,16 @@
 import React from "react";
+import Page from "../components/layout/Page";
+import PageContainer from "../components/layout/PageContainer";
+import PageHeader from "../components/layout/PageHeader";
 import "./legal.css";
 
 function Privacy(): JSX.Element {
   return (
-    <div className="legal bp3-dark">
-      <div className="legal-header">
-        <div className="legal-header-text">
+    <Page>
+      <PageContainer>
+        <PageHeader>
           Privacy Policy
-        </div>
-      </div>
-      <div className="legal-container">
+        </PageHeader>
         <ul>
           <li>We store your email and IP address. We use it to identify you. We don't give it away.</li>
           <li>We won't give away your password, either.</li>
@@ -18,8 +19,8 @@ function Privacy(): JSX.Element {
           <li>We may log some stuff, and that may contain information like your username and email.</li>
           <li>Don't use the site in the EU. If you do, and come to us with some GDPR request, too bad. We told you not to use it.</li>
         </ul>
-      </div>
-    </div>
+      </PageContainer>
+    </Page>
   );
 }
 
