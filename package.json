@@ -70,6 +70,7 @@
     "rehype-katex": "^6.0.1",
     "remark-emoji": "^3.0.1",
     "remark-footnotes": "^4.0.1",
+    "remark-gfm": "^3.0.0",
     "remark-hint": "^1.0.10",
     "remark-math": "^5.1.0",
     "remark-slug": "^7.0.0",
