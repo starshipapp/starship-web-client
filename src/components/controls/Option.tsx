@@ -33,7 +33,7 @@ function Option(props: IOptionProps): JSX.Element {
 
   return (
     <div {...props} className={className}>
-      {props.icon && <div className={`ml-1 mr-1 my-auto flex items-center text-center content-center `}>
+      {props.icon && <div className={`ml-1 mr-1 my-auto pt-1 flex items-center text-center content-center `}>
         <div className={`text-center content-center ${props.description ? "w-8": "w-4"}`}>
           <FontAwesomeIcon icon={props.icon} size={props.description ? "2x" : undefined}/>
         </div> 

@@ -33,7 +33,7 @@ function PageComponent(props: IComponentProps): JSX.Element {
         {data?.page && <>
           <PageHeader>
             <span>{props.name}</span>
-            <div className="inline-block text-sm mt-auto ml-1">
+            <div className="inline-block text-sm mt-auto ml-1 mb-0.5">
               {(userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <Button
                 icon={faEdit}
                 onClick={() => {
@@ -57,7 +57,7 @@ function PageComponent(props: IComponentProps): JSX.Element {
               </Button>)}
             </div>
           </PageHeader>
-          {!isEditing && <Markdown planetEmojis={props.planet.customEmojis}>{data.page.content}</Markdown>}
+          {!isEditing && <Markdown planetEmojis={props.planet.customEmojis} longForm>{data.page.content}</Markdown>}
           {isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={memoizedOptions}/>}
         </>}
       </PageContainer>

@@ -34,7 +34,7 @@ const customEmojiPlugin: Plugin<[ICustomEmojiPluginOptions]> = function(options)
         value: match as string,
         data: {
           hName: 'img',
-          hProperties: { className: "Markdown-custom-emoji", src: emojiSearch[0].url }
+          hProperties: { className: "inline h-4 w-4", src: emojiSearch[0].url }
         },
       };
     } else {

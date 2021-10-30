@@ -1,9 +1,12 @@
 import { useMutation } from "@apollo/client";
-import { Intent, Spinner } from "@blueprintjs/core";
 import React, { useEffect } from "react";
 import { useHistory, useParams } from "react-router";
+import Toasts from "../components/display/Toasts";
+import Page from "../components/layout/Page";
+import PageContainer from "../components/layout/PageContainer";
+import PageHeader from "../components/layout/PageHeader";
+import PageSubheader from "../components/layout/PageSubheader";
 import activateEmailMutation, { IActivateEmailMutationData } from "../graphql/mutations/users/activateEmailMutation";
-import { GlobalToaster } from "../util/GlobalToaster";
 
 let activationStarted = false;
 
@@ -21,26 +24,32 @@ function Activate(): JSX.Element {
       activationStarted = true;
       const activationDataSplit = activationdata.split(":token:");
       if(activationDataSplit.length !== 2) {
-        GlobalToaster.show({message: "Invalid activation token.", intent: Intent.DANGER});
+        Toasts.danger("Invalid activation data.");
         return;
       }
       activateEmail({variables: {userId: activationDataSplit[0], token: activationDataSplit[1]}}).then(() => {
         history.push("/login");
-        GlobalToaster.show({message: "Sucessfully activated account. You may now login.", intent: Intent.SUCCESS});
+        Toasts.success("Your account has been activated.");
       }).catch((error: Error) => {
-        GlobalToaster.show({message: error.message, intent: Intent.DANGER});
+        Toasts.danger(error.message);
       });
     }
   });
 
   return (
-    <div className="Login">
-      <div className="Login-container">
-        <div className="Login-center">
-          <Spinner/>
-        </div>
-      </div>
-    </div>
+    <Page>
+      <PageContainer>
+        <PageHeader>
+          Activating your account...
+        </PageHeader>
+        <PageSubheader>
+          Please wait while we activate your account.
+        </PageSubheader>
+        <p>
+          If this takes more then a few seconds, please contact us.
+        </p>
+      </PageContainer>
+    </Page>
   );
 }
 

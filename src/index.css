@@ -2,36 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-a {
-  @apply dark:text-blue-400
-}
-
-h1 {
-  @apply text-5xl font-extrabold
-}
-
-h2 {
-  @apply text-3xl font-extrabold
-}
-
-h3 {
-  @apply text-2xl font-bold
-}
-
-h4 {
-  @apply text-xl font-bold
-}
-
-h5 {
-  @apply text-base font-bold
-}
-
-/* Disable link-highlighting for buttons */
-a.link-button {
-  color: inherit !important;
-  text-decoration: inherit !important;
-}
-
 /*body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

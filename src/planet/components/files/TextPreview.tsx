@@ -36,7 +36,7 @@ function TextPreview(props: ITextPreviewProps): JSX.Element {
         </div>
       </div>
       <div className="TextPreview-content">
-        {props.isMarkdown ? <Markdown>{text}</Markdown> : <div>{text}</div>}
+        {props.isMarkdown ? <Markdown longForm>{text}</Markdown> : <div>{text}</div>}
       </div>
     </div>
   );

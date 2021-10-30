@@ -27,6 +27,7 @@ interface IProfileSettingsProps {
 function ProfileSettings(props: IProfileSettingsProps): JSX.Element {
   const fileInput = useRef<HTMLInputElement>(null);
   const image = useRef<HTMLImageElement>(null);
+  const bannerImage = useRef<HTMLImageElement>(null);
   const [uploadProfilePicture] = useMutation<IUploadProfilePictureMutationData>(uploadProfilePictureMutation);
   const [updateProfileBio] = useMutation<IUpdateProfileBioMutationData>(updateProfileBioMutation);
   const [uploadProfileBanner] = useMutation<IUploadProfileBannerMutationData>(uploadProfileBannerMutation);
@@ -65,10 +66,10 @@ function ProfileSettings(props: IProfileSettingsProps): JSX.Element {
       }
       axios.put(data.data?.uploadProfileBanner, file, options).then(() => {
         props.refetch().then((data) => {
-          if(!image.current) {
+          if(!bannerImage.current) {
             return;
           }
-          image.current.src = String(data.data.currentUser.profileBanner ?? "") + "?t=" + String(Number(Date.now()));
+          bannerImage.current.src = String(data.data.currentUser.profileBanner ?? "") + "?t=" + String(Number(Date.now()));
         }).catch(() => {
           Toasts.danger("Unable to fetch new user data.");
         });
@@ -114,16 +115,16 @@ function ProfileSettings(props: IProfileSettingsProps): JSX.Element {
           <FontAwesomeIcon icon={faUpload} className="ProfileSettings-profilepic-icon opacity-0 transtion absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"/>
         </div>
         <PageSubheader>Banner</PageSubheader>
-        <div className={`ProfileSettings-banner h-24 w-96 shadow ${!props.user.profileBanner ? "bg-gray-200 dark:bg-gray-700" : ""} rounded-lg relative`} onClick={() => {
+        <div className={`ProfileSettings-banner h-36 w-xl shadow ${!props.user.profileBanner ? "bg-gray-200 dark:bg-gray-700" : ""} rounded-lg relative`} onClick={() => {
           setAction("banner");
           fileInput.current?.click();
         }}>
-          {props.user && props.user.profileBanner && <img alt="Change profile banner" src={fixPFP(props.user.profileBanner) + "?t=" + String(Number(Date.now()))} ref={image}/>}
+          {props.user && props.user.profileBanner && <img alt="Change profile banner" className="object-cover h-36 w-xl rounded-lg" src={fixPFP(props.user.profileBanner) + "?t=" + String(Number(Date.now()))} ref={bannerImage}/>}
           <FontAwesomeIcon icon={faUpload} className="ProfileSettings-profilepic-icontransition opacity-0 absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 hover:opacity-100"/>
         </div>
         <PageSubheader>Bio</PageSubheader>
         <TextArea
-          className="w-full mb-3"
+          className="w-full mb-3 h-48"
           placeholder="Type up to 2000 characters about yourself. Markdown supported." 
           onChange={(e) => setBio(e.target.value)}
           value={bio}

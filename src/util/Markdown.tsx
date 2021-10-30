@@ -6,7 +6,6 @@ import { SpecialComponents } from "react-markdown/lib/ast-to-react";
 // remark plugins
 import math from "remark-math";
 import emoji from "remark-emoji";
-import footnotes from "remark-footnotes";
 import toc from "remark-toc";
 // @ts-ignore
 import slug from "remark-slug";
@@ -27,8 +26,16 @@ import mentionPlugin from "./remark/mentionPlugin";
 
 interface IMarkdownProps {
   children: string
+  className?: string
   planetEmojis?: ICustomEmoji[]
   userEmojis?: ICustomEmoji[]
+  /**
+   * Optimize for long form text. This will increase the font size of the
+   * document to 16px inorder to make it more readable.
+   *
+   * @default false
+   */
+  longForm?: boolean
 }
 
 function Markdown(props: IMarkdownProps): JSX.Element {
@@ -45,9 +52,10 @@ function Markdown(props: IMarkdownProps): JSX.Element {
   return ( 
     <ReactMarkdown
       children={props.children}
-      remarkPlugins={[math, emoji, footnotes, hint, toc, slug, gfm, mentionPlugin, [customEmojiPlugin, {planetEmojis: props.planetEmojis, userEmojis: props.userEmojis}]]}
+      remarkPlugins={[math, emoji, hint, toc, slug, gfm, mentionPlugin, [customEmojiPlugin, {planetEmojis: props.planetEmojis, userEmojis: props.userEmojis}]]}
       rehypePlugins={[katex]}
       components={components}
+      className={`${props.longForm ? "text-document" : ""} ${props.className ?? ""}`}
     />
   );
 }

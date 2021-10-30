@@ -51,19 +51,19 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
     return (<></>);
   } else {
     return (<>
-      {data && <>
+      {data?.planet && <>
         <ModTools
           isOpen={showTools}
           onClose={() => setTools(false)}
           planet={data.planet}
         />
-        <ReportDialog
+        {data.planet.id && <ReportDialog
           isOpen={showReport} 
           onClose={() => setReport(false)}
           objectId={data.planet.id}
           objectType={reportObjectType.PLANET}
           userId={data.planet.owner?.id ?? ""}
-        />
+        />}
         <MenuCollapsed
           icon={data.planet.verified ? faCheckCircle : (data.planet.partnered ? faLink : (data.planet.featured ? faStar : faGlobe))} 
           title={data.planet.name ?? ""}

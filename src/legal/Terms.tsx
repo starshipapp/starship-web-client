@@ -7,7 +7,7 @@ import "./legal.css";
 function Terms(): JSX.Element {
   return (
     <Page>
-      <PageContainer>
+      <PageContainer className="text-document">
         <PageHeader>
           Terms of Service
         </PageHeader>

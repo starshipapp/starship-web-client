@@ -11,7 +11,7 @@ import "./legal.css";
 function Rules(): JSX.Element {
   return (
     <Page>
-      <PageContainer>
+      <PageContainer className="text-document">
         <PageHeader>
           Rules
         </PageHeader>

@@ -39,7 +39,7 @@ function Checkbox(props: ICheckboxProps): JSX.Element {
   if (props.minimal) {
     className += " bg-opacity-0 dark:bg-opacity-0 border-0";
   }
-
+  
   return ( 
     <input
       {...props}

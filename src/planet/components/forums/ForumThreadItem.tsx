@@ -203,7 +203,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
             >
               Save
             </Button>
-          </div> : <Markdown planetEmojis={props.planet.customEmojis} userEmojis={props.post.owner?.customEmojis}>{props.post.content ?? ""}</Markdown>}
+          </div> : <Markdown longForm planetEmojis={props.planet.customEmojis} userEmojis={props.post.owner?.customEmojis}>{props.post.content ?? ""}</Markdown>}
         </div>
         <div className="ForumThreadItem-bottom">
           <ButtonGroup>

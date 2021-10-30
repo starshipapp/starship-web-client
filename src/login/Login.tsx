@@ -18,7 +18,6 @@ import Textbox from "../components/input/Textbox";
 import Toasts from "../components/display/Toasts";
 import Button from "../components/controls/Button";
 import Intent from "../components/Intent";
-import { show } from "@blueprintjs/core/lib/esm/components/context-menu/contextMenu";
 
 let tfaToken = "";
 
@@ -276,6 +275,6 @@ function Login(props: ILoginProps): JSX.Element {
       </div>
     </div>
   );
- } 
+} 
 
 export default Login;

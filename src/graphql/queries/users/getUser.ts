@@ -17,6 +17,11 @@ const getUser = gql`
       banned
       createdAt
       online
+      customEmojis {
+        id
+        name
+        url
+      }
     }
   }
 `;

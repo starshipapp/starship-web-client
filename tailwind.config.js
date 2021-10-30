@@ -24,6 +24,9 @@ module.exports = {
       },
       outline: {
         'actual-none': 'none'
+      },
+      fontSize: {
+        'document': '11pt'
       }
     },
   },

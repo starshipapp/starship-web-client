@@ -1,10 +1,10 @@
 import { useQuery } from "@apollo/client";
-import {Alignment, Button, Classes, Navbar, NonIdealState} from "@blueprintjs/core";
 import { Route, Switch, useParams, useRouteMatch } from "react-router-dom";
 import getPlanet, { IGetPlanetData } from "../graphql/queries/planets/getPlanet";
-import yn from 'yn';
 import "./css/Planet.css";
 import PlanetContent from "./PlanetContent";
+import NonIdealState from "../components/display/NonIdealState";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 interface IPlanetParams {
   planet: string
@@ -17,13 +17,11 @@ interface IPlanetProps {
 function Planet(props: IPlanetProps): JSX.Element {
   const match = useRouteMatch();
   const {planet} = useParams<IPlanetParams>();
-  const {loading, data} = useQuery<IGetPlanetData>(getPlanet, {variables: {planet}, errorPolicy: 'all'});
+  const {data} = useQuery<IGetPlanetData>(getPlanet, {variables: {planet}, errorPolicy: 'all'});
 
   return (
     <div className="Planet">
-      {loading ? <>
-        <div className={`Planet-contentcontainer Planet-contentcontainer-skeleton ${Classes.SKELETON}`}/>
-      </> : (data?.planet ? <>
+      {data?.planet ? <>
         <Switch>
           <Route path={`${match.path}/:component/:subId/:page`}>
             <PlanetContent home={false} planet={data.planet}/>
@@ -40,10 +38,9 @@ function Planet(props: IPlanetProps): JSX.Element {
         </Switch>
       </> : <NonIdealState
         title="404"
-        icon="warning-sign"
-        description="It looks like this planet doesn't exist."
+        icon={faExclamationTriangle}
         className="Planet-404"
-      />)}
+      >It looks like this planet doesn't exist.</NonIdealState>}
     </div>
   );
 }

@@ -9,6 +9,7 @@ interface IPopoverProps extends HTMLProps<HTMLDivElement> {
   onClose: () => void;
   popoverTarget: JSX.Element;
   placement?: PopperPlacement;
+  popoverClassName?: string;
   fullWidth?: boolean;
 }
 
@@ -87,7 +88,7 @@ function Popover(props: IPopoverProps): JSX.Element {
               style={popper.styles.popper}
               {...popper.attributes.popper}
             >
-              <div className={`py-2 px-2 bg-gray-100 dark:bg-gray-800 rounded shadow-md text-black dark:text-white ${props.className ?? ""}`}>
+              <div className={`py-2 px-2 bg-gray-100 dark:bg-gray-800 rounded shadow-md text-black dark:text-white ${props.popoverClassName ?? ""}`}>
                 {props.children}
               </div>
             </div>

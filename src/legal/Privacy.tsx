@@ -6,7 +6,7 @@ import "./legal.css";
 
 function Privacy(): JSX.Element {
   return (
-    <Page>
+    <Page className="text-document">
       <PageContainer>
         <PageHeader>
           Privacy Policy

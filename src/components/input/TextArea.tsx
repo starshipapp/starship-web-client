@@ -31,11 +31,11 @@ function TextArea(props: ITextAreaProps): JSX.Element {
   }
 
   if(props.large) {
-    className += " text-xl py-3 px-3";
+    className += " text-base py-3 px-3";
   } else if(props.small) {
-    className += " py-2 px-2";
+    className += " py-2 px-2 text-sm";
   } else {
-    className += " py-3 px-3";
+    className += " py-3 px-3 text-sm";
   }
 
   if(props.disabled) {
