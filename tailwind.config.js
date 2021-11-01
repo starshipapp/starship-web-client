@@ -16,17 +16,29 @@ module.exports = {
         'auto-2xl': 'repeat(auto-fill, minmax(32rem, 1fr))'
       },
       spacing: {
+        '84': '21rem',
+        '88': '22rem',
+        '92': '23rem',
         'md': '28rem',
         'registration-with-recaptcha': '29.5rem', // google is special
         'lg': '32rem',
         'xl': '36rem',
-        '2xl': '42rem'
+        '2xl': '42rem',
+        '3xl': '48rem',
+        '4xl': '56rem',
+        '5xl': '64rem',
+        '6xl': '72rem',
+        '7xl': '80rem',
       },
       outline: {
         'actual-none': 'none'
       },
       fontSize: {
-        'document': '11pt'
+        'document': '11pt',
+        '2xs': '0.625rem'
+      },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(closest-side at 50% 50%, var(--tw-gradient-stops))'
       }
     },
   },

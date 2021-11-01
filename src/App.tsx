@@ -18,6 +18,7 @@ import Messages from './messages/Messages';
 import ComponentsTesting from './components/ComponentsTesting';
 import { Toaster } from 'react-hot-toast';
 import Debug from "./debugger/Debug";
+import Landing from './home/landing/Landing';
 const history = createBrowserHistory();
 
 interface IAppProps {
@@ -53,6 +54,9 @@ function App(props: IAppProps): JSX.Element {
           </Route>
           <Route path="/debug/components">
             <ComponentsTesting/>
+          </Route>
+          <Route path="/debug/landingtest">
+            <Landing/>
           </Route>
           <Route path="/login">
             <Login forcefullyResetLink={props.forcefullyResetLink}/>
