@@ -1,7 +1,5 @@
 import IPlanet from "../../types/IPlanet";
 import React, { useState } from "react";
-import "./css/AdminGeneral.css";
-import "./css/AdminExperimental.css";
 import { Button, Classes, FileInput, Intent, Popover } from "@blueprintjs/core";
 import { useMutation, useQuery } from "@apollo/client";
 import { GlobalToaster } from "../../util/GlobalToaster";

@@ -1,13 +1,18 @@
-import { ApolloError, useMutation, useQuery } from "@apollo/client";
-import { Button, Icon, Intent, NonIdealState } from "@blueprintjs/core";
-import React from "react";
+import { useMutation, useQuery } from "@apollo/client";
 import insertInviteMutation, { IInsertInviteMutationData } from "../../graphql/mutations/invites/insertInviteMutation";
 import IPlanet from "../../types/IPlanet";
-import { GlobalToaster } from "../../util/GlobalToaster";
-import MemberTableItem from "./MemberTableItem";
-import "./css/AdminMembers.css";
 import getPlanet, { IGetPlanetData } from "../../graphql/queries/planets/getPlanet";
 import removeInviteMutation, { IRemoveInviteMutationData } from "../../graphql/mutations/invites/removeInviteMutation";
+import SubPageHeader from "../../components/subpage/SubPageHeader";
+import List from "../../components/list/List";
+import ListItem from "../../components/list/ListItem";
+import ListNoItems from "../../components/list/ListNoItems";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBan, faPlus, faTrash, faUser } from "@fortawesome/free-solid-svg-icons";
+import Toasts from "../../components/display/Toasts";
+import Button from "../../components/controls/Button";
+import removeMemberMutation, { IRemoveMemberMutationData } from "../../graphql/mutations/planets/removeMemberMutation";
+import Intent from "../../components/Intent";
 
 interface IAdminMembersProps {
   planet: IPlanet
@@ -18,50 +23,87 @@ function AdminMembers(props: IAdminMembersProps): JSX.Element {
   const baseurl = window.location.protocol + "//" + window.location.host + "/invite/";
   const [insertInvite] = useMutation<IInsertInviteMutationData>(insertInviteMutation);
   const [removeInvite] = useMutation<IRemoveInviteMutationData>(removeInviteMutation);
+  const [removeMember] = useMutation<IRemoveMemberMutationData>(removeMemberMutation);
 
   const createInvite = function() {
     insertInvite({variables: {planetId: props.planet.id}}).then(() => {
-      GlobalToaster.show({message: "Successfully created invite.", intent: Intent.SUCCESS});
+      Toasts.success("Invite created.");
       void refetch();
     }).catch((err: Error) => {
-      GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+      Toasts.danger(err.message);
     });
   };
  
   return (
-    <div className="Admin-page  bp3-dark">
-      <h2>Members</h2>
-      <div className="AdminMembers-container">
-        <div>
-          <h3>Invites <Icon className="AdminMembers-add-icon" icon="plus" onClick={() => createInvite()}/></h3>
-          {props.planet.invites && props.planet.invites.length > 0 && <table className="AdminComponents-table">
-            <tbody>
-              {props.planet.invites.map((value) => (
-                <tr key={value.id}>
-                  <td className="AdminComponents-table-name"><a href={baseurl + value.id}>{baseurl + value.id}</a></td>
-                  <td className="AdminComponents-table-action"><Button intent="danger" small={true} minimal={true} icon="trash" onClick={() => {
-                    removeInvite({variables: {inviteId: value.id}}).then(() => {
-                      GlobalToaster.show({message: "Sucessfully removed invite.", intent: Intent.SUCCESS});
-                    }).catch((err: ApolloError) => {
-                      GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                    });
-                  }}/></td>
-                </tr>
-              ))}
-            </tbody>
-          </table>}
-        </div>
-        {props.planet.members && props.planet.members.length > 0 ? <table className="AdminComponents-table">
-          <tbody>
-            {props.planet.members.map((value) => (<MemberTableItem key={value.id} planetId={props.planet.id} userId={value.id}/>))}
-          </tbody>
-        </table> : <NonIdealState
-          icon="people"
-          title="No members!"
-          description="Members can edit and add content to the planet. Members can also always access the planet, even when it's in private mode."
-          action={<Button text="Create Invite" onClick={() => createInvite()}/>}
-        />}
-      </div>
+    <div className="w-full">
+      <SubPageHeader>Members</SubPageHeader>
+      <List
+        className="mb-3"
+        name={`${String(props.planet.members?.length ?? 0)} member${props.planet.members?.length === 1 ? "" : "s"}`}
+      >
+        {props.planet.members && props.planet.members.length > 0 ? props.planet.members.map((member) => {
+          return (
+            <ListItem
+              key={member.id}
+              actions={<Button
+                small
+                intent={Intent.DANGER}
+                icon={faBan}
+                onClick={() => {
+                  removeMember({variables: {planetId: props.planet.id, userId: member.id}}).then(() => {
+                    Toasts.success("Member removed.");
+                    void refetch();
+                  }).catch((err: Error) => {
+                    Toasts.danger(err.message);
+                  });
+                }}
+              />}
+            >{member.username}</ListItem>
+          );
+        }) : <ListNoItems
+          actions={<Button
+            small
+          >Create Invite</Button>}
+          icon={<FontAwesomeIcon icon={faUser}/>}
+        >No members</ListNoItems>}
+      </List>
+      <SubPageHeader>Invites</SubPageHeader>
+      <List
+        name={`${String(props.planet.invites?.length ?? 0)} invite${props.planet.invites?.length === 1 ? "" : "s"}`}
+        actions={<Button
+          small
+          minimal
+          onClick={createInvite}
+          icon={faPlus}
+        >Create Invite</Button>}
+      >
+        {props.planet.invites && props.planet.invites.length > 0 ? props.planet.invites.map((invite) => {
+          return (
+            <ListItem
+              key={invite.id}
+              actions={<Button
+                small
+                intent={Intent.DANGER}
+                icon={faTrash}
+                onClick={() => {
+                  removeInvite({variables: {inviteId: invite.id}}).then(() => {
+                    Toasts.success("Invite removed.");
+                    void refetch();
+                  }).catch((err: Error) => {
+                    Toasts.danger(err.message);
+                  });
+                }}
+              />}
+            ><a href={baseurl + invite.id}>{baseurl + invite.id}</a></ListItem>
+          );
+        }) : <ListNoItems
+          actions={<Button
+            small
+            onClick={createInvite}
+          >Create Invite</Button>}
+          icon={<FontAwesomeIcon icon={faUser}/>}
+        >No invites</ListNoItems>}
+      </List>
     </div>
   );
 }

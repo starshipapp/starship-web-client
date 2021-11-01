@@ -40,7 +40,7 @@ function MenuItem(props: IMenuItemProps): JSX.Element {
     <div className="px-3 py-1.5 w-full flex flex-row justify-between cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700" {...props}>
       <div className="flex items-center w-full">
         {props.icon && (
-          <div className="mr-1.5 w-5 text-center content-center">
+          <div className="mr-1.5 w-6 flex-shrink-0 text-center content-center">
             <FontAwesomeIcon
               className={`${descriptionClass}`}
               icon={props.icon}
@@ -48,8 +48,8 @@ function MenuItem(props: IMenuItemProps): JSX.Element {
             />
           </div>
         )}
-        <div className="flex-grow">
-          <div className={`font-semibold ${mainTextClass}`}>{props.children}</div>
+        <div className="w-full overflow-hidden">
+          <div className={`font-semibold overflow-ellipsis overflow-hidden whitespace-nowrap w-full ${mainTextClass}`}>{props.children}</div>
           {props.description && (
             <div className={descriptionClass}>{props.description}</div>
           )}

@@ -1,7 +1,5 @@
 import IPlanet from "../../types/IPlanet";
 import React, { useState } from "react";
-import "./css/AdminGeneral.css";
-import "./css/AdminExperimental.css";
 import { Button, Callout, Classes, Intent, TextArea } from "@blueprintjs/core";
 import { useMutation } from "@apollo/client";
 import setCSSMutation, { ISetCSSMutationData } from "../../graphql/mutations/planets/setCSSMutation";

@@ -10,23 +10,23 @@ interface ICalloutProps extends HTMLProps<HTMLDivElement> {
 }
 
 function Callout(props: ICalloutProps): JSX.Element {
-  let className = `px-3 py-3 rounded flex text-black dark:text-white ${props.className ?? ""}`;
+  let className = `px-3 py-3 rounded flex text-black bg-opacity-50 dark:bg-opacity-50 dark:text-white ${props.className ?? ""}`;
 
   switch (props.intent) {
     case Intent.SUCCESS:
-      className += " bg-green-300 dark:bg-green-700";
+      className += " bg-green-600";
       break;
     case Intent.WARNING:
-      className += " bg-yellow-300 dark:bg-yellow-700";
+      className += " bg-yellow-600";
       break;
     case Intent.DANGER:
-      className += " bg-red-300 dark:bg-red-700";
+      className += " bg-red-600";
       break;
     case Intent.PRIMARY:
-      className += " bg-blue-300 dark:bg-blue-700";
+      className += " bg-blue-600";
       break;
     default:
-      className += " bg-gray-200 dark:bg-gray-800";
+      className += " bg-gray-300 dark:bg-gray-600";
   }
 
   return (

@@ -1,8 +1,6 @@
-import React from "react";
 import Page from "../components/layout/Page";
 import PageContainer from "../components/layout/PageContainer";
 import PageHeader from "../components/layout/PageHeader";
-import "./legal.css";
 
 function Privacy(): JSX.Element {
   return (

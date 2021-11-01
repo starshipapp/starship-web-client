@@ -32,6 +32,7 @@ const getPlanet = gql`
       featuredDescription
       members {
         id
+        username
       }
       banned {
         id

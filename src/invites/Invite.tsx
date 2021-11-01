@@ -1,12 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React from "react";
 import { useHistory, useParams } from "react-router-dom";
 import Button from "../components/controls/Button";
 import Toasts from "../components/display/Toasts";
 import useInviteMutation, { IUseInviteMutationData } from "../graphql/mutations/invites/useInviteMutation";
 import getInvite, { IGetInviteData } from "../graphql/queries/invites/getInvite";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
-import "./css/Invite.css";
 
 interface IInviteParams {
   inviteId: string

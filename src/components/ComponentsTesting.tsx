@@ -27,11 +27,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Dialog from "./dialog/Dialog";
 import DialogBody from "./dialog/DialogBody";
 import DialogHeader from "./dialog/DialogHeader";
+import Confirm from "./dialog/Confirm";
 
 function ComponentsTesting(): JSX.Element {
   const [dark, setDark] = useState(true);
   const [showPopover, setShowPopover] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   return (
     <div className={`${dark ? "dark": ""}`}>
@@ -431,6 +433,25 @@ function ComponentsTesting(): JSX.Element {
                   </DialogBody>
                 </Dialog>
               </div> 
+            </div>
+            <div id="ComponentsTesting-confirm"/>
+              <PageSubheader>Confirm</PageSubheader>
+              <div>
+                <Label>Click the button to open the confirm.</Label>
+                <Button
+                  onClick={() => setShowConfirm(true)}
+                >Open Confirm</Button>
+                <Confirm
+                  open={showConfirm}
+                  onClose={() => setShowConfirm(false)}
+                  onConfirm={() => {
+                    Toasts.success("Confirmed!");
+                    setShowConfirm(false);
+                  }}
+                  confirmString="Example"
+                >
+                  You are about to <b>delete</b> this item.
+                </Confirm>
             </div>
             {/* wow this sure is stupid */}
             <div className="h-10"/>

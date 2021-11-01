@@ -1,12 +1,10 @@
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
 import Intent from "../components/Intent";
 import Page from "../components/layout/Page";
 import PageContainer from "../components/layout/PageContainer";
 import PageHeader from "../components/layout/PageHeader";
 import PageSubheader from "../components/layout/PageSubheader";
 import Callout from "../components/text/Callout";
-import "./legal.css";
 
 function Rules(): JSX.Element {
   return (

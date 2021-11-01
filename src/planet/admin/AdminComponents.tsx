@@ -1,13 +1,20 @@
 import { useMutation } from "@apollo/client";
-import { Button, Classes, Icon, Intent, Popover } from "@blueprintjs/core";
+import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import { useState } from "react";
+import Button from "../../components/controls/Button";
+import Toasts from "../../components/display/Toasts";
+import Textbox from "../../components/input/Textbox";
+import Intent from "../../components/Intent";
+import List from "../../components/list/List";
+import ListItem from "../../components/list/ListItem";
+import Popover from "../../components/overlays/Popover";
+import PopperPlacement from "../../components/PopperPlacement";
+import SubPageHeader from "../../components/subpage/SubPageHeader";
 import removeComponentMutation, { IRemoveComponentMutationData } from "../../graphql/mutations/planets/removeComponentMutation";
 import renameComponentMutation, { IRenameComponentMutationData } from "../../graphql/mutations/planets/renameComponentMutation";
 import IPlanet from "../../types/IPlanet";
-import { GlobalToaster } from "../../util/GlobalToaster";
 import ComponentIndex from "../ComponentIndex";
-import "./css/AdminComponents.css";
 
 interface IAdminComponentProps {
   planet: IPlanet
@@ -22,58 +29,76 @@ function AdminComponent(props: IAdminComponentProps): JSX.Element {
 
   const doRename = function(id: string) {
     renameComponent({variables: {planetId: props.planet.id, componentId: id, name: nameTextbox}}).then(() => {
+      Toasts.success(`Renamed component to ${nameTextbox} successfully.`);
       setPopoverId("");
     }).catch((err: Error) => {
-      GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+      Toasts.danger(err.message);
     });
   };
 
   return (
-    <div className="Admin-page bp3-dark">
-      <div>
-        <h2>Components</h2>
-        <div className="AdminComponents-container">
-          <table className="AdminComponents-table">
-            <tbody>
-              {props.planet.components?.map((value) => (
-                <tr key={value.componentId}>
-                  <td className="AdminComponents-table-name"><FontAwesomeIcon className="AdminComponents-table-name-icon" icon={ComponentIndex.ComponentDataTypes[value.type].icon}/> {value.name} <Popover isOpen={popoverId === value.componentId} onClose={() => setPopoverId("")}>
-                    <Icon className="AdminComponents-table-name-icon" icon="edit" onClick={() => {
-                      setPopoverId(value.componentId);
-                      setNameTextbox(value.name);
-                    }}/>
-                    <div className="menu-form">
-                      <input
-                        className={Classes.INPUT + " menu-input"}
-                        onKeyDown={(e) => {e.key === "Enter" && doRename(value.componentId);}}
-                        onChange={(e) => setNameTextbox(e.target.value)}
-                        value={nameTextbox}
-                      />
-                      <Button text="Rename" className="menu-button" onClick={() => doRename(value.componentId)}/>
-                    </div>
-                  </Popover></td>
-                  <td className="AdminComponents-table-action">
-                    <Popover isOpen={deletePopoverId === value.componentId} onClose={() => setDeleteId("")}>
-                      <Button intent="danger" className="AdminComponents-action-button" small={true} icon="trash" minimal={true} onClick={() => setDeleteId(value.componentId)}/>
-                      <div className="menu-form">
-                        <p>Are you sure?</p>
-                        <Button intent="danger" icon="trash" text="Delete" onClick={() => {
-                          deleteComponent({variables: {planetId: props.planet.id, componentId: value.componentId}}).then(() => {
-                            GlobalToaster.show({message: `Sucessfully deleted ${value.name}.`, intent: Intent.SUCCESS});
-                          }).catch((err: Error) => {
-                            GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                          });
-                        }}/>
-                      </div>
-                    </Popover>
-                    {/* ComponentIndex.ComponentDataTypes[value.type].settingsComponent? && <Button small={true} className="AdminComponents-action-button" icon="settings"/>*/}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div className="w-full">
+      <SubPageHeader>Components</SubPageHeader>
+      <List name={`${String(props.planet.components?.length) ?? "0"} components`}>
+        {props.planet.components?.map((component) => (
+          <ListItem
+            icon={<div className="w-6 flex">
+              <FontAwesomeIcon className="mx-auto" icon={ComponentIndex.ComponentDataTypes[component.type ?? "page"].icon}/>
+            </div>}
+            actions={<div className="flex">
+              <Popover
+                open={popoverId === component.componentId}
+                onClose={() => setPopoverId("")}
+                popoverTarget={<Button
+                  small
+                  icon={faEdit}
+                  onClick={() => setPopoverId(component.componentId)}
+                ></Button>}
+              >
+                <div className="flex">
+                  <Textbox
+                    placeholder="Name"
+                    value={nameTextbox}
+                    onChange={(e) => setNameTextbox(e.target.value)}
+                  />
+                  <Button
+                    className="ml-2"
+                    onClick={() => doRename(component.componentId)}
+                  >Rename</Button>
+                </div>
+              </Popover>
+              <Popover
+                open={deletePopoverId === component.componentId}
+                onClose={() => setDeleteId("")}
+                popoverTarget={<Button
+                  small
+                  className="ml-2"
+                  intent={Intent.DANGER}
+                  icon={faTrash}
+                  onClick={() => setDeleteId(component.componentId)}
+                ></Button>}
+                placement={PopperPlacement.bottomEnd}
+              >
+                <div className="flex">
+                  <p className="my-auto mr-2 ml-2">Are you sure you want to delete this component?</p>
+                  <Button
+                    className="ml-2"
+                    intent={Intent.DANGER}
+                    onClick={() => {
+                      deleteComponent({variables: {planetId: props.planet.id, componentId: component.componentId}}).then(() => {
+                        Toasts.success(`Deleted component ${component.name} successfully.`);
+                        setDeleteId("");
+                      }).catch((err: Error) => {
+                        Toasts.danger(err.message);
+                      });
+                    }}
+                  >Delete</Button>
+                </div>
+              </Popover>
+            </div>}
+          >{component.name}</ListItem>
+        ))}
+      </List>
     </div>
   );
 }
