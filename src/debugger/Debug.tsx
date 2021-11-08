@@ -12,9 +12,6 @@ function Debug(): JSX.Element {
     if(!hasAttached) {
       hasAttached = true;
       document.addEventListener("keypress", (e) => {
-        console.log(read);
-        console.log(e);
-        console.log(startReading);
         if(e.key === "~") {
           e.preventDefault();
           startReading = true;

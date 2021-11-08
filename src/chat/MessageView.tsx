@@ -8,8 +8,9 @@ import IMessage from "../types/IMessage";
 import { useEffect } from "react";
 import onMessageSent from "../graphql/subscriptions/components/onMessageSent";
 import IPlanet from "../types/IPlanet";
-import { NonIdealState } from "@blueprintjs/core";
 import permissions from "../util/permissions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCommentAlt } from "@fortawesome/free-solid-svg-icons";
 
 interface IMessageViewProps {
   channelId: string;
@@ -33,12 +34,10 @@ function MessageView(props: IMessageViewProps): JSX.Element {
         document: onMessageSent,
         variables: {channelId: props.channelId},
         updateQuery: (prev, {subscriptionData}) => {
-          console.log("af");
           if(!subscriptionData.data) return prev;
           const data = subscriptionData.data as unknown as {messageSent: IMessage};
           const messageWorkaround = prev.channel.messages?.messages ? prev.channel.messages?.messages : [];
           if(!data.messageSent) return prev;
-          console.log(data.messageSent);
           
           const newMessages = [data.messageSent, ...messageWorkaround];
 
@@ -60,21 +59,20 @@ function MessageView(props: IMessageViewProps): JSX.Element {
     }
   }, [data, subscribeToMore, props.channelId]);
 
-  console.log("bruh");
+
 
   return (
-    <div className="MessageView">
-      <div className="MessageView-message-container">
-        <div className="MessageView-messages">
+    <div className="flex h-full max-h-full flex-col flex-shrink overflow-y-auto overflow-x-hidden w-full">
+      <div className="flex max-h-full h-full overflow-y-auto flex-col-reverse">
+        <div className="flex-col-reverse flex mb-3 min-h-full">
           {data?.channel?.messages && data.channel.messages.messages.map((message: IMessage, index) => (
             <Message key={message.id} message={message} currentUser={props.currentUser} planet={props.planet} previousMessage={data.channel.messages?.messages[index + 1]} nextMessage={data.channel.messages?.messages[index - 1]}/>
           ))}
-          {data?.channel?.messages && data?.channel?.messages?.messages.length < 50 && <NonIdealState
-            icon="chat"
-            title={`Welcome to #${data.channel.name ?? "unknown_channel"}!`}
-            description={`This is the beginning of #${data.channel.name ?? "unknown_channel"}. Say hi!`}
-            className="MessageView-intro"
-          />}
+          {data?.channel?.messages && data?.channel?.messages?.messages.length < 50 && <div className="ml-4 mt-auto">
+            <FontAwesomeIcon icon={faCommentAlt} className="text-gray-600 dark:text-gray-300 mb-2" size="8x"/>
+            <div className="font-extrabold text-3xl">Welcome to #{data.channel.name}!</div>
+            <div className="text-document mt-1">This is the beginning of ${data.channel.name}. Say hi!</div>
+          </div>}
         </div>
       </div>
       {data?.channel && (props.planet ? (props.currentUser && permissions.checkPublicWritePermission(props.currentUser, props.planet)) : true) && <MessageViewTextbox channel={data.channel}/>}

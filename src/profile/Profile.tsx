@@ -36,8 +36,6 @@ function Profile(props: IProfileProps): JSX.Element {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isBlocked: boolean | undefined = currentData?.currentUser?.blockedUsers && (currentData.currentUser.blockedUsers.filter((value) => value.id === props.userId).length > 0);
- 
-  console.log(currentData);
 
   return (
     <Dialog

@@ -1,7 +1,7 @@
 import Intent from "./Intent";
 import Textbox from "./input/Textbox";
 import Label from "./text/Label";
-import { faDotCircle, faIcons } from "@fortawesome/free-solid-svg-icons";
+import { faDotCircle, faHome, faIcons } from "@fortawesome/free-solid-svg-icons";
 import Button from "./controls/Button";
 import Checkbox from "./controls/Checkbox";
 import { useState } from "react";
@@ -28,6 +28,8 @@ import Dialog from "./dialog/Dialog";
 import DialogBody from "./dialog/DialogBody";
 import DialogHeader from "./dialog/DialogHeader";
 import Confirm from "./dialog/Confirm";
+import Breadcrumbs from "./display/Breadcrumbs";
+import Breadcrumb from "./display/Breadcrumb";
 
 function ComponentsTesting(): JSX.Element {
   const [dark, setDark] = useState(true);
@@ -453,6 +455,20 @@ function ComponentsTesting(): JSX.Element {
                   You are about to <b>delete</b> this item.
                 </Confirm>
             </div>
+            <div id="ComponentsTesting-breadcrumb">
+              <PageSubheader>Breadcrumb</PageSubheader>
+              <Breadcrumbs>
+                <Breadcrumb icon={faHome}>
+                  Home
+                </Breadcrumb>
+                <Breadcrumb icon={faIcons}>
+                  Example
+                </Breadcrumb>
+                <Breadcrumb active icon={faIcons}>
+                  Active
+                </Breadcrumb>
+              </Breadcrumbs>
+            </div> 
             {/* wow this sure is stupid */}
             <div className="h-10"/>
           </PageContainer>
