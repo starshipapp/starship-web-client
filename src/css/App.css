@@ -1,3 +1,7 @@
+body {
+  overflow: hidden;
+}
+
 .App.bp3-dark {
   background-color: #30404d;
   color: #ffffff;
@@ -104,6 +108,17 @@ p {
   margin-top: 0;
 }
 
+/* make scrollbars consistent across browsers */
+::-webkit-scrollbar {
+  width: 0.75rem !important;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid rgba(0, 0, 0, 0);
+  border-radius: 0.5rem;
+  background-clip: padding-box;
+  @apply bg-gray-400 dark:bg-gray-600;
+}
 
 /* stylings required for markdown to display properly */
 a {

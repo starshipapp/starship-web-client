@@ -46,16 +46,6 @@ function Message(props: IMessageProps): JSX.Element {
       props.message.createdAt,
       props.message.owner,
     ]);
-
-  const isNextMessageRelated = useMemo(() => (!isPrevMessageRelated && props.nextMessage && 
-    props.nextMessage.owner?.username && props.nextMessage.createdAt && 
-    props.message.createdAt && props.nextMessage.owner === props.message.owner && 
-    lessThanHalfHour(new Date(Number(props.nextMessage.createdAt)), new Date(Number(props.message.createdAt)))), [
-      props.nextMessage,
-      props.message.createdAt,
-      props.message.owner,
-      isPrevMessageRelated
-    ]);
   
   console.count(props.message.id);
 
@@ -117,7 +107,7 @@ function Message(props: IMessageProps): JSX.Element {
             />
           </div>}
         </div>
-        <div className="Message-buttons hidden bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-500 absolute right-4 -top-3 rounded z-10">
+        <div className="Message-buttons hidden bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-600 absolute right-4 -top-3 rounded z-10 shadow">
           {(!props.planet || (props.currentUser && permissions.checkPublicWritePermission(props.currentUser, props.planet))) && <Button
             icon={faReply}
             small={true}

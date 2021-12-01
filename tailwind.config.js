@@ -8,7 +8,8 @@ module.exports = {
         'max-height': 'max-height'
       },
       gridTemplateColumns: {
-        'auto-xs': 'repeat(auto-fill, minmax(12rem, 1fr))',
+        'auto-2xs': 'repeat(auto-fill, minmax(12rem, 1fr))',
+        'auto-xs': 'repeat(auto-fill, minmax(14rem, 1fr))',
         'auto-sm': 'repeat(auto-fill, minmax(16rem, 1fr))',
         'auto-md': 'repeat(auto-fill, minmax(20rem, 1fr))',
         'auto-lg': 'repeat(auto-fill, minmax(24rem, 1fr))',
@@ -51,8 +52,10 @@ module.exports = {
       padding: ['dark'],
       borderRadius: ['dark']
     },
+    scrollbar: ['dark', 'rounded']
   },
   plugins: [
     require('@tailwindcss/forms'),
+    require('tailwind-scrollbar')
   ],
 }

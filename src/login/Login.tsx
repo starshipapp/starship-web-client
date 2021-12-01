@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, {useEffect, useState} from "react";
 import signInMutation, { ISignInMutationData } from "../graphql/mutations/users/signInMutation";
-import "./css/Login.css";
 import sha256 from 'crypto-js/sha256';
 import signUpMutation, { ISignUpMutationData } from "../graphql/mutations/users/signUpMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
@@ -43,7 +42,7 @@ function Login(props: ILoginProps): JSX.Element {
   const [recaptcha, setRecaptcha] = useState<string>("");
   const [showTFADialog, setTFADialog] = useState<boolean>(false);
 
-  const { client, loading, data } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+  const { client, loading } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
 
   const history = useHistory();
 

@@ -11,12 +11,10 @@ import Intent from "../../../components/Intent";
 import List from "../../../components/list/List";
 import ListItem from "../../../components/list/ListItem";
 import Popover from "../../../components/overlays/Popover";
-import PopperPlacement from "../../../components/PopperPlacement";
 import createChannelMutation, { ICreateChannelMutationData } from "../../../graphql/mutations/components/chats/createChannelMutation";
 import deleteChannelMutation, { IDeleteChannelMutationData } from "../../../graphql/mutations/components/chats/deleteChannelMutation";
 import renameChannelMutation, { IRenameChannelMutationData } from "../../../graphql/mutations/components/chats/renameChannelMutation";
 import IChannel from "../../../types/IChannel";
-import "./css/ChannelManager.css";
 
 interface IChannelManagerProps {
   isOpen: boolean;

@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Button, ButtonGroup, Classes, Divider, H2, Icon, InputGroup, Intent, Menu, MenuItem, NonIdealState, Popover, Position, ProgressBar, Text } from "@blueprintjs/core";
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import completeUploadMutation, { ICompleteUploadMutationData } from "../../../graphql/mutations/components/files/completeUploadMutation";
@@ -11,7 +10,6 @@ import getFileObject, { IGetFileObjectData } from "../../../graphql/queries/comp
 import getFiles, { IGetFilesData } from "../../../graphql/queries/components/files/getFiles";
 import getFolders, { IGetFoldersData } from "../../../graphql/queries/components/files/getFolders";
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
-import { GlobalToaster } from "../../../util/GlobalToaster";
 import permissions from "../../../util/permissions";
 import { reportObjectType } from "../../../util/reportTypes";
 import ReportDialog from "../../ReportDialog";
@@ -20,45 +18,65 @@ import { v4 } from "uuid";
 import axios, { AxiosRequestConfig, CancelTokenSource } from "axios";
 import FileBreadcrumbs from "./FileBreadcrumbs";
 import FileButton from "./FileButton";
-import "./css/FilesComponent.css";
 import FileListButton from "./FileListButton";
 import FileView from "./FileView";
-import isMobile from "../../../util/isMobile";
 import FileSearch from "./FileSearch";
 import ReadmeWrapper from "./ReadmeWrapper";
 import fileSize from "filesize";
 import cancelUploadMutation, { ICancelUploadMutationData } from "../../../graphql/mutations/components/files/cancelUploadMutation";
 import createMultiObjectDownloadTicketMutation, { ICreateMultiObjectDownloadTicketMutationData } from "../../../graphql/mutations/components/files/createMultiObjectDownloadTicketMutation";
 import Toasts from "../../../components/display/Toasts";
+import NonIdealState from "../../../components/display/NonIdealState";
+import { faArrowUp, faCalendar, faChevronUp, faCloudUploadAlt, faDownload, faExclamationCircle, faFile, faFlag, faFolderPlus, faTimes, faUpload, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Textbox from "../../../components/input/Textbox";
+import Divider from "../../../components/display/Divider";
+import Button from "../../../components/controls/Button";
+import Popover from "../../../components/overlays/Popover";
+import ProgressBar from "../../../components/display/ProgressBar";
+import Intent from "../../../components/Intent";
+import PopperPlacement from "../../../components/PopperPlacement";
 
 const uploading: Record<string, {name: string, progress: number, documentId: string, cancelToken: CancelTokenSource}> = {};
 
+let hasTimedOut = true;
+
 function FilesComponent(props: IComponentProps): JSX.Element {
+  // Queries
   const {data: userData, client, refetch: refetchUser} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const {data: objectData, loading: objectLoading} = useQuery<IGetFileObjectData>(getFileObject, {variables: {id: props.subId}, errorPolicy: 'all'});
   const {data: foldersData, refetch: foldersRefetch} = useQuery<IGetFoldersData>(getFolders, {variables: {componentId: props.id, parent: (props.subId ?? "root")}, errorPolicy: 'all', fetchPolicy: "cache-and-network"});
   const {data: filesData, refetch: filesRefetch} = useQuery<IGetFilesData>(getFiles, {variables: {componentId: props.id, parent: (props.subId ?? "root")}, errorPolicy: 'all', fetchPolicy: "cache-and-network"});
   const {refetch} = useQuery<IGetDownloadFileObjectData>(getDownloadFileObject, {variables: {fileId: props.subId}, errorPolicy: 'all', fetchPolicy: "no-cache"});
+  
+  // Mutations
   const [uploadFileM] = useMutation<IUploadFileObjectMutationData>(uploadFileObjectMutation);
   const [completeUpload] = useMutation<ICompleteUploadMutationData>(completeUploadMutation);
   const [moveObject] = useMutation<IMoveObjectMutationData>(moveObjectMutation);
   const [createFolder] = useMutation<ICreateFolderMutationData>(createFolderMutation);
   const [cancelUpload] = useMutation<ICancelUploadMutationData>(cancelUploadMutation);
   const [createTicket] = useMutation<ICreateMultiObjectDownloadTicketMutationData>(createMultiObjectDownloadTicketMutation);
+
+  // Refs
   const fileInput = useRef<HTMLInputElement>(null);
+
+  // State
   const [showReport, setReport] = useState<boolean>(false);
   const [newFolderTextbox, setNewFolderTextbox] = useState<string>("");
-  const [, setUploadUpdateCounter] = useState<number>(0);
+  const [, setUploadUpdateCounter] = useState<number>(0); // Used to force a re-render when uploading
   const [createFolderPrompt, setCreateFolderPrompt] = useState<boolean>(false);
-  const [listView, setListView] = useState<boolean>(window.localStorage.getItem("files.listView") === "true" ? true : false);
+  const [listView] = useState<boolean>(window.localStorage.getItem("files.listView") === "true" ? true : false);
   const [isDragging, setDragging] = useState<boolean>(false);
   const [searchTextbox, setSearchTextbox] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
   const [selected, setSelected] = useState<string[]>([]);
   const [total, setTotal] = useState<number>(0);
   const [completed, setCompleted] = useState<number>(0);
+  const [showUploading, setShowUploading] = useState<boolean>(false);
 
-  const date = objectData?.fileObject.createdAt ? new Date(Number(objectData?.fileObject.createdAt)) : new Date("2020-07-25T15:24:30+00:00");
+  console.log(selected);
+
+  const date = objectData?.fileObject?.createdAt ? new Date(Number(objectData?.fileObject.createdAt)) : new Date("2020-07-25T15:24:30+00:00");
   const fileDate = date.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
   const resetSearch = function() {
@@ -90,20 +108,20 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         setTotal(Object.keys(uploading).length);
         axios.put(data.data.uploadFileObject.uploadUrl, file, options).then(() => {
           completeUpload({variables: {objectId: data.data?.uploadFileObject.documentId}}).then(() => {
-            GlobalToaster.show({message: `Finished uploading ${file.name}.`, intent: Intent.SUCCESS});
+            Toasts.success(`${file.name} uploaded successfully.`);
             void filesRefetch();
             void refetchUser();
           }).catch((err: Error) => {
-            GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+            Toasts.danger(err.message);
           });
         }).catch((err: Error) => {
           if(err.message) {
-            GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+            Toasts.danger(err.message);
           }
         });
       }
     }).catch((err: Error) => {
-      GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+      Toasts.danger(err.message);
     });
   };
 
@@ -130,7 +148,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
                   void foldersRefetch();
                   void filesRefetch();
                 }).catch((err: Error) => {
-                  GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                  Toasts.danger(err.message);
                 });
               } else if (type === "application/json") {
                 const idArray: string[] = JSON.parse(stringValue) as string[] ?? [];
@@ -141,7 +159,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
                   void filesRefetch();
                     void client.cache.gc();
                   }).catch((err: Error) => {
-                    GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                    Toasts.danger(err.message);
                   });
                 }
               }
@@ -153,7 +171,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
   };
 
   const clickHandler = function(e?: React.MouseEvent<HTMLElement, MouseEvent>, id?: string) {
-    if(e?.ctrlKey && id) {
+    if(e?.ctrlKey && id && hasTimedOut) {
       e.preventDefault();
       if(!selected.includes(id)) {
         const newSelections = [...selected];
@@ -164,7 +182,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         newSelections.splice(newSelections.indexOf(id), 1);
         setSelected(newSelections);
       }
-    } else if(e?.shiftKey) {
+    } else if(e?.shiftKey && hasTimedOut) {
       e.preventDefault();
       if(selected.length !== 0) {
         if(selected.length === 1 && selected[0] === id) {
@@ -183,9 +201,14 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           }
         }
       }
-    } else if(selected.length !== 0) {
+    } else if(selected.length !== 0 && hasTimedOut) {
       setSelected([]);
     }
+  
+    hasTimedOut = false;
+    setTimeout(() => {
+      hasTimedOut = true;
+    }, 500);
   };
 
   const determineReadmeComponent = function(): (JSX.Element | undefined) {
@@ -204,6 +227,18 @@ function FilesComponent(props: IComponentProps): JSX.Element {
     }
   };
 
+  const createFolderButton = function() {
+    const parent = objectData?.fileObject ? objectData.fileObject.id : "root";
+    createFolder({variables: {componentId: props.id, parent, name: newFolderTextbox}}).then(() => {
+      void foldersRefetch();
+      Toasts.success(`Folder ${newFolderTextbox} created successfully.`);
+      setNewFolderTextbox("");
+      setCreateFolderPrompt(false);
+    }).catch((err: Error) => {
+      Toasts.danger(err.message);
+    });
+  };
+
   useEffect(() => {
     document.onclick = (e) => {
       if(document.getElementsByClassName("bp3-overlay-open").length > 0) {
@@ -215,13 +250,13 @@ function FilesComponent(props: IComponentProps): JSX.Element {
       if(!setSelected) {
         return;
       }
-      if(!(selected.length === 0)) {
+      if(!(selected.length === 0) && hasTimedOut) {
         const closestElement = document.elementFromPoint(e.clientX, e.clientY);
         if(!closestElement?.className) {
           return;
         }
         if(!closestElement?.className.includes("selected")) {
-          if(!closestElement?.className.includes("FileButton") || !closestElement.className.includes("FileListButton") || (!e.ctrlKey && !e.shiftKey)) {
+          if((!e.ctrlKey && !e.shiftKey)) {
             setSelected([]);
           }
         }
@@ -236,20 +271,19 @@ function FilesComponent(props: IComponentProps): JSX.Element {
   if(!objectData?.fileObject && !objectLoading && props.subId) {
     return (
       <div 
-        className="bp3-dark FilesComponent"
+        className="w-full h-full flex"
       >
         <NonIdealState
+          icon={faExclamationCircle}
           title="404"
-          icon="error"
-          description="The requested file/folder could not be found."
-        />
+        >The requested file/folder could not be found.</NonIdealState>
       </div>
     );
   }
 
   return (
     <div 
-      className={`bp3-dark FilesComponent`}
+      className={`bp3-dark w-full h-full flex flex-col text-black dark:text-white`}
       onDragOver={(e) => {
         e.preventDefault();
         if(e.dataTransfer.items[0] && e.dataTransfer.items[0].kind === "file") {
@@ -258,7 +292,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
       }}
     >
       {objectData?.fileObject && <ReportDialog isOpen={showReport} onClose={() => setReport(false)} objectId={objectData.fileObject.id} objectType={reportObjectType.FILE} userId={objectData.fileObject.owner?.id ?? ""}/>}
-      {isDragging && <div className="FilesComponent-drop-bg"
+      {isDragging && <div className="block absolute top-0 left-0 w-screen h-screen z-50 bg-gray-600 bg-opacity-50"
         onDrop={(e) => onDrop(e, false)}
         onDragLeave={(e) => {
           e.preventDefault();
@@ -273,7 +307,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           setDragging(false);
         }}
       />}
-      {isDragging && <div className="FilesComponent-drop-icon"
+      {isDragging && <div className="block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-center z-50 pointer-events-none"
         onDrop={(e) => onDrop(e, false)}
         onDragLeave={(e) => {
           e.preventDefault();
@@ -288,10 +322,10 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           setDragging(false);
         }}
       >
-        <Icon intent={Intent.SUCCESS} icon="cloud-upload" iconSize={200}/>
-        <H2>Drop file to upload.</H2>
+        <FontAwesomeIcon icon={faCloudUploadAlt} size="10x" className="text-black dark:text-green-600"/>
+        <h2>Drop file to upload.</h2>
       </div>}
-      <div className="FilesComponent-top">
+      <div className="w-full flex p-2 border-b border-gray-300 dark:border-gray-600">
         <input
           type="file"
           ref={fileInput}
@@ -309,43 +343,45 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           multiple
         />
         {(objectData?.fileObject || !props.subId) && <FileBreadcrumbs name={props.name} path={objectData?.fileObject.path ? objectData.fileObject.path.concat([objectData.fileObject.id]) : ["root"]} componentId={props.id} planetId={props.planet.id} resetSearch={resetSearch}/>}
-        {(objectData?.fileObject || !props.subId) && (objectData?.fileObject.type === "folder" || !props.subId) && <InputGroup 
-          leftIcon="search"
+        {(objectData?.fileObject || !props.subId) && <Textbox
+          placeholder="Search"
+          className="flex-grow-0 mr-2"
+          small
           value={searchTextbox}
-          placeholder="Search..."
-          className={Classes.MINIMAL}
           onKeyDown={(e) => {
             if(e.key === "Enter") {
               if(searchTextbox.length < 3 && searchTextbox !== "") {
-                GlobalToaster.show({message: "Search term must be at least 3 characters long.", intent: Intent.DANGER});
+                Toasts.danger("Search term must be at least 3 characters long.");
+              } else if(searchTextbox.length === 0) {
+                resetSearch();
               } else {
                 setSearchText(searchTextbox);
               }
             }
           }}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          onChange={(e) => {
             setSearchTextbox(e.target.value);
           }}
-          rightElement={searchText !== "" ? <Button minimal={true} small={true} icon="cross" onClick={() => {
-            resetSearch();
-          }}/> : undefined}
         />}
         <Divider/>
-        {objectData?.fileObject && objectData?.fileObject.type === "file" && <ButtonGroup minimal={true} className="FilesComponent-top-actions">
-          <Button text="Download" icon="download" onClick={() => {
-            refetch().then((data) => {
-              if(data.data) {
-                window.open(data.data.downloadFileObject, "_self");
-              }
-            }).catch((err: Error) => {
-              GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-            });
-          }}/>
-          {userData?.currentUser && <Button text="Report" icon="flag" onClick={() => setReport(true)}/>}
-        </ButtonGroup>}
+        {objectData?.fileObject && objectData?.fileObject.type === "file" && <div>
+          <Button
+            icon={faDownload}
+            minimal
+            onClick={() => {
+              refetch().then((data) => {
+                if(data.data) {
+                  window.open(data.data.downloadFileObject, "_self");
+                }
+              }).catch((err: Error) => {
+                Toasts.danger(err.message);
+              });
+            }}
+          >Download</Button>
+          {userData?.currentUser && <Button icon={faFlag} minimal onClick={() => setReport(true)}>Report</Button>}
+        </div>}
         {objectData?.fileObject && objectData?.fileObject.type === "folder" && filesData?.files && <Button
-          text="Download Folder"
-          icon="download"
+          icon={faDownload}
           minimal
           onClick={() => {
             const files: string[] = filesData.files.map((value) => value.id);
@@ -358,53 +394,58 @@ function FilesComponent(props: IComponentProps): JSX.Element {
               Toasts.danger(e.message);
             });
           }}
-        />}
-        {userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet) && ((objectData?.fileObject && objectData.fileObject.type === "folder") || !props.subId) && <ButtonGroup minimal={true} className="FilesComponent-top-actions">
-          <Button text={!isMobile() ? "Upload Files": ""} icon="upload" onClick={() => {
-            if(fileInput) {
-              fileInput.current?.click();
-            }
-          }}/>
-          <Popover isOpen={createFolderPrompt} onClose={() => setCreateFolderPrompt(false)}>
-            <Button text={!isMobile() ? "New Folder": ""} icon="folder-new" onClick={() => setCreateFolderPrompt(true)}/>
-            <div className="menu-form">
-              <input className={Classes.INPUT + " menu-input"} value={newFolderTextbox} onChange={(e) => setNewFolderTextbox(e.target.value)}/>
-              <Button text="Create" className="menu-button" onClick={() => {
-                const parent = objectData?.fileObject ? objectData.fileObject.id : "root";
-                createFolder({variables: {componentId: props.id, parent, name: newFolderTextbox}}).then(() => {
-                  void foldersRefetch();
-                  GlobalToaster.show({message: `Created folder "${newFolderTextbox}"`, intent: Intent.SUCCESS});
-                  setNewFolderTextbox("");
-                  setCreateFolderPrompt(false);
-                }).catch((err: Error) => {
-                  GlobalToaster.show({message: ``, intent: Intent.DANGER});
-                });
-              }}/>
+        >Download Folder</Button>}
+        {userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet) && ((objectData?.fileObject && objectData.fileObject.type === "folder") || !props.subId) && <>
+          <Button 
+            icon={faUpload}
+            minimal
+            onClick={() => {
+              if(fileInput) {
+                fileInput.current?.click();
+              }
+            }}
+          >Upload</Button>
+          <Popover
+            open={createFolderPrompt}
+            onClose={() => setCreateFolderPrompt(false)}
+            className="h-full" 
+            popoverTarget={<Button icon={faFolderPlus} minimal onClick={() => setCreateFolderPrompt(true)}>Create Folder</Button>}
+          >
+            <div className="flex">
+              <Textbox
+                placeholder="Folder name"
+                value={newFolderTextbox}
+                onChange={(e) => setNewFolderTextbox(e.target.value)}
+                onKeyDown={(e) => {
+                  if(e.key === "Enter") {
+                    createFolderButton(); 
+                  }
+                }}
+              />
+              <Button
+                icon={faFolderPlus}
+                className="ml-2"
+                onClick={() => {
+                  createFolderButton();
+                }}
+              >Create</Button>
             </div>
           </Popover>
-          {/* props.subId && <Divider/>*/}
-          {/* this.props.subId && <Button text="Download Folder" icon="download" onClick={this.downloadZip}/>*/}
-        </ButtonGroup>}
-        <Popover>
-            <Button icon="settings" minimal={true}/>
-            <Menu>
-              <MenuItem icon={listView ? "tick" : "cross"} text="List View" onClick={() => {
-                setListView(!listView);
-                window.localStorage.setItem("files.listView", String(!listView));
-              }}/>
-            </Menu>
-          </Popover>
+        </>}
       </div>
-      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && !listView && <div className="FilesComponent-button-container">
-        {props.subId && objectData && <Link to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
-          <Button
-            alignText="left"
-            className="FilesComponent-filebutton"
-            icon="arrow-up"
-            text="../"
-            large={true}
+      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && !listView && <div
+        className="grid grid-cols-auto-xs w-full p-1"
+      >
+        {props.subId && objectData && <Link className="link-button" to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
+          <div
+            className={`transition-all duration-200 flex bg-gray-200 ring-1 ring-gray-300 hover:bg-gray-300 dark:bg-gray-700 dark:ring-gray-600 dark:hover:bg-gray-600 
+            active:bg-gray-400 dark:active:bg-gray-800 px-3 py-2 text-base rounded-sm m-2 overflow-hidden leading-tight outline-none focus:outline-none focus:ring-blue-300 
+            focus:ring-1 dark:focus:ring-blue-600 shadow-md active:shadow-sm`}
             onDrop={(e) => onDrop(e, true)}
-          />
+          >
+            <FontAwesomeIcon className="my-auto mr-2 text-gray-600 dark:text-gray-300" icon={faArrowUp}/>
+            <div className="whitespace-nowrap overflow-hidden overflow-ellipsis">../</div>
+          </div>
         </Link>}
         {foldersData?.folders.map((value) => (<FileButton
           planet={props.planet}
@@ -430,7 +471,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
       {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && listView && <div className="FilesComponent-list-table">
         {props.subId && objectData && <Link className="link-button" to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
           <div className="FileListButton" onDrop={(e) => onDrop(e, true)}>
-            <div><Icon className="FileListButton-icon" icon="arrow-up"/>../</div>
+            <div><FontAwesomeIcon className="FileListButton-icon" icon={faArrowUp}/>../</div>
           </div>
         </Link>}
         {foldersData?.folders.map((value) => (<FileListButton 
@@ -475,38 +516,42 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         </div>}
         {objectData && objectData.fileObject.type === "folder" && <Divider/>}
         {objectData && <div className="FilesComponent-statusbar-objectinfo">
-          <Icon icon="user"/>
+          <FontAwesomeIcon icon={faUser}/>
           <span>{objectData.fileObject.owner?.username}</span>
-          <Icon icon="time"/>
+          <FontAwesomeIcon icon={faCalendar}/>
           <span>{fileDate}</span>
           {objectData.fileObject.size && <>
-            <Icon icon="folder-open"/>
+            <FontAwesomeIcon icon={faFile}/>
             <span>{fileSize(objectData.fileObject.size ?? 0)}</span>
           </>}
         </div>}
         <div className="FilesComponent-uploading">
           {Object.values(uploading).length !== 0 && <div className="FilesComponent-uploading-container">
-            <Icon className="FilesComponent-uploading-icon FilesComponent-uploading-icon-first" iconSize={16} icon="upload"/>
-            <ProgressBar className="FilesComponent-uploading-progress" intent={Intent.PRIMARY} value={completed / total}/>
-            <Popover position={Position.TOP_LEFT}>
-              <Icon className="FilesComponent-uploading-icon" iconSize={16} icon="chevron-up"/>
+            <FontAwesomeIcon icon={faUpload}/>
+            <ProgressBar className="FilesComponent-uploading-progress" intent={Intent.PRIMARY} progress={completed / total}/>
+            <Popover
+              popoverTarget={<FontAwesomeIcon icon={faChevronUp} onClick={() => setShowUploading(true)}/>}
+              onClose={() => setShowUploading(false)}
+              placement={PopperPlacement.topEnd}
+              open={showUploading}
+            >
               <div className="FilesComponent-uploading-info-container">
                 {Object.values(uploading).map((value, index) => (<div key={index} className="FilesComponent-uploading-info">
                   <div className="FilesComponent-uploading-info-top">
-                    <Text className="FilesComponent-uploading-info-name">{value.name}</Text>
-                    <Icon className="FilesComponent-uploading-info-cancel" icon="cross" onClick={() => {
+                    <div className="FilesComponent-uploading-info-name">{value.name}</div>
+                    <FontAwesomeIcon className="FilesComponent-uploading-info-cancel" icon={faTimes} onClick={() => {
                       value.cancelToken.cancel();
                       cancelUpload({variables: {objectId: value.documentId}}).then(() => {
-                        GlobalToaster.show({message: `Upload of ${value.name} canceled.`, intent: Intent.SUCCESS});
+                        Toasts.success(`Upload of ${value.name} cancelled.`);
                         delete uploading[Object.keys(uploading)[index]];
                         setTotal(Object.keys(uploading).length);
                         setUploadUpdateCounter(Math.random() * 300000000);
                       }).catch((err: Error) => {
-                        GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                        Toasts.danger(err.message);
                       });
                     }}/>
                   </div>
-                  <ProgressBar className="FilesComponent-uploading-info" value={value.progress} intent={Intent.PRIMARY}/>
+                  <ProgressBar className="FilesComponent-uploading-info" progress={value.progress} intent={Intent.PRIMARY}/>
                 </div>))}
               </div>
             </Popover>

@@ -6,7 +6,6 @@ import getNotifications, { IGetNotificationsData } from "../graphql/queries/misc
 import IconNameToProp from "../util/IconNameToProp";
 import IUser from "../types/IUser";
 import Markdown from "../util/Markdown";
-import "./css/NotificationPanel.css";
 import Page from "../components/layout/Page";
 import PageContainer from "../components/layout/PageContainer";
 import PageHeader from "../components/layout/PageHeader";

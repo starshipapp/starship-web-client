@@ -82,8 +82,7 @@ function Popover(props: IPopoverProps): JSX.Element {
             <div
               ref={(element) => {
                 setPopperElement(element);
-              }
-              }
+              }}
               className="z-50"
               style={popper.styles.popper}
               {...popper.attributes.popper}

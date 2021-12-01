@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "./css/Login.css";
 import { useMutation } from "@apollo/client";
 import resetPasswordMutation, { IResetPasswordMutationData } from "../graphql/mutations/users/resetPasswordMutation";
 import { useHistory, useParams } from "react-router";

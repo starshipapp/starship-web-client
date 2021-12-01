@@ -3,7 +3,6 @@ import getChannel, { IGetChannelData } from "../graphql/queries/components/chat/
 import IUser from "../types/IUser";
 import Message from "./Message";
 import MessageViewTextbox from "./MessageViewTextbox";
-import "./css/MessageView.css";
 import IMessage from "../types/IMessage";
 import { useEffect } from "react";
 import onMessageSent from "../graphql/subscriptions/components/onMessageSent";
@@ -63,7 +62,7 @@ function MessageView(props: IMessageViewProps): JSX.Element {
 
   return (
     <div className="flex h-full max-h-full flex-col flex-shrink overflow-y-auto overflow-x-hidden w-full">
-      <div className="flex max-h-full h-full overflow-y-auto flex-col-reverse">
+      <div className="flex max-h-full h-full overflow-y-auto flex-col-reverse scrollbar scrollbar-track-white scrollbar-thumb-gray-400 dark:scrollbar-track-gray-900 dark:scrollbar-thumb-gray-600">
         <div className="flex-col-reverse flex mb-3 min-h-full">
           {data?.channel?.messages && data.channel.messages.messages.map((message: IMessage, index) => (
             <Message key={message.id} message={message} currentUser={props.currentUser} planet={props.planet} previousMessage={data.channel.messages?.messages[index + 1]} nextMessage={data.channel.messages?.messages[index - 1]}/>

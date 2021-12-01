@@ -1,7 +1,10 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Alert, Button, Classes, ContextMenu, Intent, Menu, MenuItem, Popover, PopoverPosition, Tooltip } from "@blueprintjs/core";
+import { Alert, Button, Classes, ContextMenu, Intent, Menu, MenuItem, Popover, PopoverPosition } from "@blueprintjs/core";
+import { faFile, faFolder } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import Tooltip from "../../../components/display/Tooltip";
 import deleteFileObjectMutation, { IDeleteFileObjectMutationData } from "../../../graphql/mutations/components/files/deleteFileObjectMutation";
 import moveObjectMutation, { IMoveObjectMutationData } from "../../../graphql/mutations/components/files/moveObjectMutation";
 import renameObjectMutation from "../../../graphql/mutations/components/files/renameObjectMutation";
@@ -60,7 +63,7 @@ function FileButton(props: IFileButtonProps): JSX.Element {
       <br/>
       &apos;{props.object.name}&apos;{(props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id) && ` and ${props.selections.length - 1} other${props.selections.length > 2 ? "s" : " file"}`} will be lost forever! (A long time!)
       </Alert>
-      <Tooltip content={props.object.name} inheritDarkTheme={true}>
+      <Tooltip content={props.object.name ?? "unknown"} fullWidth>
         <Link 
           className="link-button" to={`/planet/${props.planet.id}/${props.componentId}/${props.object.id}`}
           onDragStart={(e) => {
@@ -73,9 +76,8 @@ function FileButton(props: IFileButtonProps): JSX.Element {
             }
           }}
         >
-          <Button
+          <div
             draggable={true}
-            alignText="left"
             onContextMenu={(e) => {
               const hasWritePermission = userData?.currentUser && permissions.checkFullWritePermission(userData.currentUser, props.planet); 
               e.preventDefault();
@@ -100,10 +102,12 @@ function FileButton(props: IFileButtonProps): JSX.Element {
                 props.onClick(e, props.object.id);
               }
             }}
-            large={true}
-            className={`FilesComponent-filebutton ${props.selections && props.selections.includes(props.object.id) ? "FilesComponent-filebutton-selected" : ""}`}
-            icon={props.object.type === "folder" ? "folder-close" : "document"}
-            text={props.object.name}
+            className={`transition-all duration-200 flex ring-1 ring-gray-300 px-3 py-2 text-base rounded-sm m-2 overflow-hidden leading-tight outline-none focus:outline-none focus:ring-blue-300 
+            focus:ring-1 dark:focus:ring-blue-600 shadow-md active:shadow-sm ${props.selections && props.selections.includes(props.object.id) ? `
+              bg-blue-400 hover:bg-blue-300 dark:bg-blue-700 dark:ring-blue-600 dark:hover:bg-blue-600 active:bg-blue-500 dark:active:bg-blue-700
+            ` : `
+              bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:ring-gray-600 dark:hover:bg-gray-600 active:bg-gray-400 dark:active:bg-gray-800
+            `}`}
             onDrop={(e) => {
               e.preventDefault();
               e.stopPropagation();
@@ -135,6 +139,8 @@ function FileButton(props: IFileButtonProps): JSX.Element {
             }}
             id={props.object.id}
           >
+            <FontAwesomeIcon className="my-auto mr-2 text-gray-600 dark:text-gray-300" icon={props.object.type === "folder" ? faFolder : faFile}/>
+            <div className="whitespace-nowrap overflow-hidden overflow-ellipsis">{props.object.name}</div>
             <Popover isOpen={rename} position={PopoverPosition.AUTO_START} onClose={() => setRename(false)}>
               <div className="FilesComponent-dummytarget"></div>
               <div className="menu-form" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()} onKeyPress={(e) => e.stopPropagation()} onKeyUp={(e) => e.stopPropagation()}>
@@ -149,7 +155,7 @@ function FileButton(props: IFileButtonProps): JSX.Element {
                 }}/>
               </div>
             </Popover>
-          </Button>
+          </div>
         </Link>
       </Tooltip>
     </div>

@@ -30,6 +30,8 @@ import DialogHeader from "./dialog/DialogHeader";
 import Confirm from "./dialog/Confirm";
 import Breadcrumbs from "./display/Breadcrumbs";
 import Breadcrumb from "./display/Breadcrumb";
+import Tooltip from "./display/Tooltip";
+import ContextMenu from "./controls/ContextMenu";
 
 function ComponentsTesting(): JSX.Element {
   const [dark, setDark] = useState(true);
@@ -436,10 +438,10 @@ function ComponentsTesting(): JSX.Element {
                 </Dialog>
               </div> 
             </div>
-            <div id="ComponentsTesting-confirm"/>
+            <div id="ComponentsTesting-confirm">
               <PageSubheader>Confirm</PageSubheader>
               <div>
-                <Label>Click the button to open the confirm.</Label>
+                <Label>Click the button to open the prompt.</Label>
                 <Button
                   onClick={() => setShowConfirm(true)}
                 >Open Confirm</Button>
@@ -454,6 +456,7 @@ function ComponentsTesting(): JSX.Element {
                 >
                   You are about to <b>delete</b> this item.
                 </Confirm>
+              </div>
             </div>
             <div id="ComponentsTesting-breadcrumb">
               <PageSubheader>Breadcrumb</PageSubheader>
@@ -468,6 +471,40 @@ function ComponentsTesting(): JSX.Element {
                   Active
                 </Breadcrumb>
               </Breadcrumbs>
+            </div> 
+            <div id="ComponentsTesting-tooltip">
+              <PageSubheader>Tooltip</PageSubheader>
+              <div>
+                
+                <Tooltip content="Example Tooltip" fullWidth>
+                  <div className="w-full text-center bg-blue-500 text-white rounded text-2xl font-bold py-10">
+                    Hover over me!
+                  </div>
+                </Tooltip>
+              </div>
+            </div>
+            <div id="ComponentsTesting-contextmenu">
+              <PageSubheader>Context Menu</PageSubheader>
+              <div>
+                <ContextMenu
+                  menu={<>
+                    <MenuItem icon={faIcons}>
+                      Example
+                    </MenuItem>
+                    <MenuItem intent={Intent.DANGER} icon={faIcons}>
+                      Example
+                    </MenuItem>
+                    <MenuItem intent={Intent.WARNING} icon={faIcons}>
+                      Example
+                    </MenuItem>
+                  </>}
+                  fullWidth
+                >
+                  <div className="w-full text-center bg-blue-500 text-white rounded text-2xl font-bold py-10">
+                    Right click me!
+                  </div>
+                </ContextMenu>
+              </div>
             </div> 
             {/* wow this sure is stupid */}
             <div className="h-10"/>

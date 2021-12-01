@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { faCamera, faCaretDown, faEdit, faHashtag, faMapPin, faThumbtack, faWrench } from "@fortawesome/free-solid-svg-icons";
+import { faCamera, faCaretDown, faEdit, faHashtag, faThumbtack, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { Link } from "react-router-dom";
@@ -72,7 +72,8 @@ function ChatComponent(props: IComponentProps): JSX.Element {
           >
             {data?.chat?.channels && data?.chat?.channels.map((channel) => (
               <Link to={`/planet/${props.planet.id}/${props.id}/${channel.id}`} key={channel.id} className="link-button">
-                <MenuItem 
+                <MenuItem
+                  onClick={() => setIsSwitchOpen(false)}
                   icon={channel.type === 1 ? faCamera : faHashtag}
                 >{channel.name}</MenuItem>
               </Link>

@@ -1,8 +1,9 @@
-import React from "react";
-import { Breadcrumb, Breadcrumbs, IBreadcrumbProps } from "@blueprintjs/core";
 import { useQuery } from "@apollo/client";
 import getBreadcrumbObjects, { IGetBreadcrumbObjectsData } from "../../../graphql/queries/components/files/getBreadcrumbObjects";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
+import Breadcrumbs from "../../../components/display/Breadcrumbs";
+import Breadcrumb from "../../../components/display/Breadcrumb";
+import { faFile, faFolder, faFolderOpen, faHome } from "@fortawesome/free-solid-svg-icons";
 
 interface IFileBreadcrumbsProps {
   path: string[],
@@ -14,29 +15,23 @@ interface IFileBreadcrumbsProps {
 
 function FileBreadcrumbs(props: IFileBreadcrumbsProps): JSX.Element {
   const {data} = useQuery<IGetBreadcrumbObjectsData>(getBreadcrumbObjects, {variables: {ids: props.path}});
-  const history = useHistory();
-  const propsRef = props;
-
-  const items: IBreadcrumbProps[] = [
-    {text: props.name, current: (props.path.length === 1), icon: "home", onClick: () => {history.push(`/planet/${props.planetId}/${props.componentId}`); propsRef.resetSearch();}}
-  ];
-
-  if(data?.fileObjectArray) {
-    const array = [...data.fileObjectArray]; 
-    array.sort((a, b) => props.path.indexOf(a.id) - props.path.indexOf(b.id));
-    array.map((value, index) => {items.push({current: (index === array.length - 1), text: value.name ?? "", icon: (value.type === "folder" ? "folder-close" : "document"), onClick: () => history.push(`/planet/${props.planetId}/${props.componentId}/${value.id}`)}); return false;});
-  }
-
-  const breadcrumbRenderer = function ({text, ...props}: IBreadcrumbProps) {
-    return <Breadcrumb onClick={(e) => {e.preventDefault(); e.stopPropagation(); propsRef.resetSearch();}} className="FilesComponent-breadcrumb" {...props}>{text}</Breadcrumb>;
-  };
 
   return (
-    <Breadcrumbs
-      className="FilesComponent-breadcrumbs"
-      currentBreadcrumbRenderer={breadcrumbRenderer}
-      items={items}
-    />
+    <Breadcrumbs className="mr-auto ml-1 my-auto">
+      <Link className="link-button" to={`/planet/${props.planetId}/${props.componentId}`}>
+        <Breadcrumb
+          icon={faHome} 
+          active={props.path.length === 1}
+        >Home</Breadcrumb>
+      </Link>
+      {data?.fileObjectArray.map((value, index) => (<Link className="link-button" to={`/planet/${props.planetId}/${props.componentId}/${value.id}`} key={index}>
+        <Breadcrumb
+          icon={value.type === "folder" ? (index === data.fileObjectArray.length - 1 ? faFolderOpen : faFolder) : faFile} 
+          active={index === data.fileObjectArray.length - 1}
+        >{value.name}</Breadcrumb>
+
+      </Link>))}
+    </Breadcrumbs> 
   );
 }
 
