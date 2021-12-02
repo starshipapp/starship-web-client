@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Alert, Button, Classes, ContextMenu, Divider, Icon, Intent, Menu, MenuItem, Popover, PopoverPosition } from "@blueprintjs/core";
+import { Alert, Button, Classes, ContextMenu, Intent, Menu, MenuItem, Popover, PopoverPosition } from "@blueprintjs/core";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import deleteFileObjectMutation, { IDeleteFileObjectMutationData } from "../../../graphql/mutations/components/files/deleteFileObjectMutation";
@@ -13,6 +13,9 @@ import { GlobalToaster } from "../../../util/GlobalToaster";
 import permissions from "../../../util/permissions";
 import filesize from "filesize";
 import "./css/FileListButton.css";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFile, faFolder } from "@fortawesome/free-solid-svg-icons";
+import Divider from "../../../components/display/Divider";
 
 interface IFileButtonProps {
   planet: IPlanet
@@ -134,9 +137,16 @@ function FileListButton(props: IFileButtonProps): JSX.Element {
               });
             }
           }}
-          className={`FileListButton ${props.selections && props.selections.includes(props.object.id) ? "FileListButton-selected" : ""}`}
+          className={`flex px-4 py-2.5 border-b ${props.selections && props.selections.includes(props.object.id) ? "bg-blue-400 hover:bg-blue-300 dark:bg-blue-700 dark:hover:bg-blue-600 border-blue-300 dark:border-blue-600"  : "hover:bg-gray-200 dark:hover:bg-gray-800 border-gray-300 dark:border-gray-600"}`}
         >
-          <div><Icon className="FileListButton-icon" icon={props.object.type === "folder" ? "folder-close" : "document"}/>{props.object.name}</div>
+          <div className="flex">
+            <div className="w-4 mr-2 mt-0.5 inline-flex">
+              <FontAwesomeIcon className="mx-auto" icon={props.object.type === "folder" ? faFolder : faFile}/>
+            </div>
+            <div className="inline-block">
+              {props.object.name}
+            </div>
+          </div>
           <div className="FileListButton-date">
             {props.object.size && <span>{filesize(props.object.size)}</span>}
             {props.object.size && <Divider/>}

@@ -27,7 +27,7 @@ function ProgressBar(props: IProgressBarProps): JSX.Element {
   }
 
   return (
-    <div className={`bg-gray-300 rounded-lg dark:bg-gray-700 shadow ${props.className ?? ""}`}>
+    <div {...props} className={`bg-gray-300 rounded-lg dark:bg-gray-700 shadow ${props.className ?? ""}`}>
       <div className={`${barStyle} rounded-lg h-2 w-full`} style={{ width: `${Math.ceil(props.progress * 100)}%` }} />
     </div>
   );

@@ -1,7 +1,8 @@
-import { Icon, Intent } from "@blueprintjs/core";
+import { faFile } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { GlobalToaster } from "../../../util/GlobalToaster";
+import Toasts from "../../../components/display/Toasts";
 import Markdown from "../../../util/Markdown";
 import "./css/TextPreview.css";
 
@@ -22,16 +23,16 @@ function TextPreview(props: ITextPreviewProps): JSX.Element {
       axios.get(props.fileURL, {responseType: "text", transformResponse: (res) => {return res as string;}}).then((data) => {
         setText((data.data as string).replace("\n", "\n\n"));
       }).catch((err: Error) => {
-        GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+        Toasts.danger(err.message);
       });
     }
   }, [text, props.fileURL, props.name]);
 
   return (
-    <div className="TextPreview">
-      <div className="TextPreview-name">
-        <Icon icon="document" className="TextPreview-name-icon"/>
-        <div className="TextPreview-name-text">
+    <div className="max-w-full min-w-full border shadow-sm border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 mb-10 mt-3 p-3 rounded">
+      <div className="flex pb-3 mb-2 border-b px-0.5 border-gray-300 dark:border-gray-700">
+        <FontAwesomeIcon icon={faFile} className="mr-1.5" />
+        <div className="font-bold text-base leading-none">
           {props.name}
         </div>
       </div>

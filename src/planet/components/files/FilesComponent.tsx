@@ -290,6 +290,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           setDragging(true);
         }
       }}
+      onDrop={(e) => e.preventDefault()}
     >
       {objectData?.fileObject && <ReportDialog isOpen={showReport} onClose={() => setReport(false)} objectId={objectData.fileObject.id} objectType={reportObjectType.FILE} userId={objectData.fileObject.owner?.id ?? ""}/>}
       {isDragging && <div className="block absolute top-0 left-0 w-screen h-screen z-50 bg-gray-600 bg-opacity-50"
@@ -434,7 +435,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         </>}
       </div>
       {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && !listView && <div
-        className="grid grid-cols-auto-xs w-full p-1"
+        className="grid grid-cols-auto-xs w-full p-2"
       >
         {props.subId && objectData && <Link className="link-button" to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
           <div
@@ -468,10 +469,17 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           resetSelection={resetSelection}
         />))}
       </div>}
-      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && listView && <div className="FilesComponent-list-table">
+      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && listView && <div>
         {props.subId && objectData && <Link className="link-button" to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
-          <div className="FileListButton" onDrop={(e) => onDrop(e, true)}>
-            <div><FontAwesomeIcon className="FileListButton-icon" icon={faArrowUp}/>../</div>
+          <div className="flex px-4 py-2.5 border-b hover:bg-gray-200 dark:hover:bg-gray-800 border-gray-300 dark:border-gray-600" onDrop={(e) => onDrop(e, true)}>
+            <div className="flex">
+              <div className="w-4 mr-2 mt-0.5 inline-flex">
+                <FontAwesomeIcon className="mx-auto" icon={faArrowUp}/>
+              </div>
+              <div className="inline-block">
+                ../
+              </div>
+            </div>
           </div>
         </Link>}
         {foldersData?.folders.map((value) => (<FileListButton 
@@ -506,40 +514,40 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         useLists={listView}
       />}
       {objectData && objectData.fileObject.type === "file" && <FileView file={objectData.fileObject}/>}
-      <div className="FilesComponent-readme">
+      <div className={`mx-4 ${listView ? "mt-1" : "-mt-2"}`}>
         {((objectData && objectData.fileObject.type === "folder") || !props.subId) && determineReadmeComponent()}
       </div>
-      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && <div className="FileComponent-status-spacer"/>}
-      <div className="FilesComponent-statusbar">
-        {((objectData && objectData.fileObject.type === "folder") || !props.subId) && <div className="FilesComponent-statusbar-count">
+      <div className="py-2 block w-1"/>
+      <div className={`flex sticky p-2 bottom-0 w-full bg-white dark:bg-gray-900 border-t border-gray-300 dark:border-gray-600 ${(objectData && objectData.fileObject.type === "folder") || !objectData ? "mt-auto" : ""}`}>
+        {((objectData && objectData.fileObject.type === "folder") || !props.subId) && <div className="mr-1">
           {foldersData?.folders.length ?? 0} folders, {filesData?.files.length ?? 0} files
         </div>}
         {objectData && objectData.fileObject.type === "folder" && <Divider/>}
-        {objectData && <div className="FilesComponent-statusbar-objectinfo">
-          <FontAwesomeIcon icon={faUser}/>
+        {objectData && <div className="ml-1">
+          <FontAwesomeIcon icon={faUser} className="mr-1"/>
           <span>{objectData.fileObject.owner?.username}</span>
-          <FontAwesomeIcon icon={faCalendar}/>
+          <FontAwesomeIcon icon={faCalendar} className="ml-2 mr-1"/>
           <span>{fileDate}</span>
           {objectData.fileObject.size && <>
-            <FontAwesomeIcon icon={faFile}/>
+            <FontAwesomeIcon icon={faFile} className="ml-2 mr-1"/>
             <span>{fileSize(objectData.fileObject.size ?? 0)}</span>
           </>}
         </div>}
-        <div className="FilesComponent-uploading">
-          {Object.values(uploading).length !== 0 && <div className="FilesComponent-uploading-container">
+        <div className="flex flex-col ml-auto">
+          {Object.values(uploading).length !== 0 && <div className="flex mt-auto mb-auto flex-row">
             <FontAwesomeIcon icon={faUpload}/>
-            <ProgressBar className="FilesComponent-uploading-progress" intent={Intent.PRIMARY} progress={completed / total}/>
+            <ProgressBar className="w-48 mx-2 flex-grow-0 h-2 my-auto cursor-pointer" intent={Intent.PRIMARY} progress={completed / total} onClick={() => setShowUploading(true)}/>
             <Popover
-              popoverTarget={<FontAwesomeIcon icon={faChevronUp} onClick={() => setShowUploading(true)}/>}
+              popoverTarget={<FontAwesomeIcon icon={faChevronUp} className="cursor-pointer" onClick={() => setShowUploading(true)}/>}
               onClose={() => setShowUploading(false)}
               placement={PopperPlacement.topEnd}
               open={showUploading}
             >
-              <div className="FilesComponent-uploading-info-container">
-                {Object.values(uploading).map((value, index) => (<div key={index} className="FilesComponent-uploading-info">
-                  <div className="FilesComponent-uploading-info-top">
-                    <div className="FilesComponent-uploading-info-name">{value.name}</div>
-                    <FontAwesomeIcon className="FilesComponent-uploading-info-cancel" icon={faTimes} onClick={() => {
+              <div className="-mt-2">
+                {Object.values(uploading).map((value, index) => (<div key={index} className="w-64">
+                  <div className="flex overflow-hidden w-full mb-1 mt-2">
+                    <div className="flex overflow-hidden whitespace-nowrap overflow-ellipsis">{value.name}</div>
+                    <FontAwesomeIcon className="FilesComponent-uploading-info-cancel ml-1.5 my-auto cursor-pointer" icon={faTimes} onClick={() => {
                       value.cancelToken.cancel();
                       cancelUpload({variables: {objectId: value.documentId}}).then(() => {
                         Toasts.success(`Upload of ${value.name} cancelled.`);
@@ -551,7 +559,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
                       });
                     }}/>
                   </div>
-                  <ProgressBar className="FilesComponent-uploading-info" progress={value.progress} intent={Intent.PRIMARY}/>
+                  <ProgressBar className="" progress={value.progress} intent={Intent.PRIMARY}/>
                 </div>))}
               </div>
             </Popover>

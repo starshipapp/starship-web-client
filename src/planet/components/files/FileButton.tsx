@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { Alert, Button, Classes, ContextMenu, Intent, Menu, MenuItem, Popover, PopoverPosition } from "@blueprintjs/core";
 import { faFile, faFolder } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import React, { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import Tooltip from "../../../components/display/Tooltip";
 import deleteFileObjectMutation, { IDeleteFileObjectMutationData } from "../../../graphql/mutations/components/files/deleteFileObjectMutation";
@@ -162,4 +162,13 @@ function FileButton(props: IFileButtonProps): JSX.Element {
   );
 }
 
-export default FileButton;
+export default memo(FileButton, (next, prev) => {
+  if(next.object !== prev.object) {
+    return false;
+  }
+  if(next.selections !== prev.selections) {
+    return false;
+  }
+
+  return true;
+});

@@ -2,6 +2,7 @@
 import ReactMarkdown from "react-markdown";
 import { NormalComponents } from "react-markdown/lib/complex-types";
 import { SpecialComponents } from "react-markdown/lib/ast-to-react";
+import { memo } from "react";
 
 // remark plugins
 import math from "remark-math";
@@ -23,6 +24,7 @@ import ICustomEmoji from "../types/ICustomEmoji";
 
 import "./css/Markdown.css";
 import mentionPlugin from "./remark/mentionPlugin";
+import yn from "yn";
 
 interface IMarkdownProps {
   children: string
@@ -49,15 +51,34 @@ function Markdown(props: IMarkdownProps): JSX.Element {
     }*/
   };
 
+
+  const useLatex = (localStorage.getItem("useLatex")) ?? "html";
+  const plugins = [emoji, hint, toc, slug, gfm, mentionPlugin, [customEmojiPlugin, {planetEmojis: props.planetEmojis, userEmojis: props.userEmojis}]];
+
+  if(useLatex !== "false") {
+    plugins.push(math);
+  }
+
   return ( 
     <ReactMarkdown
       children={props.children}
-      remarkPlugins={[math, emoji, hint, toc, slug, gfm, mentionPlugin, [customEmojiPlugin, {planetEmojis: props.planetEmojis, userEmojis: props.userEmojis}]]}
-      rehypePlugins={[katex]}
+      remarkPlugins={plugins}
+      rehypePlugins={useLatex !== "false" ? [[katex, {output: useLatex === "true" ? "htmlAndMathml" : useLatex}]] : []}
       components={components}
       className={`${props.longForm ? "text-document" : ""} ${props.className ?? ""}`}
     />
   );
 }
 
-export default Markdown;
+export default memo(Markdown, (prev, next) => {
+  if(next.children !== prev.children) {
+    return false;
+  }
+  if(next.className !== prev.className) {
+    return false;
+  }
+
+  return true;
+});
+
+// export default Markdown;
