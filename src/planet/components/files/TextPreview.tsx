@@ -29,7 +29,7 @@ function TextPreview(props: ITextPreviewProps): JSX.Element {
   }, [text, props.fileURL, props.name]);
 
   return (
-    <div className="max-w-full min-w-full border shadow-sm border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 mb-10 mt-3 p-3 rounded">
+    <div className="max-w-full min-w-full border shadow-sm border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 mb-4 mt-3 p-3 rounded">
       <div className="flex pb-3 mb-2 border-b px-0.5 border-gray-300 dark:border-gray-700">
         <FontAwesomeIcon icon={faFile} className="mr-1.5" />
         <div className="font-bold text-base leading-none">

@@ -15,15 +15,16 @@ interface IFileBreadcrumbsProps {
 
 function FileBreadcrumbs(props: IFileBreadcrumbsProps): JSX.Element {
   const {data} = useQuery<IGetBreadcrumbObjectsData>(getBreadcrumbObjects, {variables: {ids: props.path}});
-  const array = [...(data?.fileObjectArray ?? [])].reverse();
+  const array = [...(data?.fileObjectArray ?? [])];
+  array.sort((a, b) => props.path.indexOf(a.id) - props.path.indexOf(b.id));
 
   return (
-    <Breadcrumbs className="mr-auto ml-2 my-auto">
+    <Breadcrumbs className="mr-auto ml-2 my-auto flex-shrink">
       <Link className="link-button" to={`/planet/${props.planetId}/${props.componentId}`}>
         <Breadcrumb
           icon={faHome} 
           active={props.path.length === 1}
-        >Home</Breadcrumb>
+        >{props.name}</Breadcrumb>
       </Link>
       {array.map((value, index) => (<Link className="link-button" to={`/planet/${props.planetId}/${props.componentId}/${value.id}`} key={index}>
         <Breadcrumb

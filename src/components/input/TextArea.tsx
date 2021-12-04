@@ -15,19 +15,19 @@ function TextArea(props: ITextAreaProps): JSX.Element {
 
   switch (props.intent) {
     case Intent.SUCCESS:
-      className += " border-2 border-green-500";
+      className += " border border-green-500";
       break;
     case Intent.WARNING:
-      className += " border-2 border-yellow-500";
+      className += " border border-yellow-500";
       break;
     case Intent.DANGER:
-      className += " border-2 border-red-500";
+      className += " border border-red-500";
       break;
     case Intent.PRIMARY:
-      className += " border-2 border-blue-500";
+      className += " border border-blue-500";
       break;
     default:
-      className += " border-2 border-gray-300 dark:border-gray-600";
+      className += " border border-gray-300 dark:border-gray-600";
   }
 
   if(props.large) {

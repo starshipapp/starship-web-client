@@ -34,6 +34,8 @@ function Checkbox(props: ICheckboxProps): JSX.Element {
   
   if (props.disabled) {
     className += " disabled opacity-75 cursor-not-allowed";
+  } else {
+    className += " cursor-pointer";
   }
 
   if (props.minimal) {

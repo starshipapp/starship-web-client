@@ -60,8 +60,8 @@ function Popover(props: IPopoverProps): JSX.Element {
       ref={(element) => {
         setReferenceElement(element);
       }}
-      className={`${props.fullWidth ? "w-full" : "w-max"}`}
       {...rest}
+      className={`${props.fullWidth ? "w-full" : "w-max"} flex-shrink-0`}
     >
       {popoverTarget}
       {open && (

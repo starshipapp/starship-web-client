@@ -157,6 +157,7 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
                   setComponentName("");
                   setAddComponent(false);
                 }}
+                disabled={!component || componentName === ""}
               >Add {component ? ComponentIndex.ComponentDataTypes[component].friendlyName : "Component"}</Button>
             </DialogBody>
           </Dialog>

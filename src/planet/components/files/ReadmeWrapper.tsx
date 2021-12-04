@@ -14,7 +14,7 @@ function ReadmeWrapper(props: IReadmeWrapperProps): JSX.Element {
 
   return (
     <>
-      {data && <TextPreview isMarkdown={props.file.name?.endsWith(".md") ?? false} fileURL={data.getObjectPreview} name={props.file.name ?? ""}/>}
+      {data && <div className="mb-4"><TextPreview isMarkdown={props.file.name?.endsWith(".md") ?? false} fileURL={data.getObjectPreview} name={props.file.name ?? ""}/></div>}
     </>
   );
 }
