@@ -3,6 +3,7 @@ import { HTMLProps, useEffect, useState } from "react";
 import { usePopper } from "react-popper-2";
 import PopperPlacement from "../PopperPlacement";
 import ClickAwayListener from 'react-click-away-listener';
+import { createPortal } from "react-dom";
 
 interface IPopoverProps extends HTMLProps<HTMLDivElement> {
   open: boolean;
@@ -64,22 +65,14 @@ function Popover(props: IPopoverProps): JSX.Element {
       className={`${props.fullWidth ? "w-full" : "w-max"} flex-shrink-0`}
     >
       {popoverTarget}
-      {open && (
-        <Transition
-          show={open}
-          enter="transition ease-out duration-100"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          leave="transition ease-in duration-75"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-        >
-          <ClickAwayListener onClickAway={() => {
-            if (onClose) {
-              onClose();
-            }
-          }}>
-            <div
+      {( 
+        <ClickAwayListener onClickAway={() => {
+          if (onClose) {
+            onClose();
+          }
+        }}>
+          <div>
+            {createPortal(<div
               ref={(element) => {
                 setPopperElement(element);
               }}
@@ -87,12 +80,22 @@ function Popover(props: IPopoverProps): JSX.Element {
               style={popper.styles.popper}
               {...popper.attributes.popper}
             >
-              <div className={`py-2 px-2 bg-gray-100 dark:bg-gray-800 rounded shadow-md text-black dark:text-white ${props.popoverClassName ?? ""}`}>
-                {props.children}
-              </div>
-            </div>
-          </ClickAwayListener>
-        </Transition>
+              <Transition
+                show={open}
+                enter="transition ease-out duration-100"
+                enterFrom="opacity-0"
+                enterTo="opacity-100"
+                leave="transition ease-in duration-75"
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <div className={`py-2 px-2 bg-gray-100 dark:bg-gray-800 rounded shadow-md text-black dark:text-white ${props.popoverClassName ?? ""}`}>
+                  {props.children}
+                </div>
+              </Transition>
+            </div>, document.body)}
+          </div> 
+        </ClickAwayListener>
       )}
     </div>
   );

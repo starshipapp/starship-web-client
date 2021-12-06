@@ -517,7 +517,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
       <div className={`mx-4 ${listView ? "mt-1" : "-mt-2"}`}>
         {((objectData && objectData.fileObject.type === "folder") || !props.subId) && determineReadmeComponent()}
       </div>
-      {('netscape' in window) && <div id="firefox-sticky-spacer" className="p-5"/>}
+      {('netscape' in window) && objectData && objectData.fileObject.type === "folder" && <div id="firefox-sticky-spacer" className="p-5"/>}
       <div className={`flex sticky p-2 bottom-0 w-full bg-white dark:bg-gray-900 border-t border-gray-300 dark:border-gray-600 ${(objectData && objectData.fileObject.type === "folder") || !objectData ? "mt-auto" : ""}`}>
         {((objectData && objectData.fileObject.type === "folder") || !props.subId) && <div className="mr-1">
           {foldersData?.folders.length ?? 0} folders, {filesData?.files.length ?? 0} files

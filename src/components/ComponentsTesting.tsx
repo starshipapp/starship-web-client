@@ -32,12 +32,15 @@ import Breadcrumbs from "./display/Breadcrumbs";
 import Breadcrumb from "./display/Breadcrumb";
 import Tooltip from "./display/Tooltip";
 import ContextMenu from "./controls/ContextMenu";
+import AlertBody from "./dialog/AlertBody";
+import AlertControls from "./dialog/AlertControls";
 
 function ComponentsTesting(): JSX.Element {
   const [dark, setDark] = useState(true);
   const [showPopover, setShowPopover] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   return (
     <div className={`${dark ? "dark": ""}`}>
@@ -506,6 +509,27 @@ function ComponentsTesting(): JSX.Element {
                 </ContextMenu>
               </div>
             </div> 
+            <div id="ComponentsTesting-alert">
+              <PageSubheader>Alert</PageSubheader>
+              <div>
+                <Label>Click the button to open the alert.</Label>
+                <Button
+                  onClick={() => setShowAlert(true)}
+                >Open Alert</Button>
+                <Dialog
+                  open={showAlert}
+                  onClose={() => setShowAlert(false)}
+                >
+                  <AlertBody icon={faIcons} intent={Intent.DANGER}>
+                    Are you sure you want to delete this file? 'Example.txt' will be lost forever! (A long time!)
+                  </AlertBody>
+                  <AlertControls>
+                    <Button className="mr-2">Cancel</Button>
+                    <Button intent={Intent.DANGER}>Delete</Button>
+                  </AlertControls>
+                </Dialog>
+              </div>
+            </div>
             {/* wow this sure is stupid */}
             <div className="h-10"/>
           </PageContainer>

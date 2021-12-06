@@ -1,3 +1,4 @@
+import ReactDOM from "react-dom";
 import { Transition } from "@tailwindui/react";
 import { useEffect, useState } from "react";
 import ClickAwayListener from "react-click-away-listener";
@@ -10,6 +11,8 @@ interface IContextMenuProps extends React.HTMLProps<HTMLDivElement> {
 
 let x = 0;
 let y = 0;
+let prevOpen = false;
+let justOpened = false;
 
 const virtualReference = {
     getBoundingClientRect() {
@@ -38,8 +41,7 @@ function ContextMenu(props: IContextMenuProps): JSX.Element {
         options: {
           altAxis: true,
           altBoundary: true,
-          boundary: document.body,
-          padding: 5
+          boundary: document.body
         },
       }
     ],
@@ -51,14 +53,33 @@ function ContextMenu(props: IContextMenuProps): JSX.Element {
     }
   };
 
-  useEffect(() => {
-    document.addEventListener("keydown", exitFunction, false);
+  const exitFunctionContext = (e?: MouseEvent) => {
+    if(!justOpened){
+      setIsOpen(false); 
+    }
+  };
 
+  useEffect(() => {
+    console.log(isOpen);
+    console.log(prevOpen);
+    if(prevOpen !== isOpen){
+      console.log("is open", isOpen);
+      if(isOpen){
+        justOpened = true;
+        setTimeout(() => {
+          justOpened = false;
+        }, 100);
+      }
+    }
+    prevOpen = isOpen;
+    document.addEventListener("keydown", exitFunction, false);
+    document.addEventListener("contextmenu", exitFunctionContext, false);
     return () => {
       document.removeEventListener("keydown", exitFunction, false);
+      document.removeEventListener("contextmenu", exitFunctionContext, false);
     };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isOpen]);
 
   return (
     <>
@@ -74,10 +95,10 @@ function ContextMenu(props: IContextMenuProps): JSX.Element {
         {props.children}
       </div>
       <ClickAwayListener onClickAway={() => setIsOpen(false)}>
-         <div
+        <div
           className="absolute z-40"
-         >
-          {isOpen && <Transition
+        > 
+          {ReactDOM.createPortal(<Transition
             show={isOpen}
             enter="transition ease-out duration-100"
             enterFrom="opacity-0"
@@ -89,7 +110,10 @@ function ContextMenu(props: IContextMenuProps): JSX.Element {
             <div 
               {...props} 
               className={`py-2 bg-gray-100 dark:bg-gray-800 rounded shadow-md text-black dark:text-white w-48 ${props.className ?? ""}`}
-
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(false);
+              }}
               style={popper.styles.popper}
               ref={(element) => {
                 setPopperElement(element);
@@ -97,8 +121,8 @@ function ContextMenu(props: IContextMenuProps): JSX.Element {
               {...popper.attributes.popper}
             >
               {props.menu}
-            </div> 
-          </Transition>}
+            </div>
+          </Transition>, document.body)}
          </div>
       </ClickAwayListener>
     </>
