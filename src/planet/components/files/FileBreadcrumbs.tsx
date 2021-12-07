@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/display/Breadcrumbs";
 import Breadcrumb from "../../../components/display/Breadcrumb";
 import { faFile, faFolder, faFolderOpen, faHome } from "@fortawesome/free-solid-svg-icons";
+import getIconFromType from "../../../util/getIconFromType";
 
 interface IFileBreadcrumbsProps {
   path: string[],
@@ -28,7 +29,7 @@ function FileBreadcrumbs(props: IFileBreadcrumbsProps): JSX.Element {
       </Link>
       {array.map((value, index) => (<Link className="link-button" to={`/planet/${props.planetId}/${props.componentId}/${value.id}`} key={index}>
         <Breadcrumb
-          icon={value.type === "folder" ? (index === array.length - 1 ? faFolderOpen : faFolder) : faFile} 
+          icon={value.type === "folder" ? (index === array.length - 1 ? faFolderOpen : faFolder) : getIconFromType(value.fileType ?? "application/octet-stream")}
           active={index === array.length - 1}
         >{value.name}</Breadcrumb>
 

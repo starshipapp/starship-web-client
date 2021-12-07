@@ -326,7 +326,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         <FontAwesomeIcon icon={faCloudUploadAlt} size="10x" className="text-black dark:text-green-600"/>
         <h2>Drop file to upload.</h2>
       </div>}
-      <div className="w-full flex p-2 border-b border-gray-300 dark:border-gray-600 sticky top-0 bg-gray-900">
+      <div className="w-full flex p-2 border-b border-gray-300 dark:border-gray-600 sticky top-0 bg-white dark:bg-gray-900">
         <input
           type="file"
           ref={fileInput}
@@ -435,12 +435,12 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         </>}
       </div>
       {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && !listView && <div
-        className="grid grid-cols-auto-xs w-full p-2"
+        className="grid grid-cols-auto-sm w-full p-2"
       >
         {props.subId && objectData && <Link className="link-button" to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
           <div
-            className={`transition-all duration-200 flex bg-gray-200 ring-1 ring-gray-300 hover:bg-gray-300 dark:bg-gray-700 dark:ring-gray-600 dark:hover:bg-gray-600 
-            active:bg-gray-400 dark:active:bg-gray-800 px-3 py-2 text-base rounded-sm m-2 overflow-hidden leading-tight outline-none focus:outline-none focus:ring-blue-300 
+            className={`transition-all duration-200 flex bg-gray-200 ring-1 ring-gray-300 hover:bg-gray-300 dark:bg-gray-800 dark:ring-gray-700 dark:hover:bg-gray-700 
+            active:bg-gray-400 dark:active:bg-gray-900 px-3.5 py-2.5 text-base rounded-sm m-2 overflow-hidden leading-tight outline-none focus:outline-none focus:ring-blue-300 
             focus:ring-1 dark:focus:ring-blue-600 shadow-md active:shadow-sm`}
             onDrop={(e) => onDrop(e, true)}
           >

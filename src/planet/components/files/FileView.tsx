@@ -6,6 +6,7 @@ import Toasts from "../../../components/display/Toasts";
 import getDownloadFileObject, { IGetDownloadFileObjectData } from "../../../graphql/queries/components/files/getDownloadFileObject";
 import getObjectPreview, { IGetObjectPreview } from "../../../graphql/queries/components/files/getObjectPreview";
 import IFileObject from "../../../types/IFileObject";
+import getIconFromType from "../../../util/getIconFromType";
 import MimeTypes from "../../../util/validMimes";
 import TextPreview from "./TextPreview";
 
@@ -23,10 +24,15 @@ function FileView(props: IFileViewProps): JSX.Element {
         {MimeTypes.audioTypes.includes(props.file.fileType ?? "application/octet-stream") && data && <audio preload="auto" className="w-lg m-auto" controls src={data.getObjectPreview}/>}
         {MimeTypes.imageTypes.includes(props.file.fileType ?? "application/octet-stream") && data && <img className="max-w-full max-h-full object-scale-down m-auto" src={data.getObjectPreview} alt="File preview"/>}
         {MimeTypes.videoTypes.includes(props.file.fileType ?? "application/octet-stream") && data && <video preload="auto" className="max-w-full max-h-full m-auto" controls src={data.getObjectPreview}/>}
-        {MimeTypes.textTypes.includes(props.file.fileType ?? "application/octet-stream") && data && <div className=" overflow-auto px-4 pt-2"><TextPreview isMarkdown={props.file.name?.endsWith(".md") ?? false} fileURL={data.getObjectPreview} name={props.file.name ?? ""}/></div>}
+        {MimeTypes.textTypes.includes(props.file.fileType ?? "application/octet-stream") && data && <div className=" overflow-auto px-4 pt-2"><TextPreview
+          isMarkdown={props.file.name?.endsWith(".md") ?? false}
+          fileURL={data.getObjectPreview}
+          name={props.file.name ?? ""}
+          isCode={MimeTypes.codeTypes.includes(props.file.fileType ?? "application/octet-stream")}
+        /></div>}
         {props.file.fileType === "application/pdf" && data && <object height="100%" width="100%" type="application/pdf" data={data.getObjectPreview}>Failed to load PDF.</object>}
       </div> : <div className="m-auto items-center text-center">
-        <FontAwesomeIcon icon={faFile} size="8x"/>
+        <FontAwesomeIcon icon={getIconFromType(props.file.fileType ?? "application/octet-stream")} size="8x"/>
         <div className="my-2 font-bold text-2xl">{props.file.name}</div>
         <Button icon={faDownload} onClick={() => {
           refetch().then((data) => {

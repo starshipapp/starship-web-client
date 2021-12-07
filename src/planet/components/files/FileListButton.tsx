@@ -11,7 +11,7 @@ import IPlanet from "../../../types/IPlanet";
 import permissions from "../../../util/permissions";
 import filesize from "filesize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload, faEdit, faFile, faFolder, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faEdit, faFile, faFileCode, faFolder, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Divider from "../../../components/display/Divider";
 import Dialog from "../../../components/dialog/Dialog";
 import AlertBody from "../../../components/dialog/AlertBody";
@@ -24,6 +24,7 @@ import PopperPlacement from "../../../components/PopperPlacement";
 import ContextMenu from "../../../components/controls/ContextMenu";
 import MenuItem from "../../../components/menu/MenuItem";
 import Textbox from "../../../components/input/Textbox";
+import getIconFromType from "../../../util/getIconFromType";
 
 interface IFileButtonProps {
   planet: IPlanet
@@ -171,7 +172,7 @@ function FileListButton(props: IFileButtonProps): JSX.Element {
           >
             <div className="flex">
               <div className="w-4 mr-2 mt-0.5 inline-flex">
-                <FontAwesomeIcon className="mx-auto" icon={props.object.type === "folder" ? faFolder : faFile}/>
+                <FontAwesomeIcon className="mx-auto" icon={props.object.type === "folder" ? faFolder : getIconFromType(props.object.fileType ?? "application/octet-stream")}/>
               </div>
               <Popover
                 open={rename}

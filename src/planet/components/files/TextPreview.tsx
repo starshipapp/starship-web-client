@@ -8,7 +8,8 @@ import "./css/TextPreview.css";
 
 interface ITextPreviewProps {
   fileURL: string,
-  isMarkdown: boolean,
+  isMarkdown?: boolean,
+  isCode?: boolean,
   name: string
 }
 
@@ -32,12 +33,12 @@ function TextPreview(props: ITextPreviewProps): JSX.Element {
     <div className="max-w-full min-w-full border shadow-sm border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 mb-4 mt-3 p-3 rounded">
       <div className="flex pb-3 mb-2 border-b px-0.5 border-gray-300 dark:border-gray-700">
         <FontAwesomeIcon icon={faFile} className="mr-1.5" />
-        <div className="font-bold text-base leading-none">
+        <div className="font-extrabold text-base leading-none">
           {props.name}
         </div>
       </div>
       <div className="TextPreview-content">
-        {props.isMarkdown ? <Markdown longForm>{text}</Markdown> : <div>{text}</div>}
+        {props.isMarkdown ? <Markdown longForm>{text}</Markdown> : <div className={props.isCode ? "font-mono" : ""}>{text}</div>}
       </div>
     </div>
   );
