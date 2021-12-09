@@ -32,6 +32,7 @@ function ForumItem(props: IForumItemProps): JSX.Element {
           <div className="inline-block">
             {props.post.name}
             {props.post.locked && <Tag className="ml-2" icon={faLock} intent={Intent.WARNING}>LOCKED</Tag>}
+            {props.post.tags && props.post.tags.map((value) => (<Tag className="ml-2">{value}</Tag>))}
           </div>
         </div>
         <div className="ml-auto flex">
