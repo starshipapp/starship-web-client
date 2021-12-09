@@ -19,7 +19,7 @@ function Popover(props: IPopoverProps): JSX.Element {
   const [referenceElement, setReferenceElement] = useState<HTMLDivElement | null>(null);
   const [popperElement, setPopperElement] = useState<HTMLDivElement | null>(null);
   const popper = usePopper(referenceElement, popperElement, {
-    placement: props.placement || "bottom",
+    placement: props.placement || PopperPlacement.bottomEnd,
     modifiers: [
       {
         name: "preventOverflow",
@@ -65,37 +65,37 @@ function Popover(props: IPopoverProps): JSX.Element {
       className={`${props.fullWidth ? "w-full" : "w-max"} flex-shrink-0`}
     >
       {popoverTarget}
-      {( 
-        <ClickAwayListener onClickAway={() => {
-          if (onClose) {
-            onClose();
-          }
-        }}>
-          <div>
-            {createPortal(<div
-              ref={(element) => {
-                setPopperElement(element);
-              }}
-              className="z-50"
-              style={popper.styles.popper}
-              {...popper.attributes.popper}
+      {(  
+        <div>
+          {createPortal(<div
+            ref={(element) => {
+              setPopperElement(element);
+            }}
+            className="z-50"
+            style={popper.styles.popper}
+            {...popper.attributes.popper}
+          >
+            <Transition
+              show={open}
+              enter="transition ease-out duration-100"
+              enterFrom="opacity-0"
+              enterTo="opacity-100"
+              leave="transition ease-in duration-75"
+              leaveFrom="opacity-100"
+              leaveTo="opacity-0"
             >
-              <Transition
-                show={open}
-                enter="transition ease-out duration-100"
-                enterFrom="opacity-0"
-                enterTo="opacity-100"
-                leave="transition ease-in duration-75"
-                leaveFrom="opacity-100"
-                leaveTo="opacity-0"
-              >
+              <ClickAwayListener onClickAway={() => {
+                if (onClose) {
+                  onClose();
+                }
+              }}>
                 <div className={`py-2 px-2 bg-gray-100 dark:bg-gray-800 rounded shadow-md text-black dark:text-white ${props.popoverClassName ?? ""}`}>
                   {props.children}
                 </div>
-              </Transition>
-            </div>, document.body)}
-          </div> 
-        </ClickAwayListener>
+              </ClickAwayListener>
+            </Transition>
+          </div>, document.body)}
+        </div> 
       )}
     </div>
   );

@@ -2,7 +2,7 @@ import { HTMLProps } from "react";
 
 function SubPageSidebar(props: HTMLProps<HTMLDivElement>): JSX.Element {
   return (
-    <div {...props} className={`mr-4 -ml-3 border-r border-gray-200 dark:border-gray-700 flex flex-col w-72 ${props.className ?? ""}`}>
+    <div {...props} className={`-ml-3 border-r border-gray-300 dark:border-gray-600 flex flex-col w-64 ${props.className ?? ""}`}>
       {props.children}
     </div>
   );

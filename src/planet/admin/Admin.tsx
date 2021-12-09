@@ -48,7 +48,7 @@ function Admin(props: IAdminProps): JSX.Element {
               <Link onClick={toggleSidebar} className="link-button" to={`/planet/${props.planet.id}/admin/emojis`}><MenuItem icon={faSmile}>Emojis</MenuItem></Link>
               <Link onClick={toggleSidebar} className="link-button" to={`/planet/${props.planet.id}/admin/experimental`}><MenuItem icon={faFlask}>Experimental</MenuItem></Link>
             </SubPageSidebar>
-            <div className="w-full">
+            <div className="w-full ml-4">
               <Switch>
                 <Route path={`/planet/${props.planet.id}/admin/experimental`}>
                   <AdminExperimental planet={props.planet} forceStyling={props.forceStyling} enableStyling={props.enableStyling}/>

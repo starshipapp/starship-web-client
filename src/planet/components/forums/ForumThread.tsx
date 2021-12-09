@@ -46,7 +46,7 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
   }, [demandValueChange, editingContent]);
 
   return (
-    <div className="ForumThread">
+    <div className="w-full flex flex-col">
       <div className="ForumThread-name">{postData?.forumPost && postData.forumPost.name}</div>
       <div className="ForumThread-container">
         {postData?.forumPost && (props.page ? Number(props.page) : 1) === 1 && <ForumThreadItem 

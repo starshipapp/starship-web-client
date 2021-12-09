@@ -1,9 +1,15 @@
 import React, { useState } from "react";
-import { AnchorButton, Checkbox, Classes, Dialog, Intent, Label, TextArea } from "@blueprintjs/core";
 import IPlanet from "../types/IPlanet";
 import { useMutation } from "@apollo/client";
 import applyModToolsMutation, { IApplyModToolsData } from "../graphql/mutations/planets/applyModToolsMutation";
-import { GlobalToaster } from "../util/GlobalToaster";
+import Dialog from "../components/dialog/Dialog";
+import DialogBody from "../components/dialog/DialogBody";
+import DialogHeader from "../components/dialog/DialogHeader";
+import Option from "../components/controls/Option";
+import Label from "../components/text/Label";
+import TextArea from "../components/input/TextArea";
+import Button from "../components/controls/Button";
+import Toasts from "../components/display/Toasts";
 
 interface IModToolsProps {
   planet: IPlanet
@@ -19,27 +25,39 @@ function ModTools(props: IModToolsProps): JSX.Element {
   const [applyModTools] = useMutation<IApplyModToolsData>(applyModToolsMutation);
 
   return (
-    <Dialog className="bp3-dark" title={`Mod Tools for ${props.planet.name ?? "null"}`} onClose={props.onClose} isOpen={props.isOpen}>
-      <div className={Classes.DIALOG_BODY}>
-        <Checkbox checked={featured} label="Featured?" onChange={(e) => setFeatured(!featured)} />
-        <Checkbox checked={verified} label="Verified?" onChange={(e) => setVerified(!verified)} />
-        <Checkbox checked={partnered} label="Partnered?" onChange={(e) => setPartnered(!partnered)} />
-        <Label>
-          Feature Description
-          <TextArea
-            growVertically={true}
-            className="ContentSpace-textarea"
-            large={true}
-            intent={Intent.PRIMARY}
-            onChange={(e) => setDescription(e.target.value)}
-            value={featuredText}
-          />
-        </Label>
-      </div>
-      <div className={Classes.DIALOG_FOOTER}>
-        <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-          <AnchorButton text="Cancel" onClick={() => props.onClose()}/>
-          <AnchorButton text="Apply" intent={Intent.PRIMARY} onClick={() => {
+    <Dialog
+      open={props.isOpen}
+      onClose={props.onClose}
+    >
+      <DialogBody>
+        <DialogHeader>
+          Mod Tools
+        </DialogHeader>
+        <Option
+          className="mt-2"
+          checked={featured}
+          description="Shows a planet on the featured list on the home page."
+          onClick={() => setFeatured(!featured)}
+        >Featured</Option>
+        <Option
+          checked={verified}
+          description="Marks a planet as verified."
+          onClick={() => setVerified(!verified)}
+        >Verified</Option>
+        <Option
+          checked={partnered}
+          description="Marks a planet as partnered."
+          onClick={() => setPartnered(!partnered)}
+        >Partnered</Option>
+        <Label>Feature Description</Label>
+        <TextArea
+          value={featuredText}
+          onChange={(e) => setDescription(e.target.value)}
+          className="w-full"
+        />
+        <Button
+          className="ml-auto mt-4"
+          onClick={() => {
             applyModTools({variables: {
               planetId: props.planet.id,
               featured,
@@ -47,13 +65,13 @@ function ModTools(props: IModToolsProps): JSX.Element {
               partnered,
               featuredDescription: featuredText
             }}).then(() => {
-              GlobalToaster.show({message: "Sucessfully applied changes.", intent: Intent.SUCCESS});
+              Toasts.success("Successfully applied changes.");
             }).catch((err: Error) => {
-              GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+              Toasts.danger(err.message);
             });
-          }}/>
-        </div>
-      </div>
+          }}
+        >Apply</Button>
+      </DialogBody>
     </Dialog>
   );
 }

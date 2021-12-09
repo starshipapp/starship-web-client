@@ -293,19 +293,19 @@ function ComponentsTesting(): JSX.Element {
               </div>
               <div className="mt-3">
                 <Label>Danger</Label>
-                <Tag intent={Intent.DANGER}>Tag</Tag>
+                <Tag icon={faIcons} intent={Intent.DANGER}>Tag</Tag>
               </div>
               <div className="mt-3">
                 <Label>Warning</Label>
-                <Tag intent={Intent.WARNING}>Tag</Tag>
+                <Tag icon={faIcons} intent={Intent.WARNING}>Tag</Tag>
               </div>
               <div className="mt-3">
                 <Label>Primary</Label>
-                <Tag intent={Intent.PRIMARY}>Tag</Tag>
+                <Tag icon={faIcons} intent={Intent.PRIMARY}>Tag</Tag>
               </div>
               <div className="mt-3">
                 <Label>Success</Label>
-                <Tag intent={Intent.SUCCESS}>Tag</Tag>
+                <Tag icon={faIcons} intent={Intent.SUCCESS}>Tag</Tag>
               </div>
             </div>
             <div id="ComponentsTesting-toast">
