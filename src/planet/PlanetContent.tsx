@@ -14,20 +14,13 @@ import "./css/Planet.css";
 import yn from 'yn';
 import PlanetSidebar from "../sidebar/PlanetSidebar";
 
-interface IPlanetContentParams {
-  planet: string,
-  component?: string,
-  subId?: string,
-  page?: string
-}
-
 interface IPlanetContentProps {
   home: boolean,
   planet: IPlanet
 }
 
 function PlanetContent(props: IPlanetContentProps): JSX.Element {
-  const {planet, component, subId, page} = useParams<IPlanetContentParams>();
+  const { component, subId, page} = useParams();
   const {data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [componentName, setComponentName] = useState<string>("");
   const [addComponent] = useMutation<IAddComponentMutationData>(addComponentMutation);

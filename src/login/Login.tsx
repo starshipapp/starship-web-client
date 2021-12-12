@@ -4,7 +4,7 @@ import signInMutation, { ISignInMutationData } from "../graphql/mutations/users/
 import sha256 from 'crypto-js/sha256';
 import signUpMutation, { ISignUpMutationData } from "../graphql/mutations/users/signUpMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import sendResetPasswordEmailMutation, { ISendResetPasswordEmailMutationData } from "../graphql/mutations/users/sendResetPasswordEmailMutation";
 import resendVerificationEmailMutation, { IResendVerificationEmailMutationData } from "../graphql/mutations/users/resendVerificationEmailMutation";
 import ReCAPTCHA from "react-google-recaptcha";
@@ -44,7 +44,7 @@ function Login(props: ILoginProps): JSX.Element {
 
   const { client, loading } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   useEffect(() => {
     document.title = "Login | starship";
@@ -117,7 +117,7 @@ function Login(props: ILoginProps): JSX.Element {
           props.forcefullyResetLink();
           setUsername("");
           setPassword("");
-          history.push("/");
+          navigate("/");
         }
       }
     }).catch((error: Error) => {
@@ -147,7 +147,7 @@ function Login(props: ILoginProps): JSX.Element {
               props.forcefullyResetLink();
               setUsername("");
               setPassword("");
-              history.push("/");
+              navigate("/");
             }
           }).catch((err: Error) => {
             Toasts.danger(err.message);

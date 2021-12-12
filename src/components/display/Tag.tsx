@@ -9,7 +9,7 @@ interface ITagProps extends HTMLProps<HTMLDivElement> {
 }
 
 function Tag(props: ITagProps): JSX.Element {
-  let className = "rounded ext-black w-max dark:text-white text-xs font-normal px-1.5 py-0.5 font-extrabold";
+  let className = "rounded ext-black w-max dark:text-white text-xs px-1.5 py-0.5 font-extrabold";
 
   switch (props.intent) {
     case Intent.DANGER:

@@ -11,11 +11,11 @@ import { Button, Icon, Intent, NonIdealState } from "@blueprintjs/core";
 import { assembleEditorOptions } from "../../../util/editorOptions";
 import insertForumReplyMutation, { IInsertForumReplyMutationData } from "../../../graphql/mutations/components/forums/insertForumReplyMutation";
 import { GlobalToaster } from "../../../util/GlobalToaster";
-import { useHistory } from "react-router-dom";
 import IForumItem from "../../../types/IForumItem";
 import ForumThreadItem from "./ForumThreadItem";
 import "./css/ForumThread.css";
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
+import { useNavigate } from "react-router-dom";
 
 interface IForumThreadProps {
   planet: IPlanet,
@@ -34,9 +34,9 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
   const [editingContent, setEditingContent] = useState<string>("");
   const [demandValueChange, setDemandValueChange] = useState<boolean>(false);
   const [insertReply] = useMutation<IInsertForumReplyMutationData>(insertForumReplyMutation);
-  const history = useHistory();
   const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
   const memoizedOptions = useMemo(() => assembleEditorOptions(uploadMarkdownImage), [uploadMarkdownImage]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if(demandValueChange && mdeInstance) {
@@ -94,7 +94,7 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
         marginPagesDisplayed={2}
         pageRangeDisplayed={5}
         onPageChange={(page) => {
-          history.push(`/planet/${props.planet.id}/${props.forum.id}/${props.postId}/${page.selected + 1}`);
+          navigate(`/planet/${props.planet.id}/${props.forum.id}/${props.postId}/${page.selected + 1}`);
         }}
         initialPage={Number(props.page) - 1}
         disableInitialCallback={true}

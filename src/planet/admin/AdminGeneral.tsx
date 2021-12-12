@@ -6,7 +6,6 @@ import togglePrivateMutation, { ITogglePrivateMutationData } from "../../graphql
 import setDescriptionMutation, { ISetDescriptionMutationData } from "../../graphql/mutations/planets/setDescriptionMutation";
 import getCurrentUser, { IGetCurrentUserData } from "../../graphql/queries/users/getCurrentUser";
 import deletePlanetMutation, { IDeletePlanetMutationData } from "../../graphql/mutations/planets/deletePlanetMutation";
-import { useHistory } from "react-router";
 import SubPageHeader from "../../components/subpage/SubPageHeader";
 import Callout from "../../components/text/Callout";
 import Intent from "../../components/Intent";
@@ -16,13 +15,13 @@ import Button from "../../components/controls/Button";
 import Toasts from "../../components/display/Toasts";
 import TextArea from "../../components/input/TextArea";
 import Confirm from "../../components/dialog/Confirm";
+import { useNavigate } from "react-router-dom";
 
 interface IAdminGeneralProps {
   planet: IPlanet
 }
 
 function AdminGeneral(props: IAdminGeneralProps): JSX.Element {
-  const history = useHistory();
   const {refetch} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [nameTextboxContents, updateNameTextbox] = useState<string>(props.planet.name ?? "");
   const [descTextboxContents, updateDescTextbox] = useState<string>(props.planet.description ?? "");
@@ -32,6 +31,7 @@ function AdminGeneral(props: IAdminGeneralProps): JSX.Element {
   const [setDescription] = useMutation<ISetDescriptionMutationData>(setDescriptionMutation);
   const [togglePrivate] = useMutation<ITogglePrivateMutationData>(togglePrivateMutation);
   const [deletePlanet] = useMutation<IDeletePlanetMutationData>(deletePlanetMutation);
+  const navigate = useNavigate();
 
   const doVerify = function() {
     if(openType === "private") {
@@ -44,7 +44,7 @@ function AdminGeneral(props: IAdminGeneralProps): JSX.Element {
       deletePlanet({variables: {planetId: props.planet.id}}).then(async () => {
         Toasts.success(`Planet ${props.planet.name ?? ""} has been deleted.`);
         await refetch();
-        history.push("/");
+        navigate("/");
       }).catch((err: Error) => {
         Toasts.danger(err.message);
       });

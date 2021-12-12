@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
-import { Route, Switch, useRouteMatch } from "react-router";
+import { Route } from "react-router";
 import ProfileSettings from "./ProfileSettings";
 import SecuritySettings from "./SecuritySettings";
 import EmojiSettings from "./EmojiSettings";
@@ -9,33 +9,22 @@ import About from "./About";
 import NonIdealState from "../components/display/NonIdealState";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import AppearanceSettings from "./AppearanceSettings";
+import { Routes } from "react-router-dom";
 
 function Settings(): JSX.Element {
   const {data: userData, refetch} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const match = useRouteMatch();
 
   if(userData?.currentUser) {
     return (
-      <Switch>
-        <Route path={`${match.path}/security`}>
-          <SecuritySettings user={userData.currentUser} refetch={() => refetch()}/>
-        </Route>
-        <Route path={`${match.path}/emojis`}>
-          <EmojiSettings user={userData.currentUser} refetch={() => refetch()}/>
-        </Route>
-        <Route path={`${match.path}/notifications`}>
-          <NotificationSettings user={userData.currentUser} refetch={() => refetch()}/>
-        </Route>
-        <Route path={`${match.path}/appearance`}>
-          <AppearanceSettings/>
-        </Route>
-        <Route path={`${match.path}/about`}>
-          <About/>
-        </Route>
-        <Route path={`${match.path}`}>
-          <ProfileSettings user={userData.currentUser} refetch={() => refetch()}/>
-        </Route>
-      </Switch>
+      <Routes>
+        <Route path="security" element={<SecuritySettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+        <Route path="profile" element={<ProfileSettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+        <Route path="emojis" element={<EmojiSettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+        <Route path="notifications" element={<NotificationSettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+        <Route path="appearance" element={<AppearanceSettings/>}/>
+        <Route path="about" element={<About/>}/>
+        <Route path="/" element={<ProfileSettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+      </Routes>
     );
   } else {
     return (

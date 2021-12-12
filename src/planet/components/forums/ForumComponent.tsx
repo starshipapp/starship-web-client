@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import createForumTagMutation, { ICreateForumTagMutationData } from "../../../graphql/mutations/components/forums/createForumTagMutation";
 import removeForumTagMutation, { IRemoveForumTagMutationData } from "../../../graphql/mutations/components/forums/removeForumTagMutation";
 import getForum, { IGetForumData } from "../../../graphql/queries/components/forums/getForum";
@@ -66,7 +66,6 @@ function ForumComponent(props: IComponentProps): JSX.Element {
   const [activeTag, setActiveTag] = useState<string>("");
   const [activeSort, setActiveSort] = useState<string>("recentlyUpdated");
   const {data: forumData, fetchMore, refetch} = useQuery<IGetForumData>(getForum, {variables: {forumId: props.id, tag: activeTag !== "" ? activeTag : null, sortMethod: activeSort ?? "recentlyUpdated", count: 25}});
-  const history = useHistory();
 
   const loadMore = function() {
     if(hasHitEnd) {

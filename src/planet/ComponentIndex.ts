@@ -86,5 +86,5 @@ export default class ComponentIndex {
     if(Component) {
       return React.createElement(Component, {id, planet, name, subId, pageId});
     }
-  }
+  };
 }

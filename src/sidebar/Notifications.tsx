@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { faBell, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/controls/Button";
 import MenuItem from "../components/menu/MenuItem";
 import Popover from "../components/overlays/Popover";
@@ -34,7 +34,6 @@ function Notifications(props: INotificationsProps): JSX.Element {
   const [clearNotification] = useMutation<IClearNotificationMutationData>(clearNotificationMutation);
   const [clearAllNotifications] = useMutation<IClearAllNotificationsMutationData>(clearAllNotificationsMutation);
   const [markAllRead] = useMutation<IMarkAllReadMutationData>(markAllReadMutation);
-  const history = useHistory();
 
   const notifCount = notifications?.notifications ? notifications.notifications.filter((value) => value.isRead === false).length : 0;
 
@@ -78,7 +77,7 @@ function Notifications(props: INotificationsProps): JSX.Element {
         open={showPopover}
         onClose={() => setShowPopover(false)}
         fullWidth={true}
-        placement={PopperPlacement.right}
+        placement={PopperPlacement.rightEnd}
         popoverTarget={
           <Link to="/messages" className="link-button">
             <MenuItem 

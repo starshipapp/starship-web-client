@@ -1,7 +1,7 @@
 import { useMutation } from "@apollo/client";
 import { Button, Classes, Intent, Menu, MenuItem, Popover } from "@blueprintjs/core";
 import React, { useMemo, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import SimpleMDEEditor from "react-simplemde-editor";
 import insertForumPostMutation, { IInsertForumPostMutationData } from "../../../graphql/mutations/components/forums/insertForumPostMutation";
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
@@ -20,13 +20,13 @@ function ForumEditor(props: IForumEditorProps): JSX.Element {
   const [editingContent, setEditingContent] = useState<string>("");
   const [name, setName] = useState<string>("");
   const [insertPost] = useMutation<IInsertForumPostMutationData>(insertForumPostMutation);
-  const history = useHistory();
   const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
 
+  const navigate = useNavigate();
   const memoizedOptions = useMemo(() => assembleEditorOptions(uploadMarkdownImage), [uploadMarkdownImage]);
 
   return (
-    <div className="ForumEditor">
+    <div className="w-full px-4">
       <div className="ForumEditor-title">
         <input className={Classes.INPUT + " ForumEditor-name " + Classes.LARGE} value={name} onChange={(e) => setName(e.target.value)} placeholder="Thread Name"/>
         {props.forum.tags && props.forum.tags.length !== 0 && <Popover>
@@ -48,7 +48,7 @@ function ForumEditor(props: IForumEditorProps): JSX.Element {
         }
         insertPost({variables: {forumId: props.forum.id, name, content: editingContent, tag: activeTag}}).then((data) => {
           GlobalToaster.show({message: "Sucessfully created thread.", intent: Intent.SUCCESS});
-          history.push(`/planet/${props.forum.planet?.id ?? "uh_oh"}/${props.forum.id}/${data.data?.insertForumPost.id ?? ""}`);
+          navigate(`/planet/${props.forum.planet?.id ?? "uh_oh"}/${props.forum.id}/${data.data?.insertForumPost.id ?? ""}`);
           props.onClose();
         }).catch((err: Error) => {
           GlobalToaster.show({message: err.message, intent: Intent.DANGER});

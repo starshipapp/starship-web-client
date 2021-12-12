@@ -9,7 +9,7 @@ import { assembleEditorOptions } from "../../../util/editorOptions";
 import updateWikiPageMutation, { IUpdateWikiPageData } from "../../../graphql/mutations/components/wikis/updateWikiPageMutation";
 import renameWikiPageMutation, { IRenameWikiPageData } from "../../../graphql/mutations/components/wikis/renameWikiPageMutation";
 import removeWikiPageMutation, { IRemoveWikiPageData } from "../../../graphql/mutations/components/wikis/removeWikiPageMutation";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
 import Markdown from "../../../util/Markdown";
 import SubPageHeader from "../../../components/subpage/SubPageHeader";
@@ -41,7 +41,7 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
   const [savePage] = useMutation<IUpdateWikiPageData>(updateWikiPageMutation);
   const [renameWikiPage] = useMutation<IRenameWikiPageData>(renameWikiPageMutation); 
   const [removeWikiPage] = useMutation<IRemoveWikiPageData>(removeWikiPageMutation);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
 
   useEffect(() => {
@@ -112,7 +112,7 @@ function WikiPage(props: IWikiPageProps): JSX.Element {
                   removeWikiPage({variables: {pageId: props.subId}}).then(() => {
                     Toasts.success(`Removed page ${data.wikiPage.name ?? ""}.`);
                     props.refetch();
-                    history.push(`/planet/${props.planet.id}/${props.id}`);
+                    navigate(`/planet/${props.planet.id}/${props.id}`);
                   }).catch((err: Error) => {
                     Toasts.danger(err.message);
                   });

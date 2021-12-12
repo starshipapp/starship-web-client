@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { faExclamationTriangle, faGlobe, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Button from "../components/controls/Button";
 import Checkbox from "../components/controls/Checkbox";
 import Toasts from "../components/display/Toasts";
@@ -25,7 +25,7 @@ function PlanetSwitcher(props: IPlanetSwitcherProps): JSX.Element {
   const [showPopout, setPopout] = useState<boolean>(false);
   const [insertPlanet] = useMutation<IInsertPlanetMutationData>(insertPlanetMutation);
 
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const createPlanet = function() {
     if(planetName === "") {
@@ -37,7 +37,7 @@ function PlanetSwitcher(props: IPlanetSwitcherProps): JSX.Element {
       if(value.data && value.data.insertPlanet) {
         Toasts.success("Planet sucessfully created!");
         void refetch();
-        history.push("/planet/" + value.data.insertPlanet.id);
+        navigate("/planet/" + value.data.insertPlanet.id);
         setPopout(false);
         props.toggleHidden && props.toggleHidden();
       } else {

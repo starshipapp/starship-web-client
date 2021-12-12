@@ -20,7 +20,6 @@ import lockForumPostMutation, { ILockForumPostMutationData } from "../../../grap
 import stickyForumPostMutation, { IStickyForumPostMutationData } from "../../../graphql/mutations/components/forums/stickyForumPostMutation";
 import updateForumPostMutation, { IUpdateForumPostMutationData } from "../../../graphql/mutations/components/forums/updateForumPostMutation";
 import updateForumReplyMutation, { IUpdateForumReplyMutationData } from "../../../graphql/mutations/components/forums/updateForumReplyMutation";
-import { useHistory } from "react-router-dom";
 import { GlobalToaster } from "../../../util/GlobalToaster";
 import "./css/ForumThreadItem.css";
 import "emoji-mart/css/emoji-mart.css";
@@ -31,6 +30,7 @@ import fixPFP from "../../../util/fixPFP";
 import Markdown from "../../../util/Markdown";
 import generateEmojiMartEmojis from "../../../util/generateEmojiMartEmojis";
 import getSysInfo, { IGetSysInfoData } from "../../../graphql/queries/misc/getSysInfo";
+import { useNavigate } from "react-router-dom";
 
 interface IForumThreadItemProps {
   forumId: string
@@ -60,9 +60,9 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const [stickyForumPost] = useMutation<IStickyForumPostMutationData>(stickyForumPostMutation);
   const [updateForumPost] = useMutation<IUpdateForumPostMutationData>(updateForumPostMutation);
   const [updateForumReply] = useMutation<IUpdateForumReplyMutationData>(updateForumReplyMutation);
-  const history = useHistory();
   const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
   const memoizedOptions = useMemo(() => assembleEditorOptions(uploadMarkdownImage), [uploadMarkdownImage]);
+  const navigate = useNavigate();
 
   const typeCheck = function (arg: any): arg is IForumPost {
     // this suits our needs for this specific use case
@@ -139,7 +139,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
           if(props.isParent) {
             deleteForumPost({variables: {postId: props.post.id}}).then(() => {
               GlobalToaster.show({message: "Successfully deleted post.", intent: Intent.SUCCESS});
-              history.push(`/planet/${props.planet.id}/${props.forumId}`);
+              navigate(`/planet/${props.planet.id}/${props.forumId}`);
               props.forumRefetch();
             }).catch((err: Error) => {
               GlobalToaster.show({message: err.message, intent: Intent.DANGER});

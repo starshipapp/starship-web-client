@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useMutation } from "@apollo/client";
 import resetPasswordMutation, { IResetPasswordMutationData } from "../graphql/mutations/users/resetPasswordMutation";
-import { useHistory, useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { SHA256 } from "crypto-js";
 import logo from '../assets/images/logo.svg';
 import blackLogo from '../assets/images/black-logo.svg';
@@ -11,26 +11,23 @@ import Toasts from "../components/display/Toasts";
 import Button from "../components/controls/Button";
 import Intent from "../components/Intent";
 import { Link } from "react-router-dom";
-interface IForgotParams {
-  forgotdata: string
-}
 
 function Forgot(): JSX.Element {
   const [password, setPassword] = useState<string>("");
   const [confirm, setConfirm] = useState<string>("");
-  const history = useHistory();
-  const {forgotdata} = useParams<IForgotParams>();
+  const navigate = useNavigate();
+  const {forgotdata} = useParams();
   const [resetPassword] = useMutation<IResetPasswordMutationData>(resetPasswordMutation);
 
   const reset = function() {
-    const splitdata = forgotdata.split(":token:");
+    const splitdata = forgotdata ? forgotdata.split(":token:") : [];
     if(password !== confirm) {
       Toasts.danger("Passwords do not match.");
       return;
     }
     resetPassword({variables: {password: SHA256(password).toString(), token: splitdata[1], userId: splitdata[0]}}).then(() => {
       Toasts.success("Password reset successfully.");
-      history.push("/login");
+      navigate("/login");
     }).catch((error: Error) => {
       Toasts.danger(error.message);
     });

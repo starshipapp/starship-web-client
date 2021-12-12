@@ -1,21 +1,17 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Button from "../components/controls/Button";
 import Toasts from "../components/display/Toasts";
 import useInviteMutation, { IUseInviteMutationData } from "../graphql/mutations/invites/useInviteMutation";
 import getInvite, { IGetInviteData } from "../graphql/queries/invites/getInvite";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 
-interface IInviteParams {
-  inviteId: string
-}
-
 function Invite(): JSX.Element {
-  const {inviteId} = useParams<IInviteParams>();
+  const {inviteId} = useParams();
   const {data: invite} = useQuery<IGetInviteData>(getInvite, { variables: {id: inviteId}, errorPolicy: 'all' });
   const {loading, data, refetch} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [useInvite] = useMutation<IUseInviteMutationData>(useInviteMutation);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const use = function() {
     // it thinks this is a hook
@@ -24,7 +20,7 @@ function Invite(): JSX.Element {
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useInvite({variables: {id: invite?.invite.id}}).then((data) => {
       Toasts.success(`Successfully joined ${invite?.invite.planet?.name ?? 'the planet'}!`);
-      history.push(`/planet/${data.data?.useInvite.id ?? "null"}`);
+      navigate(`/planet/${data.data?.useInvite.id ?? "null"}`);
       void refetch();
     }).catch((err: Error) => {
       Toasts.danger(err.message);

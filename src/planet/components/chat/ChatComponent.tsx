@@ -1,8 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { faCamera, faCaretDown, faEdit, faHashtag, faThumbtack, faWrench } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import MessageView from "../../../chat/MessageView";
 import Button from "../../../components/controls/Button";
 import Divider from "../../../components/display/Divider";
@@ -26,7 +25,7 @@ function ChatComponent(props: IComponentProps): JSX.Element {
   const [showTopicText, setShowTopicText] = useState(false);
   const [topicText, setTopicText] = useState("");
   const [setTopicM] = useMutation<ISetChannelTopicMutationData>(setChannelTopicMutation);
-  const history = useHistory();
+  const navigate = useNavigate();
 
   function setTopic(): void {
     setTopicM({variables: {channelId: props.subId, topic: topicText}}).then(() => {
@@ -39,16 +38,16 @@ function ChatComponent(props: IComponentProps): JSX.Element {
 
   useEffect(() => {
     if (data?.chat?.channels && data.chat.channels.length > 0 && !props.subId) {
-      history.push(`/planet/${props.planet.id}/${props.id}/${data.chat.channels[0].id}`);
+      navigate(`/planet/${props.planet.id}/${props.id}/${data.chat.channels[0].id}`);
     }
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-  }, [data, history, props.id, props.planet.id, props.subId]);
+  }, [data, navigate, props.id, props.planet.id, props.subId]);
 
   const currentChannelObject = data?.chat?.channels?.find((channel) => channel.id === props.subId);
 
   return (
-    <div className="w-full h-full flex flex-col overflow-hidden text-black dark:text-white bg-white dark:bg-gray-900">
+    <div className="w-full h-full flex flex-col overflow-hidden text-black dark:text-white bg-gray-50 dark:bg-gray-900">
       {data?.chat?.channels && <ChannelManager
         isOpen={isOpen}
         chatId={props.id}

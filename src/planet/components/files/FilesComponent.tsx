@@ -74,8 +74,6 @@ function FilesComponent(props: IComponentProps): JSX.Element {
   const [completed, setCompleted] = useState<number>(0);
   const [showUploading, setShowUploading] = useState<boolean>(false);
 
-  console.log(selected);
-
   const date = objectData?.fileObject?.createdAt ? new Date(Number(objectData?.fileObject.createdAt)) : new Date("2020-07-25T15:24:30+00:00");
   const fileDate = date.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
 
@@ -326,7 +324,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         <FontAwesomeIcon icon={faCloudUploadAlt} size="10x" className="text-black dark:text-green-600"/>
         <h2>Drop file to upload.</h2>
       </div>}
-      <div className="w-full flex p-2 border-b border-gray-300 dark:border-gray-600 sticky top-0 bg-white dark:bg-gray-900">
+      <div className="w-full flex p-2 border-b border-gray-300 dark:border-gray-600 sticky top-0 bg-gray-50 dark:bg-gray-900">
         <input
           type="file"
           ref={fileInput}
@@ -518,7 +516,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         {((objectData && objectData.fileObject.type === "folder") || !props.subId) && determineReadmeComponent()}
       </div>
       {('netscape' in window) && objectData && objectData.fileObject.type === "folder" && <div id="firefox-sticky-spacer" className="p-5"/>}
-      <div className={`flex sticky p-2 bottom-0 w-full bg-white dark:bg-gray-900 border-t border-gray-300 dark:border-gray-600 ${(objectData && objectData.fileObject.type === "folder") || !objectData ? "mt-auto" : ""}`}>
+      <div className={`flex sticky p-2 bottom-0 w-full bg-gray-50 dark:bg-gray-900 border-t border-gray-300 dark:border-gray-600 ${(objectData && objectData.fileObject.type === "folder") || !objectData ? "mt-auto" : ""}`}>
         {((objectData && objectData.fileObject.type === "folder") || !props.subId) && <div className="mr-1">
           {foldersData?.folders.length ?? 0} folders, {filesData?.files.length ?? 0} files
         </div>}

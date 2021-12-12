@@ -1,13 +1,13 @@
 import { useQuery } from "@apollo/client";
 import { NonIdealState } from "@blueprintjs/core";
 import React from "react";
-import { Route, Switch, useRouteMatch } from "react-router";
+import { Route } from "react-router";
+import { Routes } from "react-router-dom";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import NotificationPanel from "./NotificationPanel";
 
 function Messages(): JSX.Element {
   const {data: userData} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const match = useRouteMatch();
 
   if(!userData?.currentUser) {
     return (
@@ -19,11 +19,9 @@ function Messages(): JSX.Element {
   }
 
   return (<>
-    <Switch>
-      <Route path={`${match.path}`}>
-        <NotificationPanel user={userData.currentUser}/>
-      </Route>
-    </Switch>
+    <Routes>
+      <Route path="/" element={<NotificationPanel user={userData.currentUser}/>}/>
+    </Routes>
   </>);
 }
 

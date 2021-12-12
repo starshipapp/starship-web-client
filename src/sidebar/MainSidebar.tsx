@@ -27,16 +27,11 @@ interface IMainSidebarProps {
   context: string
 }
 
-interface IMainSidebarParams {
-  planet?: string
-  component?: string
-}
-
 
 function MainSidebar(props: IMainSidebarProps): JSX.Element {
   const { client, loading, data, refetch } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [isHidden, setHidden] = useState<boolean>(isMobile());
-  const {planet, component} = useParams<IMainSidebarParams>();
+  const {planet, component} = useParams();
 
 
   const toggleHidden = function() {

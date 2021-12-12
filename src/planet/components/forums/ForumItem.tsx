@@ -1,6 +1,6 @@
 import { faComment, faLock, faReply, faThumbtack } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Divider from "../../../components/display/Divider";
 import Tag from "../../../components/display/Tag";
 import Intent from "../../../components/Intent";
