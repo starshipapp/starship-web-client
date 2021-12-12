@@ -1,5 +1,7 @@
 module.exports = {
-  purge: ['./src/**/*.{js,jsx,ts,tsx}', './public/index.html'],
+  content: [
+    "./src/**/*.{ts,tsx}",
+  ],
   darkMode: 'class', // or 'media' or 'class'
   theme: {
     extend: {
@@ -43,19 +45,8 @@ module.exports = {
       }
     },
   },
-  variants: {
-    extend: {
-      boxShadow: ['active'],
-      backgroundColor: ['active', 'checked'],
-      borderColor: ['checked'],
-      display: ['dark'],
-      padding: ['dark'],
-      borderRadius: ['dark']
-    },
-    scrollbar: ['dark', 'rounded']
-  },
   plugins: [
     require('@tailwindcss/forms'),
     require('tailwind-scrollbar')
-  ],
+  ]
 }
