@@ -1,18 +1,10 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { Alignment, Button, Intent, Menu, MenuItem, Navbar, NonIdealState, Popover, Position } from "@blueprintjs/core";
-import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import addComponentMutation, { IAddComponentMutationData } from "../graphql/mutations/planets/addComponentMutation";
-import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import NonIdealState from "../components/display/NonIdealState";
 import IPlanet from "../types/IPlanet";
-import IUser from "../types/IUser";
-import { GlobalToaster } from "../util/GlobalToaster";
-import permissions from "../util/permissions";
 import Admin from "./admin/Admin";
 import ComponentIndex from "./ComponentIndex";
-import "./css/Planet.css";
-import yn from 'yn';
-import PlanetSidebar from "../sidebar/PlanetSidebar";
 
 interface IPlanetContentProps {
   home: boolean,
@@ -21,9 +13,6 @@ interface IPlanetContentProps {
 
 function PlanetContent(props: IPlanetContentProps): JSX.Element {
   const { component, subId, page} = useParams();
-  const {data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const [componentName, setComponentName] = useState<string>("");
-  const [addComponent] = useMutation<IAddComponentMutationData>(addComponentMutation);
   const [forceStyling, enableStyling] = useState<boolean>(false);
 
   useEffect(() => {
@@ -45,10 +34,9 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
   // really long component determining thing
   //
   let currentComponent = <NonIdealState
-    icon="error"
+    icon={faExclamationTriangle}
     title="404"
-    description="We couldn't find that page in this planet."
-  />;
+  >We couldn't find that page in this planet.</NonIdealState>;
 
   if(component && props.planet.components) {
     const filteredComponents = props.planet.components.filter(value => value.componentId === component);
@@ -58,17 +46,16 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
         currentComponent = thisComponent;
       } else {
         currentComponent = <NonIdealState
-          icon="error"
+          icon={faExclamationTriangle}
           title="Not Implemented"
-          description="This component has no client implementation and cannot be rendered."
-        />;
+        >This component has no client implementation and cannot be rendered.</NonIdealState>;
       }
     }
   }
 
   if(component === "admin" && props.planet) {
     if(props.planet.createdAt) {
-      currentComponent = <Admin planet={props.planet} forceStyling={forceStyling} enableStyling={enableStyling}/>;
+      currentComponent = <Admin planet={props.planet} forceStyling={forceStyling} enableStyling={enableStyling} subId={subId ?? "/"}/>;
     }
   }
 
@@ -80,10 +67,9 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
           currentComponent = thisComponent;
         } else {
           currentComponent = <NonIdealState
-            icon="error"
+            icon={faExclamationTriangle}
             title="Not Implemented"
-            description="This component has no client implementation and cannot be rendered."
-          />;
+          >This component has no client implementation and cannot be rendered.</NonIdealState>;
         }
       }
     }
@@ -92,7 +78,7 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
   return (
     <>
       {props.planet.css && (component !== "admin" || forceStyling === true) && <style>{props.planet.css}</style>}
-      {props.planet.components && <div className={"Planet-contentcontainer"}>
+      {props.planet.components && <div className={"min-h-full w-full overflow-x-hidden m-0 p-0 flex"}>
         {currentComponent}
       </div>}
     </>

@@ -3,7 +3,7 @@ import getCurrentUser, { IGetCurrentUserData } from "../../graphql/queries/users
 import React, { useState } from "react";
 import IPlanet from "../../types/IPlanet";
 import permissions from "../../util/permissions";
-import { Link, Route, Routes } from "react-router-dom";
+import { Link } from "react-router-dom";
 import AdminGeneral from "./AdminGeneral";
 import AdminComponent from "./AdminComponents";
 import AdminExperimental from "./AdminExperimental";
@@ -22,7 +22,8 @@ import MenuItem from "../../components/menu/MenuItem";
 interface IAdminProps {
   planet: IPlanet,
   forceStyling: boolean,
-  enableStyling: (value: boolean) => void
+  enableStyling: (value: boolean) => void,
+  subId: string
 }
 
 function Admin(props: IAdminProps): JSX.Element {
@@ -49,13 +50,11 @@ function Admin(props: IAdminProps): JSX.Element {
               <Link onClick={toggleSidebar} className="link-button" to={`/planet/${props.planet.id}/admin/experimental`}><MenuItem icon={faFlask}>Experimental</MenuItem></Link>
             </SubPageSidebar>
             <div className="w-full ml-4">
-              <Routes>
-                <Route path="experimental" element={<AdminExperimental planet={props.planet} forceStyling={props.forceStyling} enableStyling={props.enableStyling}/>}/>
-                <Route path="components" element={<AdminComponent planet={props.planet}/>}/>
-                <Route path="members" element={<AdminMembers planet={props.planet}/>}/>
-                <Route path="emojis" element={<AdminEmojis planet={props.planet}/>}/>
-                <Route path="/" element={<AdminGeneral planet={props.planet}/>}/>
-              </Routes>
+              {props.subId === "experimental" && <AdminExperimental planet={props.planet} forceStyling={props.forceStyling} enableStyling={props.enableStyling}/>}
+              {props.subId === "components" && <AdminComponent planet={props.planet}/>}
+              {props.subId === "members" && <AdminMembers planet={props.planet}/>}
+              {props.subId === "emojis" && <AdminEmojis planet={props.planet}/>}
+              {props.subId === "/" && <AdminGeneral planet={props.planet}/>}
             </div>
           </SubPage>
           </PageContainer> : <NonIdealState

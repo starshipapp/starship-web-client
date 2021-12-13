@@ -15,7 +15,7 @@ function Planet(): JSX.Element {
       {data?.planet ? <>
         <Routes>
           <Route path=":component/:subId/:page" element={<PlanetContent home={false} planet={data.planet}/>}/>
-          <Route path=":component/:subId" element={<PlanetContent home={false} planet={data.planet}/>}/>
+          <Route path=":component/:subId/*" element={<PlanetContent home={false} planet={data.planet}/>}/>
           <Route path=":component" element={<PlanetContent home={false} planet={data.planet}/>}/>
           <Route path="/" element={<PlanetContent home={true} planet={data.planet}/>}/>
         </Routes>
