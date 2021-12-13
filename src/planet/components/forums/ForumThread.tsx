@@ -7,15 +7,19 @@ import ReactPaginate from "react-paginate";
 import SimpleMDEEditor from "react-simplemde-editor";
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
 import permissions from "../../../util/permissions";
-import { Button, Icon, Intent, NonIdealState } from "@blueprintjs/core";
 import { assembleEditorOptions } from "../../../util/editorOptions";
 import insertForumReplyMutation, { IInsertForumReplyMutationData } from "../../../graphql/mutations/components/forums/insertForumReplyMutation";
-import { GlobalToaster } from "../../../util/GlobalToaster";
 import IForumItem from "../../../types/IForumItem";
 import ForumThreadItem from "./ForumThreadItem";
-import "./css/ForumThread.css";
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
 import { useNavigate } from "react-router-dom";
+import SubPageHeader from "../../../components/subpage/SubPageHeader";
+import NonIdealState from "../../../components/display/NonIdealState";
+import { faCaretLeft, faCaretRight, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Toasts from "../../../components/display/Toasts";
+import Button from "../../../components/controls/Button";
+import PageSubheader from "../../../components/layout/PageSubheader";
 
 interface IForumThreadProps {
   planet: IPlanet,
@@ -45,10 +49,17 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
     }
   }, [demandValueChange, editingContent]);
 
+  const buttonBase = `transition-all duration-200 text-black leading-tight flex-shrink-0
+  outline-none focus:outline-none focus:ring-blue-300 focus:ring-1 dark:focus:ring-blue-600 
+  dark:text-white block`;
+  const buttonLink = `link-button block px-3 py-1.5`;
+  const buttonRegular = `bg-gray-200 border-gray-300 hover:bg-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 active:bg-gray-400 dark:active:bg-gray-800`;
+  const buttonPrimary = `bg-blue-400 border-gray-300 hover:bg-blue-500 dark:bg-blue-700 dark:border-gray-600 dark:hover:bg-blue-600 active:bg-blue-600 dark:active:bg-blue-800`;
+
   return (
-    <div className="w-full flex flex-col">
-      <div className="ForumThread-name">{postData?.forumPost && postData.forumPost.name}</div>
-      <div className="ForumThread-container">
+    <div className="w-full flex flex-col mb-4">
+      <SubPageHeader>{postData?.forumPost && postData.forumPost.name}</SubPageHeader>
+      <div className="w-full">
         {postData?.forumPost && (props.page ? Number(props.page) : 1) === 1 && <ForumThreadItem 
           forumId={props.forum.id} 
           refetch={() => void refetch()} 
@@ -62,7 +73,7 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
           }}
           forumRefetch={() => props.forumRefetch()}
         />}
-        {postData?.forumPost && <div className="ForumThread-itemcontainer">
+        {postData?.forumPost && <div className="mb-3">
           {postData?.forumPost.replies && postData?.forumPost.replies.forumReplies.map((value) => (<ForumThreadItem 
             key={value.id}
             forumId={props.forum.id} 
@@ -80,16 +91,14 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
         </div>}
         {!postData?.forumPost && !loading && <NonIdealState
           title="404"
-          icon="error"
-          description="This forum post doesn't exist."
-        />}
+          icon={faExclamationTriangle}
+        >This forum post doesn't exist.</NonIdealState>}
         {/* <ForumThreadItemContainer page={this.props.page ? Number(this.props.page) : 1} addQuote={this.addQuote} planet={this.props.planet} post={postData.forumPost}/>*/}
       </div>
       {postData?.forumPost && (postData.forumPost.replyCount ?? 0) > 25 && <ReactPaginate
-        previousLabel={<Icon icon="caret-left"/>}
-        nextLabel={<Icon icon="caret-right"/>}
+        previousLabel={<FontAwesomeIcon icon={faCaretLeft}/>}
+        nextLabel={<FontAwesomeIcon icon={faCaretRight}/>}
         breakLabel="..."
-        breakClassName="bp3-button bp3-disabled pagination-button"
         pageCount={Math.ceil((postData.forumPost.replyCount ?? 0) / 25)}
         marginPagesDisplayed={2}
         pageRangeDisplayed={5}
@@ -98,36 +107,39 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
         }}
         initialPage={Number(props.page) - 1}
         disableInitialCallback={true}
-        containerClassName="pagination bp3-button-group"
-        activeClassName="bp3-button bp3-disabled pagination-button"
-        pageClassName="bp3-button pagination-button"
-        previousClassName="bp3-button pagination-button pagination-movement"
-        nextClassName="bp3-button pagination-button pagination-movement"
-        pageLinkClassName="pagination-link"
-        nextLinkClassName="pagination-link"
-        previousLinkClassName="pagination-link"
-        breakLinkClassName="pagination-link"
+        containerClassName="rounded w-max border border-gray-300 dark:border-gray-600 flex text-black dark:text-white"
+        breakClassName={`${buttonBase} ${buttonRegular} border-r disabled opacity-75 cursor-not-allowed`}
+        activeClassName={`${buttonBase} ${buttonPrimary} border-r`}
+        pageClassName={`${buttonBase} ${buttonRegular} border-r`}
+        previousClassName={`${buttonBase} ${buttonRegular} border-r`}
+        nextClassName={`${buttonBase} ${buttonRegular}`}
+        pageLinkClassName={buttonLink}
+        nextLinkClassName={buttonLink}
+        previousLinkClassName={buttonLink}
+        breakLinkClassName={buttonLink}
       />}
-      {postData?.forumPost && data?.currentUser && (!postData.forumPost.locked || permissions.checkFullWritePermission(data.currentUser, props.planet)) && <div className="ForumThread-reply-editor">
-        <div className="ForumThread-reply">Reply</div>
+      {postData?.forumPost && data?.currentUser && (!postData.forumPost.locked || permissions.checkFullWritePermission(data.currentUser, props.planet)) && <div className="w-full">
+        <PageSubheader>Reply</PageSubheader> 
         <SimpleMDEEditor
           onChange={(e) => setEditingContent(e)}
           value={editingContent} 
           getMdeInstance={(instance) => mdeInstance = instance}
-          options={memoizedOptions}/>
-        <Button text="Post" className="ForumEditor-button" onClick={() => {
+          options={memoizedOptions}
+        />
+        <Button className="block -mt-4" onClick={() => {
           if(editingContent === "") {
-            GlobalToaster.show({message: "Your reply must have content.", intent: Intent.DANGER});
+            Toasts.danger("Your reply must not be empty.");
+            return;
           }
           insertReply({variables: {postId: props.postId, content: editingContent}}).then(() => {
-            GlobalToaster.show({message: "Reply created.", intent: Intent.SUCCESS});
+            Toasts.success("Successfully replied to post.");
             void refetch();
             setEditingContent("");
             setDemandValueChange(true);
           }).catch((err: Error) => {
-            GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+            Toasts.danger(err.message);
           });
-        }}/>
+        }}>Reply</Button>
       </div>}
     </div>
   );

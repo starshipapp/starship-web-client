@@ -118,10 +118,13 @@ function ForumComponent(props: IComponentProps): JSX.Element {
   return (
     <Page>
       <PageContainer>
-        <Link to={`/planet/${props.planet.id}/${props.id}`} className="link-button cursor-pointer"><PageHeader>{props.name}</PageHeader></Link>
+        <Link
+          to={`/planet/${props.planet.id}/${props.id}`} className="link-button cursor-pointer"
+          onClick={() => setCreatingNewThread(false)}
+        ><PageHeader>{props.name}</PageHeader></Link>
         {forumData?.forum && <SubPage>
           {!props.subId && <SubPageSidebar>
-            {hasPublicWrite && <MenuItem icon={faPlus} onClick={() => setCreatingNewThread(true)}>New Thread</MenuItem>}
+            {hasPublicWrite && <MenuItem icon={faPlus} onClick={() => setCreatingNewThread(!creatingNewThread)}>New Thread</MenuItem>}
             {((forumData.forum.tags && forumData.forum.tags.length > 0) || hasFullWrite) && <MenuHeader>Tags</MenuHeader>}
             {forumData.forum.tags && forumData.forum.tags.length > 0 && <MenuItem onClick={() => setActiveTag("")} icon={activeTag === "" ? faCheck : faGlobe}>All</MenuItem>}
             {forumData.forum.tags && forumData.forum.tags.map((tag, index) => (
