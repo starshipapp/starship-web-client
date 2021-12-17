@@ -71,7 +71,7 @@ function WikiComponent(props: IComponentProps): JSX.Element {
               <Button onClick={createPage}>Create</Button>
             </Popover>
           </SubPageSidebar>
-          <div className="w-full">
+          <div className="w-full ml-4">
             {wikiData?.wiki && wikiData.wiki?.pages?.length === 0 && <NonIdealState title="This Page Group is empty." icon={faExclamationTriangle}>
               <p>This page group is empty. Click the plus icon in the sidebar on the left to create a new page.</p>
             </NonIdealState>}

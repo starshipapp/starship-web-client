@@ -1,5 +1,4 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Alert, Button, ButtonGroup, Icon, Intent, Popover } from "@blueprintjs/core";
 import React, { useMemo, useState } from "react";
 import SimpleMDEEditor from "react-simplemde-editor";
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
@@ -31,6 +30,14 @@ import Markdown from "../../../util/Markdown";
 import generateEmojiMartEmojis from "../../../util/generateEmojiMartEmojis";
 import getSysInfo, { IGetSysInfoData } from "../../../graphql/queries/misc/getSysInfo";
 import { useNavigate } from "react-router-dom";
+import { faCrown, faEdit, faEllipsisH, faFlag, faLock, faQuoteLeft, faReply, faSave, faShieldAlt, faSmile, faThumbtack, faTrash, faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
+import Button from "../../../components/controls/Button";
+import Tooltip from "../../../components/display/Tooltip";
+import Tag from "../../../components/display/Tag";
+import Intent from "../../../components/Intent";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Popover from "../../../components/overlays/Popover";
+import MenuItem from "../../../components/menu/MenuItem";
 
 interface IForumThreadItemProps {
   forumId: string
@@ -52,6 +59,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const [showProfile, setProfile] = useState<boolean>(false);
   const [showReport, setReport] = useState<boolean>(false);
   const [showAnyways, setShowAnyways] = useState<boolean>(false);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
   const [deleteForumPost] = useMutation<IDeleteForumPostMutationData>(deleteForumPostMutation);
   const [deleteForumReply] = useMutation<IDeleteForumReplyMutationData>(deleteForumReplyMutation);
   const [forumPostReact] = useMutation<IForumPostReactMutationData>(forumPostReactMutation);
@@ -86,11 +94,11 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const selectEmoji = function (emoji: string): void {
     if(props.isParent) {
       forumPostReact({variables: {postId: props.post.id, emojiId: emoji}}).catch((err: Error) => {
-        GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+        // GlobalToaster.show({message: err.message, intent: Intent.DANGER});
       });
     } else {
       forumReplyReact({variables: {replyId: props.post.id, emojiId: emoji}}).catch((err: Error) => {
-        GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+        // GlobalToaster.show({message: err.message, intent: Intent.DANGER});
       });
     }
   };
@@ -110,19 +118,138 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
         <div className="ForumThreadItem-blocked-text">
           This post is from a blocked user. ({props.post.owner.username})
         </div>
-        <Button
-          className="ForumThreadItem-blocked-button"
-          text="Show Anyways"
-          minimal={true}
-          small={true}
-          onClick={() => setShowAnyways(true)}
-        />
+        {// <Button
+        //   className="ForumThreadItem-blocked-button"
+        //   text="Show Anyways"
+        //   minimal={true}
+        //   small={true}
+        //   onClick={() => setShowAnyways(true)}
+        // />
+        }
       </div>
     );
   }
 
   return (
-    <div className="ForumThreadItem">
+    <div className="flex mb-3">
+      {props.post.owner && <Profile isOpen={showProfile} planet={props.planet} userId={props.post.owner.id} onClose={() => setProfile(false)}/>}
+      {props.post.owner && <ReportDialog isOpen={showReport} onClose={() => setReport(false)} objectId={props.post.id} objectType={props.isParent ? reportObjectType.FORUMPOST : reportObjectType.FORUMREPLY} userId={props.post.owner.id}/>}
+      <div className="rounded-full w-10 h-10 overflow-hidden bg-gray-200 dark:bg-gray-700">
+        {props.post.owner?.profilePicture && <img className="w-full h-full" src={fixPFP(props.post.owner.profilePicture)} alt=""/>}
+      </div>
+      <div className="ml-3 bg-gray-100 w-full rounded overflow-hidden border border-gray-300 dark:bg-gray-900 dark:border-gray-700">
+        <div className="px-3 py-2.5 flex border-b border-gray-300 bg-gray-200 dark:bg-gray-800 dark:border-gray-700">
+          <div className={`font-bold`}>
+            {props.post.owner?.username}
+          </div>
+          {props.post.owner && permissions.checkFullWritePermission(props.post.owner, props.planet) && <div className="ml-2">
+            <Tooltip
+              content="Planet Member"
+            >
+              <FontAwesomeIcon icon={faUserAstronaut} className="text-yellow-600 dark:text-yellow-400" size="sm"/> 
+            </Tooltip>
+          </div>}
+          {props.post.owner && props.post.owner.admin && <div className="ml-2">
+            <Tooltip
+              content="Administrator"
+            >
+              <FontAwesomeIcon icon={faShieldAlt} className="text-green-600 dark:text-green-400" size="sm"/>
+            </Tooltip>
+          </div>}
+          <div className="ml-2 text-gray-600 dark:text-gray-300">
+            {creationDateText}
+          </div>
+          {data?.currentUser && permissions.checkPublicWritePermission(data?.currentUser, props.planet) && <div className="ml-auto inline-flex -mt-1 -mb-1 -mr-1.5">
+            <Button
+              minimal
+              small
+              icon={faQuoteLeft}
+              className="inline"
+            />
+            {(permissions.checkFullWritePermission(data?.currentUser, props.planet) || data.currentUser.id === props.post.owner?.id) && <Button
+              minimal
+              small
+              icon={faEdit}
+              className="inline" 
+            />}
+            <Button
+              minimal
+              small
+              icon={faSmile}
+              className="inline"  
+            />
+            <Popover
+              open={showMenu}
+              onClose={() => setShowMenu(false)}
+              popoverTarget={<Button
+                minimal
+                small
+                icon={faEllipsisH}
+                className="inline"
+                onClick={() => setShowMenu(true)}
+              />}
+              popoverClassName="pt-1 pb-1 pl-0 pr-0 w-36"
+            >
+              <MenuItem
+                icon={faFlag}
+                intent={Intent.DANGER}
+              >Report</MenuItem>
+              <MenuItem
+                icon={faTrash}
+                intent={Intent.DANGER}
+              >Delete</MenuItem>
+              <MenuItem
+                icon={faThumbtack}
+                intent={Intent.SUCCESS}
+              >Sticky</MenuItem>
+              <MenuItem
+                icon={faLock}
+                intent={Intent.WARNING}
+              >Lock</MenuItem>
+            </Popover>
+          </div>}
+        </div>
+        <div className="break-words px-3 py-2">
+          {showEditor ? <div className="w-full">
+            <SimpleMDEEditor onChange={(value) => setTextValue(value)} value={textValue} options={memoizedOptions}/>
+            <Button
+              icon={faSave}
+              onClick={() => {
+                if(textValue === "") {
+                  // GlobalToaster.show({message: "Your post must have content.", intent: Intent.DANGER});
+                  return;
+                }
+                if(props.isParent) {
+                  updateForumPost({variables: {postId: props.post.id, content: textValue}}).then(() => {
+                    // GlobalToaster.show({message: "Your post has been updated.", intent: Intent.SUCCESS});
+                    setEditor(false);
+                  }).catch((err: Error) => {
+                    // GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                  });
+                } else {
+                  updateForumReply({variables: {replyId: props.post.id, content: textValue}}).then(() => {
+                    // GlobalToaster.show({message: "Your reply has been updated.", intent: Intent.SUCCESS});
+                    setEditor(false);
+                  }).catch((err: Error) => {
+                    // GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                  });
+                }
+              }}
+              className="PageComponent-edit PageComponent-save-button"
+            >
+              Save
+            </Button> 
+          </div> : (props.post.content)}
+        </div>
+        {props.post.reactions && props.post.reactions.length > 0 && <div className="border-t border-gray-300 bg-gray-200 dark:border-gray-700 dark:bg-gray-800 p-1">
+          
+        </div>}
+      </div>
+    </div>
+  );
+
+  /* return (
+    <div className="flex mb-3 border border-gray-200 bg-gray-100 rounded">
       {props.post.owner && <Profile isOpen={showProfile} planet={props.planet} userId={props.post.owner.id} onClose={() => setProfile(false)}/>}
       {props.post.owner && <ReportDialog isOpen={showReport} onClose={() => setReport(false)} objectId={props.post.id} objectType={props.isParent ? reportObjectType.FORUMPOST : reportObjectType.FORUMREPLY} userId={props.post.owner.id}/>}
       <Alert
@@ -278,7 +405,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
         </div>
       </div>
     </div>
-  );
+  ); */
 }
 
 export default ForumThreadItem;

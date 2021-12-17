@@ -39,16 +39,16 @@ function Button(props: IButtonProps): JSX.Element {
   } else {
     switch(props.intent) {
       case Intent.PRIMARY:
-        className += " bg-blue-400 ring-blue-500 hover:bg-blue-500 dark:bg-blue-700 dark:ring-blue-600 dark:hover:bg-blue-600 active:bg-blue-600 dark:active:bg-blue-800";
+        className += " bg-blue-400 border border-blue-500 hover:bg-blue-500 dark:bg-blue-700 dark:border-blue-600 dark:hover:bg-blue-600 active:bg-blue-600 dark:active:bg-blue-800";
         break;
       case Intent.SUCCESS:
-        className += " bg-green-400 ring-green-500 hover:bg-green-500 dark:bg-green-700 dark:ring-green-600 dark:hover:bg-green-600 active:bg-green-600 dark:active:bg-green-800";
+        className += " bg-green-400 border border-green-500 hover:bg-green-500 dark:bg-green-700 dark:border-green-600 dark:hover:bg-green-600 active:bg-green-600 dark:active:bg-green-800";
         break;
       case Intent.WARNING:
-        className += " bg-yellow-400 ring-yellow-500 hover:bg-yellow-500 dark:bg-yellow-700 dark:ring-yellow-600 dark:hover:bg-yellow-600 active:bg-yellow-600 dark:active:bg-yellow-800";
+        className += " bg-yellow-400 border border-yellow-500 hover:bg-yellow-500 dark:bg-yellow-700 dark:border-yellow-600 dark:hover:bg-yellow-600 active:bg-yellow-600 dark:active:bg-yellow-800";
         break;
       case Intent.DANGER:
-        className += " bg-red-400 ring-red-500 hover:bg-red-500 dark:bg-red-700 dark:ring-red-600 dark:hover:bg-red-600 active:bg-red-600 dark:active:bg-red-800";
+        className += " bg-red-400 border border-red-500 hover:bg-red-500 dark:bg-red-700 dark:border-red-600 dark:hover:bg-red-600 active:bg-red-600 dark:active:bg-red-800";
         break;
       default:
         className += " bg-gray-200 border border-gray-300 hover:bg-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:hover:bg-gray-600 active:bg-gray-400 dark:active:bg-gray-800";

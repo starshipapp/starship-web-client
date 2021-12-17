@@ -20,6 +20,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Toasts from "../../../components/display/Toasts";
 import Button from "../../../components/controls/Button";
 import PageSubheader from "../../../components/layout/PageSubheader";
+import Divider from "../../../components/display/Divider";
 
 interface IForumThreadProps {
   planet: IPlanet,
@@ -49,6 +50,7 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
     }
   }, [demandValueChange, editingContent]);
 
+
   const buttonBase = `transition-all duration-200 text-black leading-tight flex-shrink-0
   outline-none focus:outline-none focus:ring-blue-300 focus:ring-1 dark:focus:ring-blue-600 
   dark:text-white block`;
@@ -58,8 +60,9 @@ function ForumThread(props: IForumThreadProps): JSX.Element {
 
   return (
     <div className="w-full flex flex-col mb-4">
-      <SubPageHeader>{postData?.forumPost && postData.forumPost.name}</SubPageHeader>
-      <div className="w-full">
+      <SubPageHeader className="leading-none">{postData?.forumPost && postData.forumPost.name}</SubPageHeader>
+      <Divider/>
+      <div className="w-full mt-2">
         {postData?.forumPost && (props.page ? Number(props.page) : 1) === 1 && <ForumThreadItem 
           forumId={props.forum.id} 
           refetch={() => void refetch()} 
