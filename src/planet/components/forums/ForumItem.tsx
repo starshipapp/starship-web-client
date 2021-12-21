@@ -48,35 +48,7 @@ function ForumItem(props: IForumItemProps): JSX.Element {
         </div>
       </div>
     </Link>
-  );
-
-  /* return (
-    <div className="ForumItem" onClick={() => history.push(`/planet/${props.planet.id}/${props.id}/${props.post.id}`)}>
-      <div className="ForumItem-name">
-        <span className={props.stickied ? "ForumItem-name-text ForumItem-stickied" : "ForumItem-name-text"}>{props.post.locked && <Icon icon="lock" color="#ffb366" className="ForumItem-stickied-pin" />} {props.stickied && <Icon icon="pin" color="#3dcc91" className="ForumItem-stickied-pin" />} {props.post.name}</span>
-        <div className="ForumItem-name-flex">
-          {props.post.tags && <div className="ForumItem-tags">{props.post.tags.map((value) => (<Tag className="ForumItem-tag" key={value}>{value}</Tag>))}</div>}
-        </div>
-        <div className="ForumItem-rightside">
-          <div className="ForumItem-right-container">
-            <Icon icon="comment" />
-            <span className="ForumItem-replies">{props.post.replyCount}</span>
-            {!isMobile() && <Divider />}
-            {!isMobile() && <span className="ForumItem-updated">{updateDateText}</span>}
-          </div>
-        </div>
-      </div>
-      <div className="ForumItem-info">
-        {!isMobile() && <div>Posted by {props.post.owner && props.post.owner.username} on {creationDateText}</div>}
-        {isMobile() && <div>
-          <Icon className="ForumItem-info-icon" icon="user" />
-          {props.post.owner && props.post.owner.username}
-          <Icon className="ForumItem-info-icon ForumItem-info-icon-2" icon="time" />
-          {creationDateText}
-        </div>}
-      </div>
-    </div>
-  ); */
+  ); 
 }
 
 export default ForumItem;
