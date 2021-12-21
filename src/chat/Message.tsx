@@ -12,6 +12,7 @@ import permissions from "../util/permissions";
 import Toasts from "../components/display/Toasts";
 import Button from "../components/controls/Button";
 import { faEdit, faFlag, faReply, faSmile, faThumbtack, faTrash } from "@fortawesome/free-solid-svg-icons";
+import deleteMessageMutation, { IDeleteMessageMutationData } from "../graphql/mutations/components/chats/deleteMessageMutation";
 
 interface IMessageProps {
   message: IMessage;
@@ -19,6 +20,7 @@ interface IMessageProps {
   currentUser?: IUser;
   previousMessage?: IMessage;
   nextMessage?: IMessage;
+
 }
 
 function Message(props: IMessageProps): JSX.Element {
@@ -30,6 +32,7 @@ function Message(props: IMessageProps): JSX.Element {
   const [editTextbox, setEditTextbox] = useState<string>("");
 
   const [editMessage] = useMutation<IEditMessageMutationData>(editMessageMutation);
+  const [deleteMessage] = useMutation<IDeleteMessageMutationData>(deleteMessageMutation);
 
   const lessThanHalfHour = function(date: Date, dateToCheck: Date): boolean {
     const halfHour = 1000 * 60 * 30;
@@ -131,6 +134,13 @@ function Message(props: IMessageProps): JSX.Element {
             icon={faTrash}
             small={true}
             minimal={true}
+            onClick={() => {
+              deleteMessage({variables: {messageId: props.message.id}}).then(() => {
+                Toasts.success("Successfully deleted message.");
+              }).catch((e: Error) => {
+                Toasts.danger(e.message);
+              });
+            }}
           />}
           {props.currentUser && <Button
             icon={faFlag}

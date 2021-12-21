@@ -6,6 +6,8 @@ import MessageViewTextbox from "./MessageViewTextbox";
 import IMessage from "../types/IMessage";
 import { useEffect } from "react";
 import onMessageSent from "../graphql/subscriptions/components/onMessageSent";
+import onMessageRemoved from "../graphql/subscriptions/components/onMessageRemoved";
+import onMessageUpdated from "../graphql/subscriptions/components/onMessageUpdated";
 import IPlanet from "../types/IPlanet";
 import permissions from "../util/permissions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,7 +20,9 @@ interface IMessageViewProps {
 }
 
 let hasSubscribed = "";
-let unsubscribe: () => any = () => null;
+let unsubscribeFromMessages: () => any = () => null;
+let unsubscribeFromRemoved: () => any = () => null;
+let unsubscribeFromUpdated: () => any = () => null;
 
 function MessageView(props: IMessageViewProps): JSX.Element {
   const {data, subscribeToMore} = useQuery<IGetChannelData>(getChannel, {variables: {id: props.channelId, count: 50, pinnedCount: 0}});
@@ -26,10 +30,12 @@ function MessageView(props: IMessageViewProps): JSX.Element {
   useEffect(() => {
     if(hasSubscribed !== props.channelId && data?.channel.messages) {
       if(hasSubscribed !== "") {
-        unsubscribe();
+        unsubscribeFromMessages();
+        unsubscribeFromRemoved();
+        unsubscribeFromUpdated();
       }
       hasSubscribed = props.channelId;
-      unsubscribe = subscribeToMore({
+      unsubscribeFromMessages = subscribeToMore({
         document: onMessageSent,
         variables: {channelId: props.channelId},
         updateQuery: (prev, {subscriptionData}) => {
@@ -54,6 +60,58 @@ function MessageView(props: IMessageViewProps): JSX.Element {
             }
           });
         }
+      });
+      unsubscribeFromRemoved = subscribeToMore({
+        document: onMessageRemoved,
+        variables: {channelId: props.channelId},
+        updateQuery: (prev, {subscriptionData}) => {
+          if(!subscriptionData.data) return prev;
+          const data = subscriptionData.data as unknown as {messageRemoved: IMessage};
+          const messageWorkaround = prev.channel.messages?.messages ? prev.channel.messages?.messages : [];
+          if(!data.messageRemoved) return prev;
+          
+          const newMessages = messageWorkaround.filter(m => m.id !== data.messageRemoved.id);
+             
+
+          if(newMessages.length > 50) {
+            newMessages.unshift();
+          }
+          return Object.assign({}, prev, {
+            channel: {
+              ...prev.channel,
+              messages: {
+                cursor: prev.channel.messages?.cursor ?? "0",
+                messages: newMessages
+              }
+            }
+          });
+        } 
+      });
+      unsubscribeFromUpdated = subscribeToMore({
+        document: onMessageUpdated,
+        variables: {channelId: props.channelId},
+        updateQuery: (prev, {subscriptionData}) => { 
+          if(!subscriptionData.data) return prev;
+          const data = subscriptionData.data as unknown as {messageUpdated: IMessage};
+          const messageWorkaround = prev.channel.messages?.messages ? prev.channel.messages?.messages : [];
+          console.log(data.messageUpdated);
+          if(!data.messageUpdated) return prev;
+
+          const newMessages = messageWorkaround.map(m => m.id === data.messageUpdated.id ? data.messageUpdated : m); 
+
+          if(newMessages.length > 50) {
+            newMessages.unshift();
+          }
+          return Object.assign({}, prev, {
+            channel: {
+              ...prev.channel,
+              messages: {
+                cursor: prev.channel.messages?.cursor ?? "0",
+                messages: newMessages
+              }
+            }
+          });
+        } 
       });
     }
   }, [data, subscribeToMore, props.channelId]);
