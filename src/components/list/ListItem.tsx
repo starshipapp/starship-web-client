@@ -11,10 +11,10 @@ function ListItem(props: IListItemProps): JSX.Element {
       {props.icon && <div className="my-auto mr-2">
         {props.icon}
       </div>}
-      <div className="my-auto mr-auto">
+      <div className="my-auto mr-auto max-w-full overflow-hidden flex-shrink">
         {props.children}
       </div>
-      <div className="my-auto">
+      <div className="my-auto ml-2">
         {props.actions}
       </div>
     </div>

@@ -17,6 +17,7 @@ import Notifications from './Notifications';
 import PlanetSidebar from './PlanetSidebar';
 import PlanetSwitcher from './PlanetSwitcher';
 import SettingsSidebar from './SettingsSidebar';
+import GAdminSidebar from './GAdminSidebar';
 import logo from '../assets/images/logo.svg';
 import blackLogo from '../assets/images/black-logo.svg';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -60,6 +61,7 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
         {props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
         {data?.currentUser && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
         {data?.currentUser && props.context === "messages" && <MessagesSidebar toggleHidden={toggleHidden}/>}
+        {data?.currentUser.admin && props.context === "gadmin" && <GAdminSidebar toggleHidden={toggleHidden}/>}
         {loading ? <MenuItem>Loading...</MenuItem>: (data?.currentUser ? <>
           <div className="mt-auto"/>
           <Divider/>

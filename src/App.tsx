@@ -34,10 +34,13 @@ function App(props: IAppProps): JSX.Element {
           <Route path="/login" element={<Login forcefullyResetLink={props.forcefullyResetLink}/>}/>
           <Route path="/forgot/:forgotdata" element={<Forgot/>}/>
           <Route path="/verify/:activationdata" element={<Activate/>}/>
-          <Route path="/gadmin/*" element={<GAdmin/>}/>
           <Route path="/debug/components" element={<ComponentsTesting/>}/>
           <Route path="/debug/landingtest" element={<Landing/>}/>
           <Route path="/invite/:inviteId/*" element={<Invite/>}/>
+          <Route path="/gadmin/*" element={<>
+            <MainSidebar context="gadmin" forcefullyResetLink={props.forcefullyResetLink}/>
+            <GAdmin/>
+          </>}/>
           <Route path="/planet/:planet/*" element={<>
             <MainSidebar context="planet" forcefullyResetLink={props.forcefullyResetLink}/>
             <Planet/>

@@ -1,11 +1,9 @@
-import React from "react";
 import { NonIdealState } from "@blueprintjs/core";
 import { useQuery } from "@apollo/client";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import { Route } from "react-router";
 import GAdminHome from "./GAdminHome";
 import "./css/GAdmin.css";
-import GAdminSidebar from "./GAdminSidebar";
 import GAdminReports from "./GAdminReports";
 import GAdminUsers from "./GAdminUsers";
 import GAdminPlanets from "./GAdminPlanets";
@@ -15,10 +13,7 @@ function GAdmin(): JSX.Element {
   const {data} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
 
   return (
-    <div className="GAdmin bp3-dark">
-      <div className="GAdmin-container">
-        
-        {data?.currentUser && data.currentUser.admin && <GAdminSidebar/>}
+    <div className="flex w-full flex-shrink max-w-full overflow-hidden">
         {(data?.currentUser && data.currentUser.admin) ? <Routes>
           <Route path="/" element={<GAdminHome/>}/>
           <Route path="/users" element={<GAdminUsers/>}/>
@@ -31,7 +26,6 @@ function GAdmin(): JSX.Element {
             description="You don't have permission to view this page."
           />
         </div>}
-      </div>
     </div>
   );
 }
