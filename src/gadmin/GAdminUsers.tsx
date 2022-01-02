@@ -3,7 +3,6 @@ import { Button, ButtonGroup, Classes, Popover } from "@blueprintjs/core";
 import React, { useState } from "react";
 import getAdminUsers, { IGetAdminUsersData } from "../graphql/queries/admin/getAdminUsers";
 import Profile from "../profile/Profile";
-import "./css/GAdmin-page.css";
 
 function GAdminUsers(): JSX.Element {
   const [pageNumber, setPage] = useState<number>(0);

@@ -5,38 +5,3 @@
 .Message table {
   margin: 0.1rem 0;
 }
-
-.Message-header {
-  margin-bottom: 0.15rem;
-}
-
-.Message-header-username {
-  margin-right: 0.35rem;
-  display: inline-block;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.Message-header-date {
-  color: #BFCCD6;
-  display: inline-block;
-}
-
-.Message:hover .Message-buttons {
-  display: block;
-}
-
-.Message-edit-textarea {
-  width: 100%;
-  resize: none;
-}
-
-.Message-right {
-  width: 100%;
-}
-
-.Message-body-edited {
-  display: inline-block;
-  color: #BFCCD6;
-  margin-left: 0.25rem;
-}

@@ -8,10 +8,8 @@ import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/us
 import IForum from "../../../types/IForum";
 import permissions from "../../../util/permissions";
 import IComponentProps from "../IComponentProps";
-import "./css/ForumComponent.css";
 import ForumEditor from "./ForumEditor";
 import ForumItemContainer from "./ForumItemContainer";
-import yn from "yn";
 import ForumThread from "./ForumThread";
 import Page from "../../../components/layout/Page";
 import PageHeader from "../../../components/layout/PageHeader";
@@ -26,7 +24,6 @@ import Toasts from "../../../components/display/Toasts";
 import Popover from "../../../components/overlays/Popover";
 import PopperPlacement from "../../../components/PopperPlacement";
 import Textbox from "../../../components/input/Textbox";
-import Divider from "../../../components/display/Divider";
 
 const sortOptions = {
   newest: {

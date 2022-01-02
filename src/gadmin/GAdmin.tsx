@@ -3,7 +3,6 @@ import { useQuery } from "@apollo/client";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import { Route } from "react-router";
 import GAdminHome from "./GAdminHome";
-import "./css/GAdmin.css";
 import GAdminReports from "./GAdminReports";
 import GAdminUsers from "./GAdminUsers";
 import GAdminPlanets from "./GAdminPlanets";

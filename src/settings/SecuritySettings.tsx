@@ -9,7 +9,6 @@ import PageSubheader from "../components/layout/PageSubheader";
 import disableTFAMutation, { IDisableTFAMutation } from "../graphql/mutations/users/disableTFAMutation";
 import IUser from "../types/IUser";
 import TFAPrompt from "../util/TFAPrompt";
-import "./css/Settings.css";
 import TFAWizard from "./TFAWizard";
 
 interface ISecuritySettingsProps {

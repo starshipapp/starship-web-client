@@ -3,7 +3,6 @@ import { Button, ButtonGroup, Classes, Popover } from "@blueprintjs/core";
 import React, { useState } from "react";
 import getAllReports, { IGetAllReportsData } from "../graphql/queries/admin/getAllReports";
 import { reportObjectTypeStrings, reportTypeStrings } from "../util/reportTypes";
-import "./css/GAdmin-page.css";
 import Report from "./Report";
 
 function GAdminReports(): JSX.Element {

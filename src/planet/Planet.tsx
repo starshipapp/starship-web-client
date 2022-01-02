@@ -1,7 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Route, Routes, useParams } from "react-router-dom";
 import getPlanet, { IGetPlanetData } from "../graphql/queries/planets/getPlanet";
-import "./css/Planet.css";
 import PlanetContent from "./PlanetContent";
 import NonIdealState from "../components/display/NonIdealState";
 import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";

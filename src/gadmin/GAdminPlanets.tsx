@@ -12,7 +12,6 @@ import PageHeader from "../components/layout/PageHeader";
 import List from "../components/list/List";
 import ListItem from "../components/list/ListItem";
 import getAdminPlanets, { IGetAdminPlanetsData } from "../graphql/queries/admin/getAdminPlanets";
-import "./css/GAdmin-page.css";
 
 function GAdminPlanets(): JSX.Element {
   const [pageNumber, setPage] = useState<number>(0);

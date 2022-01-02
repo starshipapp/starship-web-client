@@ -6,7 +6,6 @@ import Tag from "../../../components/display/Tag";
 import Intent from "../../../components/Intent";
 import IForumPost from "../../../types/IForumPost";
 import IPlanet from "../../../types/IPlanet";
-import "./css/ForumItem.css";
 
 interface IForumItemProps {
   post: IForumPost,

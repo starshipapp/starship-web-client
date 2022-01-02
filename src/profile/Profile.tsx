@@ -17,7 +17,6 @@ import fixPFP from "../util/fixPFP";
 import Markdown from "../util/Markdown";
 import permissions from "../util/permissions";
 import PopperPlacement from "../components/PopperPlacement";
-import "./css/Profile.css";
 import Toasts from "../components/display/Toasts";
 
 interface IProfileProps {

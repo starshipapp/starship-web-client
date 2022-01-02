@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Dialog from "../components/dialog/Dialog";
 import Textbox from "../components/input/Textbox";
-import "./css/TFAPrompt.css";
 
 interface ITFAPromptProps {
   onSubmit: (key: number) => void

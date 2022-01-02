@@ -10,7 +10,6 @@ import Textbox from "../components/input/Textbox";
 import Intent from "../components/Intent";
 import confirmTFAMutation, { IConfirmTFAMutation } from "../graphql/mutations/users/confirmTFAMutation";
 import generateTOTPSecretMutation, { IGenerateTOTPSecretMutationData } from "../graphql/mutations/users/generateTOTPSecretMutation";
-import "./css/TFAWizard.css";
 
 interface ITFAWizardProps {
   onComplete: () => void;

@@ -1,12 +1,10 @@
 import { useMutation } from "@apollo/client";
 import { Button, Dialog, Intent } from "@blueprintjs/core";
-import React from "react";
 import solveReportMutation, { ISolveReportMutationData } from "../graphql/mutations/admin/solveReportMutation";
 import IReport from "../types/IReport";
 import fixPFP from "../util/fixPFP";
 import { GlobalToaster } from "../util/GlobalToaster";
 import { reportObjectType, reportTypeStrings } from "../util/reportTypes";
-import "./css/Report.css";
 import FileObject from "./objects/FileObject";
 import ForumPostObject from "./objects/ForumPostObject";
 import ForumReplyObject from "./objects/ForumReplyObject";

@@ -1,7 +1,0 @@
-.MainSidebar {
-  scrollbar-width: none;
-}
-
-.MainSidebar::-webkit-scrollbar {
-  display: none;
-}

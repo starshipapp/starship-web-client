@@ -10,7 +10,6 @@ import TextArea from "../components/input/TextArea";
 import Label from "../components/text/Label";
 import insertReportMutation, { IInsertReportMutationData } from "../graphql/mutations/reports/insertReportMutation";
 import { reportObjectType, reportType } from "../util/reportTypes";
-import "./css/ReportDialog.css";
 
 interface IReportDialogProps {
   objectType: reportObjectType,

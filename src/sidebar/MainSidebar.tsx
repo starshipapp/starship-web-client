@@ -11,7 +11,6 @@ import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/ge
 import getCap from '../util/getCap';
 import getCapString from '../util/getCapString';
 import isMobile from '../util/isMobile';
-import './css/MainSidebar.css';
 import MessagesSidebar from './MessagesSidebar';
 import Notifications from './Notifications';
 import PlanetSidebar from './PlanetSidebar';
@@ -41,7 +40,7 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
     }
   };
 
-  let className = "MainSidebar w-56 flex-shrink-0 overflow-y-scroll overflow-x-visible";
+  let className = "MainSidebar w-56 flex-shrink-0 overflow-y-scroll overflow-x-visible scrollbar-none";
 
   if(isHidden) {
     className += "MainSidebar-hidden";

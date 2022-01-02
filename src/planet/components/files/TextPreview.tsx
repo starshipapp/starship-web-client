@@ -4,7 +4,6 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Toasts from "../../../components/display/Toasts";
 import Markdown from "../../../util/Markdown";
-import "./css/TextPreview.css";
 
 interface ITextPreviewProps {
   fileURL: string,

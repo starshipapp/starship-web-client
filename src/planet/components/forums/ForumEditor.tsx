@@ -12,7 +12,6 @@ import insertForumPostMutation, { IInsertForumPostMutationData } from "../../../
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
 import IForum from "../../../types/IForum";
 import { assembleEditorOptions } from "../../../util/editorOptions";
-import "./css/ForumEditor.css";
 
 interface IForumEditorProps {
   onClose: () => void,
