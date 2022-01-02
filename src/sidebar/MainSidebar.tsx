@@ -60,7 +60,7 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
         {props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
         {data?.currentUser && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
         {data?.currentUser && props.context === "messages" && <MessagesSidebar toggleHidden={toggleHidden}/>}
-        {data?.currentUser.admin && props.context === "gadmin" && <GAdminSidebar toggleHidden={toggleHidden}/>}
+        {data?.currentUser?.admin && props.context === "gadmin" && <GAdminSidebar toggleHidden={toggleHidden}/>}
         {loading ? <MenuItem>Loading...</MenuItem>: (data?.currentUser ? <>
           <div className="mt-auto"/>
           <Divider/>
