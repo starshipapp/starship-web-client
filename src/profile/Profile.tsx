@@ -37,8 +37,6 @@ function Profile(props: IProfileProps): JSX.Element {
 
   const isBlocked: boolean | undefined = currentData?.currentUser?.blockedUsers && (currentData.currentUser.blockedUsers.filter((value) => value.id === props.userId).length > 0);
 
-  console.log(props.planet?.banned);
-
   return (
     <Dialog
       open={props.isOpen}

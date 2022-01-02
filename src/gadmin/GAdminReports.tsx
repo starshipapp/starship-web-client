@@ -1,8 +1,15 @@
 import { useQuery } from "@apollo/client";
-import { Button, ButtonGroup, Classes, Popover } from "@blueprintjs/core";
 import { useState } from "react";
+import Button from "../components/controls/Button";
+import Divider from "../components/display/Divider";
+import Textbox from "../components/input/Textbox";
+import Page from "../components/layout/Page";
+import PageContainer from "../components/layout/PageContainer";
+import PageHeader from "../components/layout/PageHeader";
+import List from "../components/list/List";
+import ListItem from "../components/list/ListItem";
 import getAllReports, { IGetAllReportsData } from "../graphql/queries/admin/getAllReports";
-import { reportObjectTypeStrings, reportTypeStrings } from "../util/reportTypes";
+import { reportTypeStrings } from "../util/reportTypes";
 import Report from "./Report";
 
 function GAdminReports(): JSX.Element {
@@ -11,73 +18,44 @@ function GAdminReports(): JSX.Element {
   const [openReport, setReport] = useState<string>("");
 
   return (
-    <div className="GAdmin-page bp3-dark">
-      <div className="GAdmin-page-header">Reports</div>
-      <ButtonGroup minimal={true} className="GAdmin-page-buttongroup">
-        <Popover>
-          <Button rightIcon="caret-down">Set Page</Button>
-          <div className="menu-form">
-            <input className={Classes.INPUT + " menu-input"} onChange={(e) => setPage(Number(e.target.value))} value={pageNumber}/>
-          </div>
-        </Popover>
-      </ButtonGroup>
-      <div className="GAdmin-page-container">
-        <table className={`${Classes.HTML_TABLE} GAdmin-page-table`}>
-          <thead>
-            <tr>
-              <td>
-                Reporter
-              </td>
-              <td>
-                Reportee
-              </td>
-              <td>
-                Type
-              </td>
-              <td>
-                Reason
-              </td>
-              <td>
-                Date
-              </td>
-              <td>
-                Status
-              </td>
-            </tr>
-          </thead>
-          {data?.allReports && <tbody>
-          {data.allReports.map((value) => (<>
-            <Report 
-              open={openReport === value.id} 
-              date={new Date(Number(value.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
-              report={value}
-              onClose={() => setReport("")}
-            />
-            <tr onClick={() => setReport(value.id)}>
-              <td>
-                {value.owner?.username}
-              </td>
-              <td>
-                {value.user?.username}
-              </td>
-              <td>
-                {reportObjectTypeStrings[value.objectType ?? 0]}
-              </td>
-              <td>
-                {reportTypeStrings[value.reportType ?? 0]}
-              </td>
-              <td>
-                {new Date(Number(value.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
-              </td>
-              <td>
-                {value.solved ? "Solved" : "Open"}
-              </td>
-            </tr>
-          </>))}  
-        </tbody>}
-        </table>
-      </div>
-    </div>
+    <Page>
+      <PageContainer>
+        <PageHeader>Reports</PageHeader>
+        <List
+          name="List of reports"
+          actions={<div className="space-x-1">
+            <Button small onClick={() => setPage(pageNumber - 1)}>Previous</Button>
+            <Textbox small value={pageNumber.toString()} onChange={(e) => setPage(!isNaN(parseInt(e.target.value, 10)) ? parseInt(e.target.value, 10) : 0)} />
+            <Button small onClick={() => setPage(pageNumber + 1)}>Next</Button>
+          </div>}
+        >
+          {data?.allReports && data?.allReports.map((report) => (
+            <ListItem
+              key={report.id} 
+              onClick={() => setReport(report.id)}
+              className="w-full overflow-hidden max-w-full cursor-pointer"
+              actions={<div className="flex flex-shrink-0 flex-grow">
+                <div className="overflow-ellipsis overflow-hidden whitespace-nowrap flex-shrink block w-full">
+                  {report.owner?.username}
+                </div>
+                <Divider/>
+                <div>
+                  {report.solved ? "Solved" : "Open"}
+                </div>
+              </div>}
+            >
+              <Report 
+                open={openReport === report.id} 
+                date={new Date(Number(report.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+                report={report}
+                onClose={() => setReport("")}
+              />
+              <div className="overflow-ellipsis overflow-hidden whitespace-nowrap flex-shrink block w-full">{report.user?.username} - {new Date(Number(report.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })} - {reportTypeStrings[report.reportType ?? 0]}</div>
+            </ListItem>
+          ))}
+        </List>
+      </PageContainer>
+    </Page>
   );
 }
 

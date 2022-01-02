@@ -10,7 +10,7 @@ function Planet(): JSX.Element {
   const {data} = useQuery<IGetPlanetData>(getPlanet, {variables: {planet}, errorPolicy: 'all'});
 
   return (
-    <div className="h-full w-full overflow-x-hidden overflow-y-hidden flex text-black dark:text-white">
+    <div className="h-full w-full overflow-x-hidden overflow-y-hidden flex text-black dark:text-white Planet">
       {data?.planet ? <>
         <Routes>
           <Route path=":component/:subId/:page" element={<PlanetContent home={false} planet={data.planet}/>}/>

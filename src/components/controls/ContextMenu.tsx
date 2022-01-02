@@ -60,10 +60,7 @@ function ContextMenu(props: IContextMenuProps): JSX.Element {
   };
 
   useEffect(() => {
-    console.log(isOpen);
-    console.log(prevOpen);
     if(prevOpen !== isOpen){
-      console.log("is open", isOpen);
       if(isOpen){
         justOpened = true;
         setTimeout(() => {

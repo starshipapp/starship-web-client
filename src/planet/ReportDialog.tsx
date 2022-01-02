@@ -24,9 +24,6 @@ function ReportDialog(props: IReportDialogProps): JSX.Element {
   const [details, setDetails] = useState<string>("");
   const [insertReport] = useMutation<IInsertReportMutationData>(insertReportMutation);
 
-  console.log(stateReportType);
-  console.log(reportType.HARASSMENT.toString());
-
   return (
     <Dialog
       onClose={props.onClose}

@@ -86,19 +86,6 @@ return (
       </div>
     </div>
   );
-
-  /* return (
-    <div className="Login">
-      <div className="Login-container">
-        <div className="Login-center">
-          <H1 className="Login-header">Reset Password</H1>
-          <input value={password} onChange={(e) => setPassword(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Password" type="password"/>
-          <input value={confirm} onChange={(e) => setConfirm(e.target.value)} className={Classes.INPUT + " " + Classes.LARGE + " Login-input"} placeholder="Confirm Password" type="password"/>
-          <Button text="Reset" onClick={() => reset()}/>
-        </div>
-      </div>
-    </div>
-  ); */
 }
 
 export default Forgot;

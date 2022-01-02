@@ -3,7 +3,6 @@ import { faArchive, faCode, faFile, faFileCode, faFilePdf, faHdd, faImage, faMus
 import MimeTypes from "./validMimes";
 
 function getIconFromType(type: string): IconProp {
-  console.log(type);
   if(MimeTypes.audioTypes.includes(type)) return faMusic;
   if(MimeTypes.videoTypes.includes(type)) return faVideo;
   if(MimeTypes.imageTypes.includes(type)) return faImage;

@@ -7,7 +7,7 @@ interface IListItemProps extends HTMLProps<HTMLDivElement> {
 
 function ListItem(props: IListItemProps): JSX.Element {
   return (
-    <div className="flex h-10 border-b border-gray-300 dark:border-gray-600">
+    <div {...props} className={`flex h-10 border-b border-gray-300 dark:border-gray-600 ${props.className ?? ""}`}>
       {props.icon && <div className="my-auto mr-2">
         {props.icon}
       </div>}

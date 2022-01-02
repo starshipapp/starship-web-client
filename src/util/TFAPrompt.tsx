@@ -25,8 +25,6 @@ function TFAPrompt(props: ITFAPromptProps): JSX.Element {
           onChange={(e) => setTextbox(e.target.value)}
           onKeyDown={(e) => {
             if(e.key === "Enter") {
-              console.log(keyTextbox);
-              console.log(Number(keyTextbox));
               props.onSubmit(Number(keyTextbox));
             }
           }}

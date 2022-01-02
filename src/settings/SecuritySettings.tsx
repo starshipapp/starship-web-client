@@ -41,7 +41,6 @@ function SecuritySettings(props: ISecuritySettingsProps): JSX.Element {
         >Two Factor Authentication</Option>
         <TFAPrompt 
           onSubmit={(key) => {
-            console.log(key);
             disableTFA({variables: {token: key}}).then(() => {
               Toasts.success("Disabled two factor authentication.");
               props.refetch();

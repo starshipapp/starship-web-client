@@ -94,7 +94,6 @@ function MessageView(props: IMessageViewProps): JSX.Element {
           if(!subscriptionData.data) return prev;
           const data = subscriptionData.data as unknown as {messageUpdated: IMessage};
           const messageWorkaround = prev.channel.messages?.messages ? prev.channel.messages?.messages : [];
-          console.log(data.messageUpdated);
           if(!data.messageUpdated) return prev;
 
           const newMessages = messageWorkaround.map(m => m.id === data.messageUpdated.id ? data.messageUpdated : m); 
