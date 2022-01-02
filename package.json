@@ -83,6 +83,9 @@
     "web-vitals": "^2.1.2",
     "yn": "^5.0.0"
   },
+  "engines": {
+    "node": "16.x"
+  },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
