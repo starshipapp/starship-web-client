@@ -1,9 +1,9 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { Button, Card, Icon, Intent } from "@blueprintjs/core";
+import { useQuery } from "@apollo/client";
+import { faFile } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import deleteFileObjectMutation, { IDeleteFileObjectMutationData } from "../../graphql/mutations/components/files/deleteFileObjectMutation";
+import Button from "../../components/controls/Button";
 import getFileObject, { IGetFileObjectData } from "../../graphql/queries/components/files/getFileObject";
-import { GlobalToaster } from "../../util/GlobalToaster";
 
 interface IForumPostObjectProps {
   id: string
@@ -11,32 +11,24 @@ interface IForumPostObjectProps {
 
 function FileObject(props: IForumPostObjectProps): JSX.Element {
   const {data} = useQuery<IGetFileObjectData>(getFileObject, {variables: {id: props.id, count: 0, cursor: ""}});
-  const [deleteFile] = useMutation<IDeleteFileObjectMutationData>(deleteFileObjectMutation);
 
   return (
-    <Card className="Report-object-card">
+    <div className="bg-gray-200 dark:bg-gray-700 p-4 rounded">
       {data?.fileObject && <>
-        <div className="Report-object-card-header">
-          <Icon icon="document"/>
-          <h3 className="Report-object-card-name">{data.fileObject.name}</h3>
+        <div className="flex mb-1">
+          <FontAwesomeIcon icon={faFile}/>
+          <h3 className="text-document my-auto font-bold leading-none ml-1">{data.fileObject.name}</h3>
         </div>
-        <div className="Report-object-card-details">
-          <div className="Report-object-card-date">
+        <div className="mb-2">
+          <div className="text-gray-300 dark:text-gray-300">
             {new Date(Number(data.fileObject.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
           </div>
         </div>
-        <div className="Report-object-card-actions">
-          <Button text="Delete" intent={Intent.DANGER} onClick={() => {
-            deleteFile({variables: {objectId: props.id}}).then(() => {
-              GlobalToaster.show({message: "Deleted file.", intent: Intent.SUCCESS});
-            }).catch((error: Error) => {
-              GlobalToaster.show({message: error.message, intent: Intent.DANGER});
-            });
-          }}/>
-          <Link className="link-button" to={`/planet/${data.fileObject.planet?.id ?? "null"}/${data.fileObject.component?.id ?? "null"}/${data.fileObject.id}`}><Button text="Go To"/></Link>
+        <div>
+          <Link className="link-button" to={`/planet/${data.fileObject.planet?.id ?? "null"}/${data.fileObject.component?.id ?? "null"}/${data.fileObject.id}`}><Button small>Go To</Button></Link>
         </div>
       </>}
-    </Card>
+    </div>
   );
 }
 
