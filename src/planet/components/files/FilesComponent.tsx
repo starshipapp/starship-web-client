@@ -387,7 +387,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
 
             createTicket({variables: {objectIds: files, zipName: objectData.fileObject.name}}).then((data) => {
               if(data.data) {
-                window.open(`${process.env.REACT_APP_FILES_ENDPOINT}/files/download/${data.data.createMultiObjectDownloadTicket}`, "_self");
+                window.open(`${process.env.REACT_APP_FILES_ENDPOINT ?? "http://localhost:4000"}/files/download/${data.data.createMultiObjectDownloadTicket}`, "_self");
               } 
             }).catch((e: Error) => {
               Toasts.danger(e.message);
