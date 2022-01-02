@@ -7,33 +7,6 @@ import { IUploadMarkdownImageMutationData } from "../graphql/mutations/misc/uplo
 import { GlobalToaster } from "./GlobalToaster";
 import MimeTypes from "./validMimes";
 
-type ToolbarButton =
-    'bold'
-    | 'italic'
-    | 'quote'
-    | 'unordered-list'
-    | 'ordered-list'
-    | 'link'
-    | 'image'
-    | 'strikethrough'
-    | 'code'
-    | 'table'
-    | 'redo'
-    | 'heading'
-    | 'undo'
-    | 'heading-bigger'
-    | 'heading-smaller'
-    | 'heading-1'
-    | 'heading-2'
-    | 'heading-3'
-    | 'clean-block'
-    | 'horizontal-rule'
-    | 'preview'
-    | 'side-by-side'
-    | 'fullscreen'
-    | 'guide';
-
-
 const editorOptions: EasyMDE.Options = {
   uploadImage: true,
   hideIcons: ["side-by-side", "fullscreen", "guide"],

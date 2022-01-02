@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import deleteFileObjectMutation, { IDeleteFileObjectMutationData } from "../../../graphql/mutations/components/files/deleteFileObjectMutation";
 import moveObjectMutation, { IMoveObjectMutationData } from "../../../graphql/mutations/components/files/moveObjectMutation";
@@ -11,7 +11,7 @@ import IPlanet from "../../../types/IPlanet";
 import permissions from "../../../util/permissions";
 import filesize from "filesize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload, faEdit, faFile, faFileCode, faFolder, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faEdit, faFolder, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Divider from "../../../components/display/Divider";
 import Dialog from "../../../components/dialog/Dialog";
 import AlertBody from "../../../components/dialog/AlertBody";

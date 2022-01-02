@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import resetPasswordMutation, { IResetPasswordMutationData } from "../graphql/mutations/users/resetPasswordMutation";
 import { useNavigate, useParams } from "react-router";
@@ -77,7 +77,7 @@ return (
         </div>
       </div>
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center dark:text-white">
-        <span className="font-bold">© Starship 2020 - 2021. All rights reserved.</span>
+        <span className="font-bold">© Starship 2020 - 2022. All rights reserved.</span>
         <span className="block">
           <Link className="font-bold mr-2" to="/terms">Terms</Link>
           <Link className="font-bold mr-2" to="/privacy">Privacy Policy</Link> 

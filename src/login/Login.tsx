@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import signInMutation, { ISignInMutationData } from "../graphql/mutations/users/signInMutation";
 import sha256 from 'crypto-js/sha256';
 import signUpMutation, { ISignUpMutationData } from "../graphql/mutations/users/signUpMutation";
@@ -41,6 +41,7 @@ function Login(props: ILoginProps): JSX.Element {
   const [signUp] = useMutation<ISignUpMutationData>(signUpMutation);
   const [recaptcha, setRecaptcha] = useState<string>("");
   const [showTFADialog, setTFADialog] = useState<boolean>(false);
+  const [showVerify, setShowVerify] = useState<boolean>(false);
 
   const { client, loading } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
 
@@ -127,6 +128,7 @@ function Login(props: ILoginProps): JSX.Element {
       } else if(error.message === "You need to verify your email.") {
         // TODO: better flow for account verification
         Toasts.danger("You need to verify your email.");
+        setShowVerify(true);
       } else {
         Toasts.danger(error.message);
       }
@@ -263,9 +265,14 @@ function Login(props: ILoginProps): JSX.Element {
           minimal
           className={`mt-4 opacity-0 transition-all ${showReset && username.length > 3 ? "opacity-100" : ""}`}
         >Forgot your password?</Button>
+        <Button
+          onClick={sendVerificationEmail}
+          minimal
+          className={`mt-4 opacity-0 transition-all ${showVerify && username.length > 3 ? "opacity-100" : ""}`}
+        >Resend verification email</Button>
       </div>
       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 text-center dark:text-white">
-        <span className="font-bold">© Starship 2020 - 2021. All rights reserved.</span>
+        <span className="font-bold">© Starship 2020 - 2022. All rights reserved.</span>
         <span className="block">
           <Link className="font-bold mr-2" to="/terms">Terms</Link>
           <Link className="font-bold mr-2" to="/privacy">Privacy Policy</Link> 

@@ -1,6 +1,6 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import createForumTagMutation, { ICreateForumTagMutationData } from "../../../graphql/mutations/components/forums/createForumTagMutation";
 import removeForumTagMutation, { IRemoveForumTagMutationData } from "../../../graphql/mutations/components/forums/removeForumTagMutation";
 import getForum, { IGetForumData } from "../../../graphql/queries/components/forums/getForum";
@@ -19,7 +19,7 @@ import SubPageSidebar from "../../../components/subpage/SubPageSidebar";
 import MenuHeader from "../../../components/menu/MenuHeader";
 import MenuItem from "../../../components/menu/MenuItem";
 import Button from "../../../components/controls/Button";
-import { faCalendarMinus, faCalendarPlus, faCheck, faClock, faGlobe, faPlus, faReply, faReplyAll, faSort, faTag, faTrash, faUserMinus, faUserPlus } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarMinus, faCalendarPlus, faCheck, faClock, faGlobe, faPlus, faReply, faReplyAll, faTag, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Toasts from "../../../components/display/Toasts";
 import Popover from "../../../components/overlays/Popover";
 import PopperPlacement from "../../../components/PopperPlacement";

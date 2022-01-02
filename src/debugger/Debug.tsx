@@ -12,6 +12,7 @@ let read = "";
 function Debug(): JSX.Element {
   const [show, setShow] = useState(false);
   const [showUnsupported, setShowUnsupported] = useState(localStorage.getItem("debug.showUnsupported") ? yn(localStorage.getItem("debug.showUnsupported")) ?? true : true);
+  const [showChat, setShowChat] = useState(localStorage.getItem("debug.showChat") ? yn(localStorage.getItem("debug.showChat")) ?? false : false);
 
   useEffect(() => {
     if(!hasAttached) {
@@ -40,6 +41,11 @@ function Debug(): JSX.Element {
     localStorage.setItem("debug.showUnsupported", showUnsupported ? "false" : "true");
   };
 
+  const toggleShowChat = () => {
+    setShowChat(!showChat);
+    localStorage.setItem("debug.showChat", showChat ? "false" : "true");
+  };
+
   if(show) {
     return (
       <div className="absolute top-0 left-0 h-screen w-screen bg-gray-800 bg-opacity-90 z-50 text-white p-6">
@@ -54,6 +60,10 @@ function Debug(): JSX.Element {
               rightElement={<Checkbox checked={!showUnsupported} onClick={toggleShowUnsupported}/>}
               onClick={toggleShowUnsupported}
             >Disable "Unsupported" banner</MenuItem>
+            <MenuItem
+              rightElement={<Checkbox checked={showChat} onClick={toggleShowChat}/>}
+              onClick={toggleShowChat}
+            >Enable Chat</MenuItem>
           </MenuCollapsed>
           <MenuCollapsed
             title="Debug Menu"

@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { faGlobe, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../components/controls/Button";
 import Divider from "../components/display/Divider";

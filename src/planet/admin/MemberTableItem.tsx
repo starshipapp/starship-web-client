@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Intent, Spinner } from "@blueprintjs/core";
-import React from "react";
 import removeMemberMutation, { IRemoveMemberMutationData } from "../../graphql/mutations/planets/removeMemberMutation";
 import getUser, { IGetUserData } from "../../graphql/queries/users/getUser";
 import { GlobalToaster } from "../../util/GlobalToaster";

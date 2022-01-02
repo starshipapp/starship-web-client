@@ -57,7 +57,8 @@ function Message(props: IMessageProps): JSX.Element {
       <Profile
         onClose={() => setProfile(false)}
         isOpen={showProfile}
-        userId={props.currentUser?.id ?? ""}
+        userId={props.message.owner?.id ?? ""}
+        planet={props.planet}
       />
       {!isPrevMessageRelated && <div>
         <div className="rounded-full h-10 w-10 mr-2 bg-gray-300 dark:bg-gray-700 display-block" onClick={() => setProfile(true)}>
@@ -175,6 +176,9 @@ export default memo(Message, (prev, next) => {
     return false;
   }
   if(prev.planet?.members !== next.planet?.members) {
+    return false;
+  }
+  if(prev.planet?.banned !== next.planet?.banned) {
     return false;
   }
   return true;

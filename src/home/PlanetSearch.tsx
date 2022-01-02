@@ -1,4 +1,3 @@
-import React from "react";
 import { useQuery } from "@apollo/client";
 import { Link } from "react-router-dom";
 import getSearchForPlanets, { IGetSearchForPlanetsData } from "../graphql/queries/planets/getSearchForPlanets";

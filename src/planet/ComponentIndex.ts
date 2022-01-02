@@ -20,7 +20,7 @@ export enum ComponentQuality {
 }
 
 export function getComponentQualityTag(quality: ComponentQuality): JSX.Element | undefined {
-  const className = "mt-0.5 ml-2";
+  const className = "mt-1.5 mb-auto ml-2";
 
   switch (quality) {
     case ComponentQuality.UNIMPLEMENTED:
@@ -40,6 +40,7 @@ export interface IComponentDataType {
   friendlyName: string,
   component?: (props: IComponentProps) => JSX.Element
   quality: ComponentQuality
+  requiresKey?: string
 }
 
 export default class ComponentIndex {
@@ -77,7 +78,8 @@ export default class ComponentIndex {
       icon: faCommentAlt,
       friendlyName: "Chat",
       component: ChatComponent,
-      quality: ComponentQuality.UNFINISHED
+      quality: ComponentQuality.UNFINISHED,
+      requiresKey: "debug.showChat"
     }
   };
 

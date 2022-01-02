@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import { faCaretDown, faCheck, faGlobe, faTag } from "@fortawesome/free-solid-svg-icons";
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import SimpleMDEEditor from "react-simplemde-editor";
 import Button from "../../../components/controls/Button";

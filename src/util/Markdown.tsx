@@ -24,7 +24,6 @@ import ICustomEmoji from "../types/ICustomEmoji";
 
 import "./css/Markdown.css";
 import mentionPlugin from "./remark/mentionPlugin";
-import yn from "yn";
 
 interface IMarkdownProps {
   children: string

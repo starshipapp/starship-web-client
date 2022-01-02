@@ -26,6 +26,7 @@ import DialogHeader from "../components/dialog/DialogHeader";
 import Option from "../components/controls/Option";
 import Label from "../components/text/Label";
 import Button from "../components/controls/Button";
+import yn from "yn";
 
 interface IPlanetSidebarProps {
   planet: string,
@@ -124,14 +125,22 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
                 className="mb-3"
               />
               <Label>Select a component type: </Label>
-              {Object.values(ComponentIndex.ComponentDataTypes).map((value) => (<Option
-                icon={value.icon}
-                checked={component === value.name}
-                onClick={() => setComponent(value.name)}
-              >
-                <span>{value.friendlyName}</span>
-                {getComponentQualityTag(value.quality)}
-              </Option>))}
+              {Object.values(ComponentIndex.ComponentDataTypes).map((value) => {
+                if(value.requiresKey && !yn(localStorage.getItem(value.requiresKey))) {
+                  return null;
+                }
+
+                return (
+                  <Option
+                    icon={value.icon}
+                    checked={component === value.name}
+                    onClick={() => setComponent(value.name)}
+                  >
+                    <span>{value.friendlyName}</span>
+                    {getComponentQualityTag(value.quality)}
+                  </Option>
+                );
+              })}
               <Button
                 className="ml-auto mt-2"
                 onClick={() => {

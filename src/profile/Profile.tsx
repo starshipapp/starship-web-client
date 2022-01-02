@@ -18,6 +18,7 @@ import Markdown from "../util/Markdown";
 import permissions from "../util/permissions";
 import PopperPlacement from "../components/PopperPlacement";
 import Toasts from "../components/display/Toasts";
+import yn from "yn";
 
 interface IProfileProps {
   onClose: () => void,
@@ -28,13 +29,15 @@ interface IProfileProps {
 
 function Profile(props: IProfileProps): JSX.Element {
   const { data, loading, refetch } = useQuery<IGetUserData>(getUser, {variables: {id: props.userId}});
-  const { data: currentData, loading: currentLoading } = useQuery<IGetCurrentUserData>(getCurrentUser, {errorPolicy: "all"});
+  const { data: currentData } = useQuery<IGetCurrentUserData>(getCurrentUser, {errorPolicy: "all"});
   const [banUser] = useMutation<IBanUserMutationData>(banUserMutation);
   const [toggleBan] = useMutation<IToggleBanMutationData>(toggleBanMutation);
   const [blockUser] = useMutation<IToggleBlockUserData>(toggleBlockUserMutation);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const isBlocked: boolean | undefined = currentData?.currentUser?.blockedUsers && (currentData.currentUser.blockedUsers.filter((value) => value.id === props.userId).length > 0);
+
+  console.log(props.planet?.banned);
 
   return (
     <Dialog
@@ -91,12 +94,12 @@ function Profile(props: IProfileProps): JSX.Element {
                 onClick={() => {
                   toggleBan({variables: {planetId: props.planet?.id, userId: props.userId}}).then(() => {
                     void refetch();
-                    Toasts.success("Successfully " + (data.user.banned ? "un" : "") + "banned user.");
+                    Toasts.success("Successfully " + ((props.planet?.banned?.filter((value) => value.id === props.userId).length ?? 0) > 0 ? "un" : "") + "banned user.");
                   }).catch((err: Error) => {
                     Toasts.danger(err.message);
                   });
                 }}
-              >{props.planet.banned && props.planet.banned.includes({id: props.userId}) ? "Unban" : "Ban"}</MenuItem>}
+              >{props.planet.banned && (props.planet?.banned?.filter((value) => value.id === props.userId).length ?? 0) > 0 ? "Unban" : "Ban"}</MenuItem>}
               {currentData?.currentUser && currentData.currentUser.id !== data.user.id && <MenuItem
                 icon={faBan}
                 onClick={() => {
@@ -107,7 +110,7 @@ function Profile(props: IProfileProps): JSX.Element {
                   });
                 }}
               >{isBlocked ? "Unblock" : "Block"}</MenuItem>}
-              {<MenuItem
+              {yn(localStorage.getItem("debug.showChat")) && <MenuItem
                 icon={faComment}
               >Message</MenuItem>}
             </Popover>

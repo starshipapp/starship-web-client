@@ -48,7 +48,7 @@ function WikiComponent(props: IComponentProps): JSX.Element {
             {wikiData?.wiki?.pages?.map((page) => (
               <Link to={`/planet/${props.planet.id}/${props.id}/${page.id}`} className="link-button"><MenuItem icon={faFileAlt}>{page.name}</MenuItem></Link>
             ))}
-            <Popover
+            {hasWritePermission && <Popover
               open={showNewPage}
               onClose={() => setNewPage(false)}
               popoverTarget={
@@ -69,7 +69,7 @@ function WikiComponent(props: IComponentProps): JSX.Element {
                 className="mr-2"
               />
               <Button onClick={createPage}>Create</Button>
-            </Popover>
+            </Popover>}
           </SubPageSidebar>
           <div className="w-full ml-4">
             {wikiData?.wiki && wikiData.wiki?.pages?.length === 0 && <NonIdealState title="This Page Group is empty." icon={faExclamationTriangle}>

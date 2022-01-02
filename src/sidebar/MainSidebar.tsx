@@ -1,7 +1,7 @@
 import { useQuery } from '@apollo/client';
 import { faCog, faGripLines, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import fileSize from 'filesize';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ProgressBar from '../components/display/ProgressBar';
 import Intent from '../components/Intent';
@@ -29,7 +29,7 @@ interface IMainSidebarProps {
 
 
 function MainSidebar(props: IMainSidebarProps): JSX.Element {
-  const { client, loading, data, refetch } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+  const { client, loading, data } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [isHidden, setHidden] = useState<boolean>(isMobile());
   const {planet, component} = useParams();
 

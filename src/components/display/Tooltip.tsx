@@ -1,5 +1,5 @@
 import { Transition } from "@tailwindui/react";
-import { HTMLProps, useEffect, useState } from "react";
+import { HTMLProps, useState } from "react";
 import { usePopper } from "react-popper-2";
 import PopperPlacement from "../PopperPlacement";
 

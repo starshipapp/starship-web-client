@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Card, Icon, Intent } from "@blueprintjs/core";
-import React from "react";
 import { Link } from "react-router-dom";
 import deleteFileObjectMutation, { IDeleteFileObjectMutationData } from "../../graphql/mutations/components/files/deleteFileObjectMutation";
 import getFileObject, { IGetFileObjectData } from "../../graphql/queries/components/files/getFileObject";

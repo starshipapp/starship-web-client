@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
 import { Button, Card, Icon, Intent } from "@blueprintjs/core";
-import React from "react";
 import { Link } from "react-router-dom";
 import deleteForumReplyMutation, { IDeleteForumReplyMutationData } from "../../graphql/mutations/components/forums/deleteForumReplyMutation";
 import getForumReply, { IGetForumReplyData } from "../../graphql/queries/components/forums/getForumReply";

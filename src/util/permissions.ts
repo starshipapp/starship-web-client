@@ -96,4 +96,6 @@ function checkAdminPermission(user: IUser): boolean {
   return false;
 }
 
-export default {checkAdminPermission, checkReadPermission, checkPublicWritePermission, checkFullWritePermission};
+const permissions = {checkAdminPermission, checkReadPermission, checkPublicWritePermission, checkFullWritePermission};
+
+export default permissions;

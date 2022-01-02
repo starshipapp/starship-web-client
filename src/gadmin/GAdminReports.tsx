@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Button, ButtonGroup, Classes, Popover } from "@blueprintjs/core";
-import React, { useState } from "react";
+import { useState } from "react";
 import getAllReports, { IGetAllReportsData } from "../graphql/queries/admin/getAllReports";
 import { reportObjectTypeStrings, reportTypeStrings } from "../util/reportTypes";
 import Report from "./Report";

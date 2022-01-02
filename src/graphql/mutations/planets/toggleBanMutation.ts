@@ -9,7 +9,9 @@ const toggleBanMutation = gql`
   mutation ToggleBan($planetId: ID!, $userId: ID!) {
     toggleBan(planetId: $planetId, userId: $userId) {
       id
-      banned
+      banned {
+        id
+      }
     }
   }
 `;

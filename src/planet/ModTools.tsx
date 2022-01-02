@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import IPlanet from "../types/IPlanet";
 import { useMutation } from "@apollo/client";
 import applyModToolsMutation, { IApplyModToolsData } from "../graphql/mutations/planets/applyModToolsMutation";

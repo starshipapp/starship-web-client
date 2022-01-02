@@ -1,7 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { faBell, faCommentDots } from "@fortawesome/free-solid-svg-icons";
-import React from "react";
 import { Link } from "react-router-dom";
+import yn from "yn";
 import MenuCollapsed from "../components/menu/MenuCollapsed";
 import MenuHeader from "../components/menu/MenuHeader";
 import MenuItem from "../components/menu/MenuItem";
@@ -26,7 +26,7 @@ function MessagesSidebar(props: IMessagesSidebarProps): JSX.Element {
       </div>}
     </MenuCollapsed>
     <Link className="link-button" to="/messages"><MenuItem icon={faBell}>Notifications</MenuItem></Link>
-    <MenuHeader>Direct Messages</MenuHeader>
+    {yn(localStorage.getItem("debug.showChat")) && <MenuHeader>Direct Messages</MenuHeader>}
   </>);
 }
 

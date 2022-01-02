@@ -1,5 +1,5 @@
 import IPlanet from "../../types/IPlanet";
-import React, { useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client";
 import uploadCustomEmojiMutation, { IUploadCustomEmojiData } from "../../graphql/mutations/customemojis/uploadCustomEmojiMutation";
 import deleteCustomEmojiMutation, { IDeleteCustomEmojiData } from "../../graphql/mutations/customemojis/deleteCustomEmojiMutation";

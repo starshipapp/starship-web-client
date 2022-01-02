@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import getForumPost, { IGetForumPostData } from "../../../graphql/queries/components/forums/getForumPost";
 import IForum from "../../../types/IForum";
 import IPlanet from "../../../types/IPlanet";

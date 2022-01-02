@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import { faBell, faTimes, faUser } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Button from "../components/controls/Button";
 import MenuItem from "../components/menu/MenuItem";
 import Popover from "../components/overlays/Popover";

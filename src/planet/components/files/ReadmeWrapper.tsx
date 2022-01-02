@@ -1,8 +1,6 @@
 import { useQuery } from "@apollo/client";
-import React from "react";
 import getObjectPreview, { IGetObjectPreview } from "../../../graphql/queries/components/files/getObjectPreview";
 import IFileObject from "../../../types/IFileObject";
-import MimeTypes from "../../../util/validMimes";
 import TextPreview from "./TextPreview";
 
 interface IReadmeWrapperProps {

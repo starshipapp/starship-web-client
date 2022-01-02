@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import getCurrentUser, { IGetCurrentUserData } from "../../graphql/queries/users/getCurrentUser";
-import React, { useState } from "react";
+import { useState } from "react";
 import IPlanet from "../../types/IPlanet";
 import permissions from "../../util/permissions";
 import { Link } from "react-router-dom";

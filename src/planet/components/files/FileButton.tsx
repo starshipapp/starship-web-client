@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { faDownload, faEdit, faFile, faFolder, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faEdit, faFolder, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { memo, useState } from "react";
+import { memo, useState } from "react";
 import { Link } from "react-router-dom";
 import Button from "../../../components/controls/Button";
 import ContextMenu from "../../../components/controls/ContextMenu";

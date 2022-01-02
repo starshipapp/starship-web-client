@@ -1,6 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { Button, ButtonGroup, Classes, Popover } from "@blueprintjs/core";
-import React, { useState } from "react";
+import { useState } from "react";
 import getAdminUsers, { IGetAdminUsersData } from "../graphql/queries/admin/getAdminUsers";
 import Profile from "../profile/Profile";
 

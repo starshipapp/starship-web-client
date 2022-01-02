@@ -37,11 +37,11 @@ function Invite(): JSX.Element {
           {invite?.invite ? invite.invite.planet?.name : "Unknown Planet"}
         </div>
         <div>
-          <Button
+          {data?.currentUser.id && <Button
             className="mt-4"
             onClick={use}
             disabled={!invite?.invite}
-          >Join</Button>
+          >Join</Button>}
         </div>
       </div>
     </div>

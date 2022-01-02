@@ -1,5 +1,5 @@
 import { useQuery } from "@apollo/client";
-import { faDownload, faFile } from "@fortawesome/free-solid-svg-icons";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Button from "../../../components/controls/Button";
 import Toasts from "../../../components/display/Toasts";

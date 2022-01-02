@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import getFeaturedPlanets, { IGetFeaturedPlanetsData } from '../graphql/queries/planets/getFeaturedPlanets';
 import { Link } from 'react-router-dom';
@@ -107,7 +107,7 @@ function Home(): JSX.Element {
         </div>}
         {searchText !== "" && <PlanetSearch searchText={searchText}/>}
         <div className="mt-auto">
-          <span className="font-bold">© Starship 2020 - 2021. All rights reserved.</span>
+          <span className="font-bold">© Starship 2020 - 2022. All rights reserved.</span>
           <span className="block">
             <Link className="font-bold mr-2" to="/terms">Terms</Link>
             <Link className="font-bold mr-2" to="/privacy">Privacy Policy</Link> 

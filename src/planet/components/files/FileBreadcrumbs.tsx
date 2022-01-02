@@ -3,7 +3,7 @@ import getBreadcrumbObjects, { IGetBreadcrumbObjectsData } from "../../../graphq
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/display/Breadcrumbs";
 import Breadcrumb from "../../../components/display/Breadcrumb";
-import { faFile, faFolder, faFolderOpen, faHome } from "@fortawesome/free-solid-svg-icons";
+import { faFolder, faFolderOpen, faHome } from "@fortawesome/free-solid-svg-icons";
 import getIconFromType from "../../../util/getIconFromType";
 
 interface IFileBreadcrumbsProps {

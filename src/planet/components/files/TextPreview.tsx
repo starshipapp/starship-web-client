@@ -1,7 +1,7 @@
 import { faFile } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Toasts from "../../../components/display/Toasts";
 import Markdown from "../../../util/Markdown";
 

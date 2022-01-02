@@ -1,6 +1,6 @@
 import { useMutation } from "@apollo/client";
 import QRCode from "qrcode.react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../components/controls/Button";
 import Dialog from "../components/dialog/Dialog";
 import DialogBody from "../components/dialog/DialogBody";

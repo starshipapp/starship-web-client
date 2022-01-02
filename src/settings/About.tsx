@@ -27,7 +27,7 @@ function About(): JSX.Element {
           </div>
         </>}
         <div className="mt-auto">
-          <span className="Home-footer-copyright">© Starship 2020 - 2021. All rights reserved.</span>
+          <span className="Home-footer-copyright">© Starship 2020 - 2022. All rights reserved.</span>
           <span className="Home-footer-links">
             <Link className="Home-footer-link" to="/terms">Terms</Link>
             <Link className="Home-footer-link" to="/privacy">Privacy Policy</Link> 

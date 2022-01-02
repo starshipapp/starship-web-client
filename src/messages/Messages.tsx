@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import { NonIdealState } from "@blueprintjs/core";
-import React from "react";
 import { Route } from "react-router";
 import { Routes } from "react-router-dom";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";

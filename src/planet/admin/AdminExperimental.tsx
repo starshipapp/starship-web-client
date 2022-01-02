@@ -1,5 +1,5 @@
 import IPlanet from "../../types/IPlanet";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import setCSSMutation, { ISetCSSMutationData } from "../../graphql/mutations/planets/setCSSMutation";
 import Callout from "../../components/text/Callout";

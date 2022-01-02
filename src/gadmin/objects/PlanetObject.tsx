@@ -1,6 +1,5 @@
 import { useQuery } from "@apollo/client";
 import { Button, Card, Icon } from "@blueprintjs/core";
-import React from "react";
 import { Link } from "react-router-dom";
 import getPlanet, { IGetPlanetData } from "../../graphql/queries/planets/getPlanet";
 
