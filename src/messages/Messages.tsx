@@ -1,7 +1,8 @@
 import { useQuery } from "@apollo/client";
-import { NonIdealState } from "@blueprintjs/core";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 import { Route } from "react-router";
 import { Routes } from "react-router-dom";
+import NonIdealState from "../components/display/NonIdealState";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
 import NotificationPanel from "./NotificationPanel";
 
@@ -11,7 +12,7 @@ function Messages(): JSX.Element {
   if(!userData?.currentUser) {
     return (
       <NonIdealState
-        icon="error"
+        icon={faExclamationTriangle}
         title="You're not logged in."
       />
     );
