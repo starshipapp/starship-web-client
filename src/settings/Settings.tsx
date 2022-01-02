@@ -1,95 +1,40 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { Button, Icon, Intent } from "@blueprintjs/core";
-import axios from "axios";
-import React, { useRef, useState } from "react";
-import disableTFAMutation, { IDisableTFAMutation } from "../graphql/mutations/users/disableTFAMutation";
-import uploadProfilePictureMutation, { IUploadProfilePictureMutationData } from "../graphql/mutations/users/uploadProfilePictureMutation";
+import { useQuery } from "@apollo/client";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
-import fixPFP from "../util/fixPFP";
-import { GlobalToaster } from "../util/GlobalToaster";
-import TFAPrompt from "../util/TFAPrompt";
-import "./css/Settings.css";
-import TFAWizard from "./TFAWizard";
+import { Route } from "react-router";
+import ProfileSettings from "./ProfileSettings";
+import SecuritySettings from "./SecuritySettings";
+import EmojiSettings from "./EmojiSettings";
+import NotificationSettings from "./NotificationSettings";
+import About from "./About";
+import NonIdealState from "../components/display/NonIdealState";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import AppearanceSettings from "./AppearanceSettings";
+import { Routes } from "react-router-dom";
 
 function Settings(): JSX.Element {
-  const fileInput = useRef<HTMLInputElement>(null);
-  const image = useRef<HTMLImageElement>(null);
   const {data: userData, refetch} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const [uploadProfilePicture] = useMutation<IUploadProfilePictureMutationData>(uploadProfilePictureMutation);
-  const [disableTFA] = useMutation<IDisableTFAMutation>(disableTFAMutation);
-  const [isTFAOpen, setTFAOpen] = useState<boolean>(false);
-  const [isTFAPromptOpen, setTFAPromptOpen] = useState<boolean>(false);
 
-  return (
-    <div className="Settings bp3-dark">
-      <input
-        type="file"
-        ref={fileInput}
-        id="upload-button"
-        style={{ display: "none" }}
-        onChange={(e) => {
-          if(!e.target.files) {
-            return false;
-          }
-          const file = e.target.files[0];
-          uploadProfilePicture({variables: {type: file.type, size: file.size}}).then((data) => {
-            const options = { headers: { "Content-Type": file.type, "x-amz-acl": "public-read" }};
-            if(!data.data?.uploadProfilePicture) {
-              GlobalToaster.show({message: "The server did not return an address to upload.", intent: Intent.DANGER});
-              return;
-            }
-            axios.put(data.data?.uploadProfilePicture, file, options).then(() => {
-              refetch().then((data) => {
-                if(!image.current) {
-                  return;
-                }
-                image.current.src = (data.data.currentUser.profilePicture ?? "") + "?t=" + String(Number(Date.now()));
-              }).catch(() => {
-                GlobalToaster.show({message: "Unable to fetch new user data.", intent: Intent.DANGER});
-              });
-            }).catch(function (error) {
-              // handle error
-            });
-          }).catch((error: Error) => {
-            GlobalToaster.show({message: error.message, intent: Intent.DANGER});
-          });
-        }}
+  if(userData?.currentUser) {
+    return (
+      <Routes>
+        <Route path="security" element={<SecuritySettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+        <Route path="profile" element={<ProfileSettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+        <Route path="emojis" element={<EmojiSettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+        <Route path="notifications" element={<NotificationSettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+        <Route path="appearance" element={<AppearanceSettings/>}/>
+        <Route path="about" element={<About/>}/>
+        <Route path="/" element={<ProfileSettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+      </Routes>
+    );
+  } else {
+    return (
+      <NonIdealState
+        className="dark:bg-gray-900"
+        icon={faExclamationTriangle}
+        title="You're not logged in."
       />
-      <div className="Settings-header">
-        <div className="Settings-header-text">
-          Settings
-        </div>
-      </div>
-      <div className="Settings-container">
-        <h1>Profile Picture</h1>
-        <div className="Settings-profilepic" onClick={() => fileInput.current?.click()}>
-          {/* eslint-disable-next-line jsx-a11y/img-redundant-alt*/}
-          {userData?.currentUser && userData?.currentUser.profilePicture && <img alt="Change profile picture" src={fixPFP(userData.currentUser.profilePicture) + "?t=" + String(Number(Date.now()))} ref={image}/>}
-          <Icon icon="upload" className="Settings-uploadpfp"/>
-        </div>
-        <h1>Security</h1>
-        <div className="Settings-tfa">
-          <p>Two Factor Authentication <b>is{userData?.currentUser && !userData.currentUser.tfaEnabled && " not"}</b> enabled</p>
-          {userData?.currentUser && !userData.currentUser.tfaEnabled && <Button onClick={() => setTFAOpen(true)}>Enable 2FA</Button>}
-          {userData?.currentUser && userData.currentUser.tfaEnabled && <Button onClick={() => setTFAPromptOpen(true)}>Disable 2FA</Button>}
-          <TFAPrompt 
-            onSubmit={(key) => {
-              disableTFA({variables: {token: key}}).then(() => {
-                GlobalToaster.show({message: "Disabled two factor authentication.", intent: Intent.SUCCESS});
-                void refetch();
-                setTFAPromptOpen(false);
-              }).catch((err: Error) => {
-                GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-              });
-            }}
-            onClose={() => {setTFAPromptOpen(false);}}
-            isOpen={isTFAPromptOpen}
-          />
-          <TFAWizard isOpen={isTFAOpen} onClose={() => setTFAOpen(false)} onComplete={() => void refetch()}/>
-        </div>
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default Settings;

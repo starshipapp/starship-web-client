@@ -1,17 +1,23 @@
 import { useMutation } from "@apollo/client";
-import { Button, Classes, Code, DialogStep, H1, H3, Intent, MultistepDialog, NonIdealState, Spinner } from "@blueprintjs/core";
 import QRCode from "qrcode.react";
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
+import Button from "../components/controls/Button";
+import Dialog from "../components/dialog/Dialog";
+import DialogBody from "../components/dialog/DialogBody";
+import DialogHeader from "../components/dialog/DialogHeader";
+import Toasts from "../components/display/Toasts";
+import Textbox from "../components/input/Textbox";
+import Intent from "../components/Intent";
 import confirmTFAMutation, { IConfirmTFAMutation } from "../graphql/mutations/users/confirmTFAMutation";
 import generateTOTPSecretMutation, { IGenerateTOTPSecretMutationData } from "../graphql/mutations/users/generateTOTPSecretMutation";
-import { GlobalToaster } from "../util/GlobalToaster";
-import "./css/TFAWizard.css";
 
 interface ITFAWizardProps {
   onComplete: () => void;
   onClose: () => void;
   isOpen: boolean
 }
+
+let hasGeneratedTOTP = false;
 
 function TFAWizard(props: ITFAWizardProps): JSX.Element {
   const [page, setPage] = useState<string>("start");
@@ -20,142 +26,147 @@ function TFAWizard(props: ITFAWizardProps): JSX.Element {
   const [codeTextbox, setTextbox] = useState<string>();
   const [generateTOTPSecret] = useMutation<IGenerateTOTPSecretMutationData>(generateTOTPSecretMutation);
   const [confirmTFA] = useMutation<IConfirmTFAMutation>(confirmTFAMutation);
-
+ 
+  useEffect(() => {
+    if(props.isOpen && !hasGeneratedTOTP && totpSecret === "") {
+      hasGeneratedTOTP = true;
+      generateTOTPSecret().then((data) => {
+        if(data.data) {
+          setSecret(data.data.generateTOTPSecret);
+        }
+      }).catch((e: Error) => {
+        Toasts.danger(e.message);
+        props.onClose();
+      });
+    }
+  });
+  
   return (
-    <MultistepDialog 
-      title="2FA Setup" 
-      className={Classes.DARK}
-      isOpen={props.isOpen}
+    <Dialog
+      open={props.isOpen}
       onClose={() => {
         setSecret("");
-        setPage("");
+        setPage("start");
         setCodes([]);
         props.onClose();
         if(page === "finished") {
           props.onComplete();
         }
+
+        // Reset the hasGeneratedTOTP flag
+        // We don't want to generate a new TOTP secret instantly because
+        // that would regenerate the secret.
+        setTimeout(() => {
+          hasGeneratedTOTP = false;
+        }, 200);
       }}
-      resetOnClose={true}
-      onChange={(newStepId, prevStepId) => {
-        setPage(newStepId.toString());
-        if(newStepId.toString() === "qrCode" && prevStepId?.toString() === "start") {
-          generateTOTPSecret().then((data) => {
-            setSecret(data.data?.generateTOTPSecret ?? "");
-          }).catch((err: Error) => {
-            GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-            GlobalToaster.show({message: "Could not generate QR code. Closing dialog.", intent: Intent.DANGER});
-          });
-        }
-      }}
-      backButtonProps={{disabled: page !== "verify"}}
-      nextButtonProps={{disabled: ((page === "verify" && backupCodes.length === 0))}}
-      finalButtonProps={{text: "Finish", onClick: () => {
-        setSecret("");
-        setPage("");
-        setCodes([]);
-        props.onClose();
-        props.onComplete();
-      }}}
     >
-      <DialogStep
-        id="start"
-        title="Start"
-        panel={<div className="TFAWizard-panel">
-          {page !== "start" ? <TFAWizardStateWarning/> : <>
-            <H1>2FA Setup</H1>
-            <p>To begin enabling Two Factor Authentication, click the "Next" button.</p>
-          </>}
-        </div>}
-      />
-      <DialogStep 
-        id="qrCode"
-        title="Scan Code"
-        panel={<div className="TFAWizard-panel">
-          {page !== "qrCode" ? <TFAWizardStateWarning/> : <>
-            {totpSecret !== "" ? <>
-              <div className="TFAWizard-qrcode-container">
+      <DialogBody>
+        <DialogHeader>
+          Two Factor Authentication
+        </DialogHeader>
+        {page === "start" && <div>
+          {totpSecret !== "" ? <>
+            <div className="flex mt-1">
+              {/** this div is required on dark mode because some cameras won't pick it up otherwise*/}
+              <div className="dark:p-4 dark:bg-gray-50 dark:rounded">
                 <QRCode value={totpSecret} size={176}/>
-                <div className="TFAWizard-qrcode-text">
-                  <div className="TFAWizard-qrcode-header">Scan this QR code with your authenticator app.</div>
-                  <div className="TFAWizard-qrcode-authenticator">
-                    <span>Don't have one? We recommend </span>
-                    <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>
-                    <span> or </span>
-                    <a href="https://play.google.com/store/apps/details?id=org.shadowice.flocke.andotp">andOTP</a>
-                    <span>.</span>
-                  </div>
-                  <div className="TFAWizard-qrcode-backuptext">
-                    <span>If you can't scan the QR code, try using <a href={totpSecret}>this</a> URI.</span>
-                  </div>
-                  <div className="TFAWizard-qrcode-backuptext">
-                    Click the next button when you're done.
-                  </div>
-                </div>
               </div>
-            </> : <><Spinner/></>}
-          </>}
+              <div className="ml-4 flex flex-col w-full">
+                <div className="font-extrabold text-lg -mt-1">Scan this QR code with your authenticator app.</div>
+                <div>
+                  <span>Don't have one? We recommend </span>
+                  <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2">Google Authenticator</a>
+                  <span> or </span>
+                  <a href="https://play.google.com/store/apps/details?id=org.shadowice.flocke.andotp">andOTP</a>
+                  <span>.</span>
+                </div>
+                <div className="mt-1">
+                  <span>If you can't scan the QR code, try using <a href={totpSecret}>this</a> URI.</span>
+                </div>
+                <div className="mt-1">
+                  Click the next button when you're done.
+                </div>
+                <Button
+                  className="mt-auto ml-auto"
+                  intent={Intent.PRIMARY}
+                  onClick={() => {
+                    setPage("check");
+                  }}
+                >Next</Button>
+              </div>
+            </div>
+          </> : <>Loading...</>}
         </div>}
-      />
-      <DialogStep
-        id="verify"
-        title="Verify"
-        panel={<div className="TFAWizard-panel">
-          {page !== "verify" ? <TFAWizardStateWarning/> : <>
-            <div className="TFAWizard-qrcode-header">Enter the code from your authenticator app.</div>
-            <div className="TFAWizard-qrcode-authenticator">To finish enabling two factor autentication, please type the code you see in your authenticator app.</div>
-            <div className="TFAWizard-qrcode-backuptext">
-              <input
-                className={`${Classes.INPUT} ${Classes.LARGE} TFAWizard-verify-input`}
+        {page === "check" && <div className="flex flex-col">
+          <div className="font-extrabold text-lg">Enter the code from your authenticator app.</div>
+          <div className="mb-2">To finish enabling two factor autentication, please type the code you see in your authenticator app.</div>
+          {backupCodes.length === 0 && <div className="flex">
+            <div className="mb-1">
+              <Textbox
+                className=""
                 placeholder="Authentication Code"
                 onChange={(e) => setTextbox(e.target.value)}
                 value={codeTextbox}
               />
             </div>
-            {backupCodes.length === 0 && <div className="TFAWizard-qrcode-backuptext">
-              <Button text="Check" onClick={() => {
-                const codeNumber = Number(codeTextbox);
-                if(codeNumber && !isNaN(codeNumber)) {
-                  confirmTFA({variables: {token: codeNumber}}).then((data) => {
-                    setCodes(data.data?.confirmTFA ?? []);
-                  }).catch((err: Error) => {
-                    GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                  });
-                } else {
-                  GlobalToaster.show({message: "Invalid token.", intent: Intent.DANGER});
-                }
-              }}/>
-            </div>}
-            {backupCodes.length !== 0 && <div className="TFAWizard-qrcode-backuptext">
-              Token verified. Click the next button to see your backup codes.
-            </div>}
-          </>}
+            <div className="ml-auto mt-0.5">
+              <Button
+                className="mr-2"
+                onClick={() => {
+                  setPage("start");
+                }}
+              >Back</Button>
+              <Button
+                onClick={() => {
+                  const codeNumber = Number(codeTextbox);
+                  if(codeNumber && !isNaN(codeNumber)) {
+                    confirmTFA({variables: {token: codeNumber}}).then((data) => {
+                      setCodes(data.data?.confirmTFA ?? []);
+                      setPage("finished");
+                    }).catch((err: Error) => {
+                      Toasts.danger(err.message);
+                    });
+                  } else {
+                    Toasts.danger("Invalid token.");
+                  }
+                }}
+                intent={Intent.SUCCESS}
+              >Check</Button>
+            </div>
+          </div>}
         </div>}
-      />
-      <DialogStep
-        id="finished"
-        title="Backup Codes"
-        panel={<div className="TFAWizard-panel">
-          <div className="TFAWizard-qrcode-header">Two Factor Authentication is now enabled!</div>
-          <div className="TFAWizard-qrcode-backuptext">
+        {page === "finished" && <div className="flex flex-col">
+          <div className="font-extrabold text-lg">Two Factor Authentication is now enabled!</div>
+          <div className="">
             If you lose your phone, or lose access to your authenticator app, you'll need these backup codes:
           </div>
-          <div className="TFAWizard-qrcode-backuptext">
-            {backupCodes.map((value) => (<span>{value}, </span>))}
+          <div className="p-3 rounded bg-gray-200 dark:bg-gray-700 text-center mt-2 shadow-inner shadow-lg">
+            {backupCodes.map((value) => (<div className="inline-block mr-2 font-mono font-bold text-xl">{value}</div>))}
           </div>
+          <Button
+            className="ml-auto mt-3"
+            intent={Intent.SUCCESS}
+            onClick={() => {
+              setSecret("");
+              setPage("start");
+              setCodes([]);
+              props.onClose();
+              if(page === "finished") {
+                props.onComplete();
+              }
+              
+              // Reset the hasGeneratedTOTP flag
+              // We don't want to generate a new TOTP secret instantly because
+              // that would regenerate the secret.
+              setTimeout(() => {
+                hasGeneratedTOTP = false;
+              }, 200);
+            }}
+          >Finish</Button>            
         </div>}
-      />
-    </MultistepDialog>
-  );
-}
-
-
-function TFAWizardStateWarning(): JSX.Element {
-  return (
-    <NonIdealState
-      title="State error"
-      description="The 2FA setup dialog has lost track of it's page state. Please reopen the dialog. If you see this error, you should submit a bug report to the offical Starship planet."
-      icon="error"
-    />
+      </DialogBody>
+    </Dialog>
   );
 }
 

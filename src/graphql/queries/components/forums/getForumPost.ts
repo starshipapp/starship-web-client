@@ -17,6 +17,11 @@ const getForumPost = gql`
         admin
         banned
         createdAt
+        customEmojis {
+          id
+          name
+          url
+        }
       }
       reactions {
         emoji
@@ -34,6 +39,9 @@ const getForumPost = gql`
       stickied
       locked
       createdAt
+      mentions {
+        id
+      }
       replies(limit: $count, cursor: $cursor) {
         forumReplies {
           id
@@ -45,6 +53,11 @@ const getForumPost = gql`
             admin
             banned
             createdAt
+            customEmojis {
+              id
+              name
+              url
+            }
           }
           reactions {
             emoji
@@ -53,6 +66,9 @@ const getForumPost = gql`
           stickied
           createdAt
           updatedAt
+          mentions {
+            id
+          }
         }
       }
     }

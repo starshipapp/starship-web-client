@@ -1,12 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import './css/Home.css';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@apollo/client';
 import getFeaturedPlanets, { IGetFeaturedPlanetsData } from '../graphql/queries/planets/getFeaturedPlanets';
-import { Button, Callout, Classes, InputGroup, Intent, Text } from '@blueprintjs/core';
 import { Link } from 'react-router-dom';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
-import { GlobalToaster } from '../util/GlobalToaster';
 import PlanetSearch from './PlanetSearch';
+import logo from '../assets/images/logo.svg';
+import blackLogo from '../assets/images/black-logo.svg';
+import Textbox from '../components/input/Textbox';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle, faSearch } from '@fortawesome/free-solid-svg-icons';
+import Callout from '../components/text/Callout';
+import Intent from '../components/Intent';
+import Toasts from '../components/display/Toasts';
 
 
 function Home(): JSX.Element {
@@ -20,94 +25,93 @@ function Home(): JSX.Element {
   });
 
   return (
-   <div className="Home">
-      <div className="Home-container">
-        <div className="Home-header">
-          <div className="Home-header-nav">
-            <div className="Home-logo"/>
-            <InputGroup
-              className="Home-search-box"
-              placeholder="Search Planets"
-              leftIcon="search"
-              onChange={(e) => setTextbox(e.target.value)}
-              onKeyDown={(e) => {
-                if(e.key === "Enter") {
-                  if(searchTextbox.length < 3 && searchTextbox !== "") {
-                    GlobalToaster.show({message: "Search term must be at least 3 characters long.", intent: Intent.DANGER});
-                  } else {
-                    setText(searchTextbox);
+   <div className="w-full bg-gray-50 dark:bg-gray-900 flex text-black dark:text-white ">
+      <div className="w-full m-5 flex flex-col overflow-auto">
+        <div>
+          <div className="w-full mb-3 flex">
+            <img src={logo} alt="logo" className="h-8 hidden dark:block"/>  
+            <img src={blackLogo} alt="logo" className="h-8 dark:hidden"/>  
+            <div className="ml-auto">
+              <FontAwesomeIcon icon={faSearch} size="1x" className="text-gray-700 dark:text-gray-300 mr-2"/>
+              <Textbox
+                placeholder="Search Planets"
+                onChange={(e) => setTextbox(e.target.value)}
+                onKeyDown={(e) => {
+                  if(e.key === "Enter") {
+                    if(searchTextbox.length < 3 && searchTextbox !== "") {
+                      Toasts.danger("Search term must be at least 3 characters long.");
+                    } else {
+                      setText(searchTextbox);
+                    }
                   }
-                }
-              }}
-              rightElement={searchText !== "" ? <Button minimal={true} small={true} icon="cross" onClick={() => {
-                setText("");
-                setTextbox("");
-              }}/> : undefined}
-              value={searchTextbox}
-            />
+                }}
+                value={searchTextbox}
+                small={true}
+              />
+            </div>
           </div>
-          <Callout icon="warning-sign" intent={Intent.WARNING} className="Home-alpha-callout">
+          <Callout icon={faExclamationTriangle} intent={Intent.WARNING} className="mb-2">
             Starship is in an early alpha stage. Expect bugs and unfinished features.
           </Callout>
-          {process.env.NODE_ENV === "development" && <Callout icon="warning-sign" intent={Intent.WARNING} className="Home-alpha-callout-padtop">
+          {process.env.NODE_ENV === "development" && <Callout icon={faExclamationTriangle} intent={Intent.WARNING}>
             This is not a production build. You may encounter performance issues.
           </Callout>}
         </div>
-        {searchText === "" && userData?.currentUser && <div className="Home-featured">
-          <div className="Home-featured-header">Followed Planets</div>
-          {!userLoading && <div className="Home-featured-list">
+        {searchText === "" && userData?.currentUser && <div className="mt-3">
+          <div className="font-bold text-2xl mb-2">Followed Planets</div>
+          {!userLoading && <div className="grid grid-cols-auto-md gap-3">
             {userData && userData.currentUser.following && userData.currentUser.following.map((value) => (<Link className="link-button" to={`/planet/` + value.id} key={value.id}>
-              <div className="Home-featured-item">
-                <Text className="Home-featured-name">{value.name}</Text>
-                <Text className="Home-featured-description">{value.description && value.description} </Text>
-                <div className="Home-featured-followers">{value.followerCount} {value.followerCount === 1 ? "Follower" : "Followers"}</div>
+              <div className="h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col">
+                <div className="font-bold text-2xl mb-1 overflow-ellipsis whitespace-nowrap overflow-hidden">{value.name}</div>
+                <div className="mb-auto">{value.description && value.description}</div>
+                <div className="text-gray-700 dark:text-gray-300">{value.followerCount} {value.followerCount === 1 ? "Follower" : "Followers"}</div>
               </div>
             </Link>))}
           </div>}
-          {userLoading && <div className="Home-featured-list">
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+          {userLoading && <div className="grid grid-cols-auto-md gap-3">
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
           </div>}
         </div>}
-        {searchText === "" && <div className="Home-featured">
-          <div className="Home-featured-header">Featured Planets</div>
-          {!loading && <div className="Home-featured-list">
+        {searchText === "" && <div className="mt-3">
+          <div className="font-bold text-2xl mb-2">Featured Planets</div>
+          {!loading && <div className="grid grid-cols-auto-md gap-3">
             {data && data.featuredPlanets.map((value) => (<Link className="link-button" to={`/planet/` + value.id} key={value.id}>
-              <div className="Home-featured-item">
-                <Text className="Home-featured-name">{value.name}</Text>
-                <Text className="Home-featured-description">{value.featuredDescription && value.featuredDescription} </Text>
-                <div className="Home-featured-followers">{value.followerCount} {value.followerCount === 1 ? "Follower" : "Followers"}</div>
+              <div className="h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col">
+                <div className="font-bold text-2xl mb-1 overflow-ellipsis whitespace-nowrap overflow-hidden">{value.name}</div>
+                <div className="mb-auto">{value.featuredDescription && value.featuredDescription}</div>
+                <div className="text-gray-700 dark:text-gray-300">{value.followerCount} {value.followerCount === 1 ? "Follower" : "Followers"}</div>
               </div>
             </Link>))}
           </div>}
-          {loading && <div className="Home-featured-list">
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
-            <div className={`Home-featured-item ${Classes.SKELETON}`}/>
+          {loading && <div className="grid grid-cols-auto-md gap-3">
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
+            <div className={`h-48 bg-gray-200 dark:bg-gray-800 p-3 rounded-lg flex flex-col`}/>
           </div>}
         </div>}
         {searchText !== "" && <PlanetSearch searchText={searchText}/>}
-        <div className="Home-footer">
-          <span className="Home-footer-copyright">© Starship 2020 - 2021. All rights reserved.</span>
-          <span className="Home-footer-links">
-            <Link className="Home-footer-link" to="/terms">Terms</Link>
-            <Link className="Home-footer-link" to="/privacy">Privacy Policy</Link> 
-            <Link className="Home-footer-link" to="/rules">Rules</Link>
+        <div className="mt-auto">
+          <span className="font-bold">© Starship 2020 - 2022. All rights reserved.</span>
+          <span className="block">
+            <Link className="font-bold mr-2" to="/terms">Terms</Link>
+            <Link className="font-bold mr-2" to="/privacy">Privacy Policy</Link> 
+            <Link className="font-bold mr-2" to="/rules">Rules</Link>
           </span>
         </div>
       </div>

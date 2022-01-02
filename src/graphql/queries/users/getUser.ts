@@ -12,8 +12,16 @@ const getUser = gql`
       username
       admin
       profilePicture
+      profileBanner
+      profileBio
       banned
       createdAt
+      online
+      customEmojis {
+        id
+        name
+        url
+      }
     }
   }
 `;

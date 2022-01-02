@@ -12,6 +12,8 @@ const getCurrentUser = gql`
       username
       admin
       profilePicture
+      profileBanner
+      profileBio
       banned
       createdAt
       following {
@@ -27,6 +29,17 @@ const getCurrentUser = gql`
       usedBytes
       capWaived
       tfaEnabled
+      customEmojis {
+        id
+        name
+        url
+      }
+      blockedUsers {
+        id
+        username
+        profilePicture
+      }
+      notificationSetting
     }
   }
 `;

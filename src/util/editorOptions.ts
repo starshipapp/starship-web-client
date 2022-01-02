@@ -1,44 +1,16 @@
 import { MutationFunctionOptions, OperationVariables } from "@apollo/client";
-import { Intent } from "@blueprintjs/core";
 import axios from "axios";
 import EasyMDE from "easymde";
 import { ExecutionResult } from "graphql";
+import Toasts from "../components/display/Toasts";
 import { IUploadMarkdownImageMutationData } from "../graphql/mutations/misc/uploadMarkdownImageMutation";
-import { GlobalToaster } from "./GlobalToaster";
 import MimeTypes from "./validMimes";
-
-type ToolbarButton =
-    'bold'
-    | 'italic'
-    | 'quote'
-    | 'unordered-list'
-    | 'ordered-list'
-    | 'link'
-    | 'image'
-    | 'strikethrough'
-    | 'code'
-    | 'table'
-    | 'redo'
-    | 'heading'
-    | 'undo'
-    | 'heading-bigger'
-    | 'heading-smaller'
-    | 'heading-1'
-    | 'heading-2'
-    | 'heading-3'
-    | 'clean-block'
-    | 'horizontal-rule'
-    | 'preview'
-    | 'side-by-side'
-    | 'fullscreen'
-    | 'guide';
-
 
 const editorOptions: EasyMDE.Options = {
   uploadImage: true,
   hideIcons: ["side-by-side", "fullscreen", "guide"],
   errorCallback: (errorMessage: string): void => {
-    GlobalToaster.show({message: errorMessage, icon:"error", intent: Intent.DANGER});
+    Toasts.danger(errorMessage);
   }
 };
 

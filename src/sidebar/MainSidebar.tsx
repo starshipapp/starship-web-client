@@ -1,48 +1,38 @@
-import { useMutation, useQuery } from '@apollo/client';
-import { Alert, Button, Checkbox, Classes, Icon, Intent, Menu, MenuDivider, MenuItem, Popover, Position, ProgressBar, Tooltip } from '@blueprintjs/core';
+import { useQuery } from '@apollo/client';
+import { faCog, faGripLines, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 import fileSize from 'filesize';
-import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import insertPlanetMutation, { IInsertPlanetMutationData } from '../graphql/mutations/planets/insertPlanetMutation';
+import { useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import ProgressBar from '../components/display/ProgressBar';
+import Intent from '../components/Intent';
+import MenuItem from '../components/menu/MenuItem';
+import Label from '../components/text/Label';
 import getCurrentUser, { IGetCurrentUserData } from '../graphql/queries/users/getCurrentUser';
-import Profile from '../profile/Profile';
 import getCap from '../util/getCap';
 import getCapString from '../util/getCapString';
-import { GlobalToaster } from '../util/GlobalToaster';
 import isMobile from '../util/isMobile';
-import './css/MainSidebar.css';
+import MessagesSidebar from './MessagesSidebar';
+import Notifications from './Notifications';
+import PlanetSidebar from './PlanetSidebar';
+import PlanetSwitcher from './PlanetSwitcher';
+import SettingsSidebar from './SettingsSidebar';
+import GAdminSidebar from './GAdminSidebar';
+import logo from '../assets/images/logo.svg';
+import blackLogo from '../assets/images/black-logo.svg';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Divider from '../components/display/Divider';
 
-function MainSidebar(): JSX.Element {
-  const { client, loading, data, refetch } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const [insertPlanet] = useMutation<IInsertPlanetMutationData>(insertPlanetMutation);
-  const [planetName, setPlanetName] = useState<string>("");
-  const [privatePlanet, setPrivate] = useState<boolean>(false);
-  const [showPopout, setPopout] = useState<boolean>(false);
-  const [showProfile, setProfile] = useState<boolean>(false);
+interface IMainSidebarProps {
+  forcefullyResetLink: () => void
+  context: string
+}
+
+
+function MainSidebar(props: IMainSidebarProps): JSX.Element {
+  const { client, loading, data } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [isHidden, setHidden] = useState<boolean>(isMobile());
+  const {planet, component} = useParams();
 
-  const history = useHistory();
-
-  const createPlanet = function() {
-    if(planetName === "") {
-      GlobalToaster.show({message: "Please enter a name.", intent: Intent.DANGER});
-      return;
-    }
-
-    insertPlanet({variables: {name: planetName, private: privatePlanet}}).then((value) => {
-      if(value.data && value.data.insertPlanet) {
-        GlobalToaster.show({message: "Planet sucessfully created!", intent: Intent.SUCCESS});
-        void refetch();
-        history.push("/planet/" + value.data.insertPlanet.id);
-        setPopout(false);
-        toggleHidden();
-      } else {
-        GlobalToaster.show({message: "An unknown data error occured.", intent: Intent.DANGER});
-      }
-    }).catch((error) => {
-      GlobalToaster.show({message: "An unknown server error occured.", intent: Intent.DANGER});
-    });
-  };
 
   const toggleHidden = function() {
     if(isMobile()) {
@@ -50,85 +40,54 @@ function MainSidebar(): JSX.Element {
     }
   };
 
-  let className = "MainSidebar";
+  let className = "MainSidebar w-56 flex-shrink-0 overflow-y-scroll overflow-x-visible scrollbar-none";
 
   if(isHidden) {
-    className += " MainSidebar-hidden";
+    className += "MainSidebar-hidden";
   }
 
   return (
     <div className={className}>
-      {data?.currentUser && <Profile isOpen={showProfile} onClose={() => setProfile(false)} userId={data.currentUser.id}/>}
-      <Menu className="MainSidebar-menu">
-        <div className="MainSidebar-menu-logo" onClick={toggleHidden} >
-          <Link className="link-button" to="/"><div className="MainSidebar-logo"/></Link>
+      <div id="MainSidebar" className="py-1 bg-gray-200 dark:bg-gray-800 min-h-full flex flex-col">
+        <div className="px-3 py-2" onClick={toggleHidden} >
+          <Link className="link-button" to="/">
+            <img src={logo} alt="logo" className="h-7 hidden dark:block"/>  
+            <img src={blackLogo} alt="logo" className="h-7 dark:hidden"/>  
+          </Link>
         </div>
-        <Icon onClick={toggleHidden} icon="menu" className="MainSidebar-show-button"/>
-        {loading ? <MenuItem text="Loading..."/> : (data?.currentUser ? <>
-          {data.currentUser.admin && <Link className="link-button" to="/gadmin/"><MenuItem icon="warning-sign" text="Admin"/></Link>}
-          <MenuDivider title="MY PLANETS"/>
-          {data.currentUser.memberOf?.map((value) => (
-            <Link onClick={toggleHidden} className="link-button" to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>
-          ))}
-          <Popover 
-            className="MainSidebar-insert-planet-popover" 
-            modifiers={{preventOverflow: 
-              {boundariesElement: 'window'}, 
-              hide: {enabled: false}, 
-              flip: {behavior: isMobile() ? "flip" : "counterclockwise"}
-            }} 
-            position={Position.RIGHT} 
-            isOpen={showPopout}
-            onClose={() => setPopout(false)}
-          >
-            <MenuItem icon="new-object" text="New Planet" className="MainSidebar-insert-planet-button" onClick={() => {
-              setPopout(!showPopout);
-              if(isMobile()) {
-                setHidden(true);
-              }
-            }}/>
-            <div className="MainSidebar-insert-planet-box">
-              <input className={Classes.INPUT} value={planetName} onChange={(e) => setPlanetName(e.target.value)}/>
-              <div className="MainSidebar-insert-planet-bottom">
-                <Checkbox label="Private" checked={privatePlanet} onChange={() => setPrivate(!privatePlanet)} className="MainSidebar-insert-planet-checkbox" onKeyPress={(e) => {
-                  if(e.key === "Enter") {
-                    createPlanet();
-                  }
-                }}/>
-                <Button small={true} className="MainSidebar-insert-planet-submit" text="Create" onClick={createPlanet}/>
-              </div>
-            </div>
-          </Popover>
-          {data.currentUser.following && data.currentUser.following.length > 0 && <MenuDivider title="FOLLOWING"/>}
-          {data.currentUser.following?.map((value) => (
-            <Link onClick={toggleHidden} className="link-button" to={"/planet/" + value.id}><MenuItem icon="globe-network" key={value.id} text={value.name}/></Link>
-          ))}
-          <MenuDivider/>
-          <MenuItem icon="user" text={data.currentUser.username} onClick={() => {
-            setProfile(true);
-            toggleHidden();  
-          }}/>
-          <div className="MainSidebar-datacap">
-            <div className="MainSidebar-datacap-text">
+        <FontAwesomeIcon onClick={toggleHidden} icon={faGripLines} className="hidden"/>
+        {props.context === "home" && <PlanetSwitcher toggleHidden={toggleHidden}/>}
+        {props.context === "planet" && planet && <PlanetSidebar toggleHidden={toggleHidden} planet={planet ?? ""} home={!component} component={component ?? "not-an-id"}/>}
+        {data?.currentUser && props.context === "settings" && <SettingsSidebar toggleHidden={toggleHidden}/>}
+        {data?.currentUser && props.context === "messages" && <MessagesSidebar toggleHidden={toggleHidden}/>}
+        {data?.currentUser.admin && props.context === "gadmin" && <GAdminSidebar toggleHidden={toggleHidden}/>}
+        {loading ? <MenuItem>Loading...</MenuItem>: (data?.currentUser ? <>
+          <div className="mt-auto"/>
+          <Divider/>
+          <Notifications currentUser={data.currentUser}/>
+          <div className="px-3 py-1.5">
+            <Label>
               {fileSize(data.currentUser.usedBytes ?? 0)} of {getCapString(data.currentUser)} used
-            </div>
-            <div className="MainSidebar-datacap-progress">
-              <ProgressBar
-                value={(data.currentUser.usedBytes ?? 0) / getCap(data.currentUser)}
-                stripes={false}
-                intent={(data.currentUser.usedBytes ?? 0) < getCap(data.currentUser) ? Intent.PRIMARY : Intent.DANGER}
-              />
-            </div>
+            </Label>
+            <ProgressBar
+              progress={(data.currentUser.usedBytes ?? 0) / getCap(data.currentUser)}
+              intent={(data.currentUser.usedBytes ?? 0) < getCap(data.currentUser) ? Intent.PRIMARY : Intent.DANGER}
+            />
           </div>
-          <Link to="/settings" className="link-button"><MenuItem onClick={toggleHidden} icon="settings" text="Settings"/></Link>
-          <MenuItem icon="log-out" text="Logout" onClick={() => {
+          <Link to="/settings" className="link-button"><MenuItem onClick={toggleHidden} icon={faCog}>Settings</MenuItem></Link>
+          <MenuItem icon={faSignOutAlt} onClick={() => {
             localStorage.removeItem("token");
+            props.forcefullyResetLink();
             void client.cache.gc();
             void client.resetStore();
             toggleHidden();
-          }}/>
-        </> : <Link className="link-button" to="/login"><MenuItem icon="log-in" text="Login"/></Link>)}
-      </Menu>
+          }}>Logout</MenuItem>
+        </> : <>
+          <div className="mt-auto"/>
+          <Divider/>
+          <Link className="link-button" to="/login"><MenuItem icon={faSignOutAlt}>Login</MenuItem></Link>
+        </>)}
+      </div>
     </div>
   );
 }

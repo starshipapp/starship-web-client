@@ -1,10 +1,9 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { Button, Card, Icon, Intent } from "@blueprintjs/core";
-import React from "react";
+import { useQuery } from "@apollo/client";
+import { faComment } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import deleteForumPostMutation, { IDeleteForumPostMutationData } from "../../graphql/mutations/components/forums/deleteForumPostMutation";
+import Button from "../../components/controls/Button";
 import getForumPost, { IGetForumPostData } from "../../graphql/queries/components/forums/getForumPost";
-import { GlobalToaster } from "../../util/GlobalToaster";
 
 interface IForumPostObjectProps {
   id: string
@@ -12,32 +11,27 @@ interface IForumPostObjectProps {
 
 function ForumPostObject(props: IForumPostObjectProps): JSX.Element {
   const {data} = useQuery<IGetForumPostData>(getForumPost, {variables: {id: props.id, count: 0, cursor: ""}});
-  const [deletePost] = useMutation<IDeleteForumPostMutationData>(deleteForumPostMutation);
 
   return (
-    <Card className="Report-object-card">
+    <div className="bg-gray-200 dark:bg-gray-700 p-4 rounded">
       {data?.forumPost && <>
-        <div className="Report-object-card-header">
-          <Icon icon="send-message"/>
-          <h3 className="Report-object-card-name">{data.forumPost.name}</h3>
+        <div className="flex mb-1">
+          <FontAwesomeIcon icon={faComment}/>
+          <h3 className="text-document my-auto font-bold leading-none ml-1">{data.forumPost.name}</h3>
         </div>
-        <div className="Report-object-card-details">
-          <div className="Report-object-card-date">
+        <div className="mb-2">
+          <div className="text-gray-300 dark:text-gray-300">
             {new Date(Number(data.forumPost.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
           </div>
+          <div>
+            {data.forumPost.content}
+          </div>
         </div>
-        <div className="Report-object-card-actions">
-          <Button text="Delete" intent={Intent.DANGER} onClick={() => {
-            deletePost({variables: {postId: props.id}}).then(() => {
-              GlobalToaster.show({message: "Deleted post.", intent: Intent.SUCCESS});
-            }).catch((error: Error) => {
-              GlobalToaster.show({message: error.message, intent: Intent.DANGER});
-            });
-          }}/>
-          <Link className="link-button" to={`/planet/${data.forumPost.planet?.id ?? "null"}/${data.forumPost.component?.id ?? "null"}/${data.forumPost.id}`}><Button text="Go To"/></Link>
+        <div>
+          <Link className="link-button" to={`/planet/${data.forumPost.planet?.id ?? "null"}/${data.forumPost.component?.id ?? "null"}/${data.forumPost.id}`}><Button small>Go To</Button></Link>
         </div>
       </>}
-    </Card>
+    </div>
   );
 }
 

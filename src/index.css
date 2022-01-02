@@ -1,4 +1,8 @@
-body {
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
@@ -15,24 +19,19 @@ code {
   transform: translateY(0.3em);
 }
 
-a.link-button {
-  color: inherit !important;
-  text-decoration: inherit !important;
-}
-
 h1 {
-  margin: 0 !important;
-  margin-bottom: 0.25rem;
+  margin: 0;
+  margin-bottom: 0.45rem;
 }
 
 h2 {
-  margin: 0  !important;
-  margin-bottom: 0.15rem;
+  margin: 0;
+  margin-bottom: 0.3rem;
 }
 
 h3 {
-  margin: 0  !important;
-  margin-bottom: 0.1rem;
+  margin: 0;
+  margin-bottom: 0.15rem;
 }
 
 img {
@@ -104,7 +103,7 @@ blockquote {
   box-shadow: inset 0 0 0 1px rgba(16,22,26,.4);
   color: #f5f8fa;
 } */
-
+/*
 .CodeMirror-line {
   border: none !important;
   outline: none !important;
@@ -133,3 +132,67 @@ blockquote {
 .bp3-multistep-dialog-left-panel {
   pointer-events: none;
 }
+
+.sidebar-mobile {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: -2rem;
+  z-index: 2;
+  max-width: 16rem;
+}
+
+div {
+  scrollbar-color: #5C7080 #293742;
+}
+
+div::-webkit-scrollbar-track {
+  border-radius: 10px;
+  margin: 2px;
+  background-color: #293742;
+}
+
+div::-webkit-scrollbar {
+  width: 8px;
+  background-color: #293742;
+}
+
+div::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #5C7080;
+}
+
+@media only screen and (max-width: 600px) {
+  .sidebar-hidden {
+    display: none;
+    height: 1rem !important;
+  }
+  
+  .sidebar-mobile-button {
+    display: inline-block;
+    margin-right: 0.5rem;
+    padding-left: 0.9rem;
+    margin-top: -0.075rem;
+  }
+}
+
+@media screen and (min-width: 600px) {
+  .sidebar {
+    min-width: 10rem;
+    border-right: 1px solid rgba(16, 22, 26, 0.3);
+  }
+
+  .sidebar-mobile-button {
+    display: none !important;
+  }
+
+  .sidebar .bp3-menu {
+    margin-top: -0.1rem;
+    margin-left: -0.5rem;
+    margin-right: 0.5rem;
+    min-width: 10rem;
+    max-width: 15rem;
+    padding: 0;
+    background-color: #00000000 !important;
+  }
+}*/

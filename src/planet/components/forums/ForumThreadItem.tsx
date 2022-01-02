@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Alert, Button, ButtonGroup, Icon, Intent, Popover } from "@blueprintjs/core";
-import React, { useState } from "react";
+import { useMemo, useState } from "react";
 import SimpleMDEEditor from "react-simplemde-editor";
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
 import Profile from "../../../profile/Profile";
@@ -20,15 +19,22 @@ import lockForumPostMutation, { ILockForumPostMutationData } from "../../../grap
 import stickyForumPostMutation, { IStickyForumPostMutationData } from "../../../graphql/mutations/components/forums/stickyForumPostMutation";
 import updateForumPostMutation, { IUpdateForumPostMutationData } from "../../../graphql/mutations/components/forums/updateForumPostMutation";
 import updateForumReplyMutation, { IUpdateForumReplyMutationData } from "../../../graphql/mutations/components/forums/updateForumReplyMutation";
-import { useHistory } from "react-router-dom";
-import { GlobalToaster } from "../../../util/GlobalToaster";
-import "./css/ForumThreadItem.css";
 import "emoji-mart/css/emoji-mart.css";
-import isMobile from "../../../util/isMobile";
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
 import { assembleEditorOptions } from "../../../util/editorOptions";
 import fixPFP from "../../../util/fixPFP";
 import Markdown from "../../../util/Markdown";
+import generateEmojiMartEmojis from "../../../util/generateEmojiMartEmojis";
+import getSysInfo, { IGetSysInfoData } from "../../../graphql/queries/misc/getSysInfo";
+import { useNavigate } from "react-router-dom";
+import { faEdit, faEllipsisH, faFlag, faLock, faQuoteLeft, faSave, faShieldAlt, faSmile, faThumbtack, faTrash, faUserAstronaut } from "@fortawesome/free-solid-svg-icons";
+import Button from "../../../components/controls/Button";
+import Tooltip from "../../../components/display/Tooltip";
+import Intent from "../../../components/Intent";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Popover from "../../../components/overlays/Popover";
+import MenuItem from "../../../components/menu/MenuItem";
+import Toasts from "../../../components/display/Toasts";
 
 interface IForumThreadItemProps {
   forumId: string
@@ -42,12 +48,15 @@ interface IForumThreadItemProps {
 
 function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const {data} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+  const {data: sysData} = useQuery<IGetSysInfoData>(getSysInfo);
   const [textValue, setTextValue] = useState<string>(props.post.content ?? "");
   const [showEditor, setEditor] = useState<boolean>(false);
-  const [showAlert, setAlert] = useState<boolean>(false);
   const [showEmojiPrompt, setEmojiPrompt] = useState<boolean>(false);
+  const [showBottomEmojiPrompt, setBottomEmojiPrompt] = useState<boolean>(false);
   const [showProfile, setProfile] = useState<boolean>(false);
   const [showReport, setReport] = useState<boolean>(false);
+  const [showAnyways, setShowAnyways] = useState<boolean>(false);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
   const [deleteForumPost] = useMutation<IDeleteForumPostMutationData>(deleteForumPostMutation);
   const [deleteForumReply] = useMutation<IDeleteForumReplyMutationData>(deleteForumReplyMutation);
   const [forumPostReact] = useMutation<IForumPostReactMutationData>(forumPostReactMutation);
@@ -56,7 +65,9 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const [stickyForumPost] = useMutation<IStickyForumPostMutationData>(stickyForumPostMutation);
   const [updateForumPost] = useMutation<IUpdateForumPostMutationData>(updateForumPostMutation);
   const [updateForumReply] = useMutation<IUpdateForumReplyMutationData>(updateForumReplyMutation);
-  const history = useHistory();
+  const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
+  const memoizedOptions = useMemo(() => assembleEditorOptions(uploadMarkdownImage), [uploadMarkdownImage]);
+  const navigate = useNavigate();
 
   const typeCheck = function (arg: any): arg is IForumPost {
     // this suits our needs for this specific use case
@@ -71,7 +82,7 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const emojiTypeCheck = function (arg: any): arg is BaseEmoji {
     // find out if we have a correct emoji
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if(arg && arg.native) {
+    if(arg && (arg.native || arg.custom)) {
       return true;
     }
     return false;
@@ -80,169 +91,272 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const selectEmoji = function (emoji: string): void {
     if(props.isParent) {
       forumPostReact({variables: {postId: props.post.id, emojiId: emoji}}).catch((err: Error) => {
-        GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+        // GlobalToaster.show({message: err.message, intent: Intent.DANGER});
       });
     } else {
       forumReplyReact({variables: {replyId: props.post.id, emojiId: emoji}}).catch((err: Error) => {
-        GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+        // GlobalToaster.show({message: err.message, intent: Intent.DANGER});
       });
     }
   };
 
   const creationDate = props.post.createdAt ? new Date(Number(props.post.createdAt)) : new Date("2020-07-25T15:24:30+00:00");
   const creationDateText = creationDate.toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" });
-  const mobileCreationDateText = creationDate.toLocaleDateString(undefined, { weekday: "short", year: "numeric", month: "short", day: "numeric" });
   let canEdit = false;
-  const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
 
   if(props.post.owner && data?.currentUser && (props.post.owner.id === data.currentUser.id || permissions.checkFullWritePermission(data?.currentUser, props.planet))) {
     canEdit = true;
   }
 
+  if(props.post.owner && !showAnyways && data?.currentUser && data?.currentUser.blockedUsers && (data?.currentUser.blockedUsers.filter((value) => value.id === props.post.owner?.id).length > 0)) {
+    return (
+      <div className="px-3 py-2.5 mb-3 border rounded bg-gray-200 w-full border-gray-300 dark:bg-gray-800 dark:border-gray-700 flex">
+        <div className="ForumThreadItem-blocked-text">
+          This post is from a blocked user. ({props.post.owner.username})
+        </div>
+        <Button
+          className="ml-auto -mt-1 -mb-1 -mr-1.5"
+          minimal={true}
+          small={true}
+          onClick={() => setShowAnyways(true)}
+        >Show Anyways</Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="ForumThreadItem">
+    <div className="flex mb-3">
       {props.post.owner && <Profile isOpen={showProfile} planet={props.planet} userId={props.post.owner.id} onClose={() => setProfile(false)}/>}
       {props.post.owner && <ReportDialog isOpen={showReport} onClose={() => setReport(false)} objectId={props.post.id} objectType={props.isParent ? reportObjectType.FORUMPOST : reportObjectType.FORUMREPLY} userId={props.post.owner.id}/>}
-      <Alert
-        isOpen={showAlert}
-        className="bp3-dark"
-        icon="trash"
-        intent={Intent.DANGER}
-        confirmButtonText="Delete"
-        cancelButtonText="Cancel"
-        canOutsideClickCancel={true}
-        canEscapeKeyCancel={true}
-        onCancel={() => setAlert(false)}
-        onConfirm={() => {
-          if(props.isParent) {
-            deleteForumPost({variables: {postId: props.post.id}}).then(() => {
-              GlobalToaster.show({message: "Successfully deleted post.", intent: Intent.SUCCESS});
-              history.push(`/planet/${props.planet.id}/${props.forumId}`);
-              props.forumRefetch();
-            }).catch((err: Error) => {
-              GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-            });
-          } else {
-            deleteForumReply({variables: {replyId: props.post.id}}).then(() => {
-              GlobalToaster.show({message: "Successfully deleted reply.", intent: Intent.SUCCESS});
-              props.refetch();
-            }).catch((err: Error) => {
-              GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-            });
-          }
-        }}
-      >Are you sure you want to delete this post? It will be lost forever! (A long time!)</Alert>
-      <div className="ForumThreadItem-info">
-        <div className="ForumThreadItem-profilepic" onClick={() => setProfile(true)}>
-          {props.post.owner && props.post.owner.profilePicture && <img alt="pfp" src={`${fixPFP(props.post.owner.profilePicture)}?t=${Number(Date.now())}`}/>}
-        </div>
-        <div className="ForumThreadItem-username" onClick={() => setProfile(false)}>{props.post.owner && props.post.owner.username}</div>
-        {!isMobile() && props.post.owner && props.post.owner.admin && <div className="ForumThreadItem-admin">Global Admin</div>}
-        {!isMobile() && props.post.owner && permissions.checkFullWritePermission(props.post.owner, props.planet) && props.post.owner.admin && <div className="ForumThreadItem-member">Planet Member</div>}
-        {isMobile() && <div className="ForumThreadItem-mobile-date">
-          <Icon icon="time" className="ForumThreadItem-postinfo-dateicon"/>
-          <span className="ForumThreadItem-postinfo-date">{mobileCreationDateText}</span>
-        </div>}
+      <div
+        className="rounded-full w-10 h-10 overflow-hidden bg-gray-200 dark:bg-gray-700 cursor-pointer"
+        onClick={() => setProfile(true)}
+      >
+        {props.post.owner?.profilePicture && <img className="w-full h-full" src={fixPFP(props.post.owner.profilePicture)} alt=""/>}
       </div>
-      <div className="ForumThreadItem-content">
-        {!isMobile() && <div className="ForumThreadItem-postinfo">
-          <div>
-            <Icon icon="time" className="ForumThreadItem-postinfo-dateicon"/>
-            <span className="ForumThreadItem-postinfo-date">{creationDateText}</span>
+      <div className="ml-3 bg-gray-100 w-full rounded overflow-hidden border border-gray-300 dark:bg-gray-900 dark:border-gray-700">
+        <div className="px-3 py-2.5 flex border-b border-gray-300 bg-gray-200 dark:bg-gray-800 dark:border-gray-700">
+          <div className={`font-bold cursor-pointer`} onClick={() => setProfile(true)}>
+            {props.post.owner?.username}
           </div>
-        </div>}
-        <div className="ForumThreadItem-text">
-          {showEditor ? <div className="ForumThreadItem-editor">
-            <SimpleMDEEditor onChange={(value) => setTextValue(value)} value={textValue} options={assembleEditorOptions(uploadMarkdownImage)}/>
+          {props.post.owner && permissions.checkFullWritePermission(props.post.owner, props.planet) && <div className="ml-2">
+            <Tooltip
+              content="Planet Member"
+            >
+              <FontAwesomeIcon icon={faUserAstronaut} className="text-yellow-600 dark:text-yellow-400" size="sm"/> 
+            </Tooltip>
+          </div>}
+          {props.post.owner && props.post.owner.admin && <div className="ml-2">
+            <Tooltip
+              content="Administrator"
+            >
+              <FontAwesomeIcon icon={faShieldAlt} className="text-green-600 dark:text-green-400" size="sm"/>
+            </Tooltip>
+          </div>}
+          <div className="ml-2 text-gray-600 dark:text-gray-300">
+            {creationDateText}
+          </div>
+          {data?.currentUser && permissions.checkPublicWritePermission(data?.currentUser, props.planet) && <div className="ml-auto inline-flex -mt-1 -mb-1 -mr-1.5">
             <Button
-              icon="saved"
+              minimal
+              small
+              icon={faQuoteLeft}
+              className="inline"
+              onClick={() => props.addQuote(props.post)}
+            />
+            {canEdit && <Button
+              minimal
+              small
+              icon={faEdit}
+              className="inline" 
+              onClick={() => setEditor(true)}
+            />}
+            <Popover
+              popoverTarget={<Button
+                minimal
+                small
+                icon={faSmile}
+                className="inline"
+                onClick={() => setEmojiPrompt(true)}
+              />}
+              open={showEmojiPrompt}
+              onClose={() => setEmojiPrompt(false)}
+              popoverClassName="overflow-hidden pt-0 pb-0 pl-0 pr-0"
+            >
+              <Picker
+                theme="dark"
+                skin={1}
+                showPreview={false} 
+                set="twitter"
+                title="Pick an emoji"
+                emoji="smile"
+                custom={generateEmojiMartEmojis(props.planet.customEmojis, data?.currentUser && data?.currentUser.customEmojis)}
+                onSelect={(e) => {
+                  if(emojiTypeCheck(e)) {
+                    selectEmoji(e.native ?? e.id); 
+                    setEmojiPrompt(false);
+                  }
+                }}
+              />
+            </Popover>
+            <Popover
+              open={showMenu}
+              onClose={() => setShowMenu(false)}
+              popoverTarget={<Button
+                minimal
+                small
+                icon={faEllipsisH}
+                className="inline"
+                onClick={() => setShowMenu(true)}
+              />}
+              popoverClassName="pt-1 pb-1 pl-0 pr-0 w-36"
+            >
+              <MenuItem
+                icon={faFlag}
+                intent={Intent.DANGER}
+                onClick={() => {
+                  setReport(true);
+                  setShowMenu(false);
+                }}
+              >Report</MenuItem>
+              {canEdit && <MenuItem
+                icon={faTrash}
+                intent={Intent.DANGER}
+                onClick={() => {
+                  if(props.isParent) {
+                    deleteForumPost({variables: {postId: props.post.id}}).then(() => {
+                      Toasts.success("Successfully deleted post.");
+                      navigate(`/planet/${props.planet.id}/${props.forumId}`);
+                      props.forumRefetch();
+                    }).catch((err: Error) => {
+                      Toasts.danger(err.message);
+                    });
+                  } else {
+                    deleteForumReply({variables: {replyId: props.post.id}}).then(() => {
+                      Toasts.success("Successfully deleted reply.");
+                      props.refetch();
+                    }).catch((err: Error) => {
+                      Toasts.danger(err.message);
+                    });
+                  }
+                  setShowMenu(false);
+                }}
+              >Delete</MenuItem>}
+              {props.isParent && permissions.checkFullWritePermission(data?.currentUser, props.planet) && <MenuItem
+                icon={faThumbtack}
+                intent={Intent.SUCCESS}
+                onClick={() => {
+                  stickyForumPost({variables: {postId: props.post.id}}).then(() => {
+                    Toasts.success("Successfully stickied post.");
+                    props.forumRefetch();
+                  }).catch((err: Error) => {
+                    Toasts.danger(err.message);
+                  });
+                  setShowMenu(false);
+                }}
+              >{props.post.stickied ? "Unsticky" : "Sticky"}</MenuItem>}
+              {props.isParent && typeCheck(props.post) && permissions.checkFullWritePermission(data?.currentUser, props.planet) && <MenuItem
+                icon={faLock}
+                intent={Intent.WARNING}
+                onClick={() => {
+                  lockForumPost({variables: {postId: props.post.id}}).then(() => {
+                    Toasts.success("Successfully locked post.");
+                    props.forumRefetch();
+                  }).catch((err: Error) => {
+                    Toasts.danger(err.message);
+                  });
+                  setShowMenu(false);
+                }}
+              >{props.post.locked ? "Unlock" : "Lock"}</MenuItem>}
+            </Popover>
+          </div>}
+        </div>
+        <div className="break-words px-3 pt-2 pb-0">
+          {showEditor ? <div className="w-full mb-2 mt-1">
+            <SimpleMDEEditor onChange={(value) => setTextValue(value)} value={textValue} options={memoizedOptions}/>
+            <Button
+              icon={faSave}
               onClick={() => {
                 if(textValue === "") {
-                  GlobalToaster.show({message: "Your post must have content.", intent: Intent.DANGER});
+                  Toasts.danger("Your post must have content.");
                   return;
                 }
                 if(props.isParent) {
                   updateForumPost({variables: {postId: props.post.id, content: textValue}}).then(() => {
-                    GlobalToaster.show({message: "Your post has been updated.", intent: Intent.SUCCESS});
+                    Toasts.success("Succsessfully updated post.");
                     setEditor(false);
                   }).catch((err: Error) => {
-                    GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                    Toasts.danger(err.message);
                   });
                 } else {
                   updateForumReply({variables: {replyId: props.post.id, content: textValue}}).then(() => {
-                    GlobalToaster.show({message: "Your reply has been updated.", intent: Intent.SUCCESS});
+                    Toasts.success("Succsessfully updated reply.");
                     setEditor(false);
                   }).catch((err: Error) => {
-                    GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+                    Toasts.danger(err.message);
                   });
                 }
               }}
-              className="PageComponent-edit PageComponent-save-button"
+              className="-mt-4 block"
             >
               Save
-            </Button>
-          </div> : <Markdown>{props.post.content ?? ""}</Markdown>}
+            </Button> 
+          </div> : <Markdown longForm planetEmojis={props.planet.customEmojis} userEmojis={props.post.owner?.customEmojis}>{props.post.content ?? ""}</Markdown>}
         </div>
-        <div className="ForumThreadItem-bottom">
-          <ButtonGroup>
-            <Button small={true} icon="flag" text={!isMobile() && "Report"} alignText="left" minimal={true} onClick={() => setReport(true)}/>
-            <Button small={true} icon="comment" text={!isMobile() && "Quote"} onClick={() => props.addQuote(props.post)} minimal={true} alignText="left"/>
-            {canEdit && <Button small={true} icon="edit" text={!isMobile() && "Edit"} onClick={() => setEditor(true)} minimal={true} alignText="left"/>}
-            {canEdit && <Button small={true} icon="trash" text={!isMobile() && "Delete"} minimal={true} onClick={() => setAlert(true)} alignText="left" intent={Intent.DANGER}/>}
-            {data?.currentUser && props.isParent && permissions.checkFullWritePermission(data?.currentUser, props.planet) && <Button 
-              small={true}
-              icon="pin"
-              text={!isMobile() && (props.post.stickied ? "Unsticky" : "Sticky")}
-              minimal={true}
+        {props.post.reactions && props.post.reactions.length > 0 && <div className="p-2.5 pt-0 flex space-x-1">
+          {props.post.reactions.map((value) => (
+            <div
+              key={value.emoji}
+              className={`rounded flex px-2 py-1 cursor-pointer ${value.reactors.includes(data?.currentUser.id ?? "notanida") ?
+                "bg-blue-300 dark:bg-blue-800 hover:bg-blue-400 dark:hover:bg-blue-700 active:bg-blue-200 dark:active:bg-blue-900 transition-all" :
+                "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 active:bg-gray-100 dark:active:bg-gray-800 transition-all"}`}
               onClick={() => {
-                stickyForumPost({variables: {postId: props.post.id}}).then(() => {
-                  GlobalToaster.show({message: "Sucessfully stickied forum post.", intent: Intent.SUCCESS});
-                  props.forumRefetch();
-                }).catch((err: Error) => {
-                  GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                });
+                selectEmoji(value.emoji);
               }}
-              alignText="left"
-              intent={Intent.SUCCESS}
-            />}
-            {data?.currentUser && typeCheck(props.post) && permissions.checkFullWritePermission(data?.currentUser, props.planet) && <Button 
-              small={true} 
-              icon="lock" 
-              text={!isMobile() && (props.post.locked ? "Unlock" : "Lock")} 
-              minimal={true} 
-              onClick={() => {
-                lockForumPost({variables: {postId: props.post.id}}).then(() => {
-                  GlobalToaster.show({message: "Sucessfully locked forum post.", intent: Intent.SUCCESS});
-                }).catch((err: Error) => {
-                  GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                });
-              }} 
-              alignText="left" 
-              intent={Intent.WARNING}
-            />}
-          </ButtonGroup>
-          <ButtonGroup className="ForumThreadItem-reactions">
-            {props.post.reactions && props.post.reactions.map((value) => (<Button 
-              key={value.emoji} 
-              onClick={() => selectEmoji(value.emoji)} 
-              minimal={(data?.currentUser ? !value.reactors.includes(data?.currentUser.id) : true)}
-              small={true} 
-              icon={<Twemoji text={value.emoji} className="ForumThreadItem-twemoji"></Twemoji>} 
-              text={value.reactors.length}
-            />))}
-            <Popover isOpen={showEmojiPrompt} onClose={() => setEmojiPrompt(false)}>
-              <Button minimal={true} small={true} icon="new-object" onClick={() => setEmojiPrompt(true)}/>
-              <div>
-                <Picker theme="dark" skin={1} showPreview={false} set="twitter" title="Pick an emoji" emoji="smile" onSelect={(e) => {
-                  if(emojiTypeCheck(e)) {
-                    selectEmoji(e.native); 
-                    setEmojiPrompt(false);
-                  }
-                }}/>
+            >
+              <div className="my-auto mr-1.5">
+                {value.emoji.startsWith("ceid:") ? 
+                  <img className="h-4 w-4" src={(sysData?.sysInfo.paths.emojiURL ?? "") + value.emoji.split(":")[1]} alt={value.emoji}/> : 
+                  <Twemoji text={value.emoji} className="h-4 w-4"/>} 
               </div>
-            </Popover>
-          </ButtonGroup>
-        </div>
+              <div>
+                {value.reactors.length}
+              </div>
+            </div>
+          ))}
+          <Popover
+            popoverTarget={<div
+              className="rounded flex px-2 py-1 cursor-pointer border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-800 transition-all"
+              onClick={() => setBottomEmojiPrompt(true)}
+            >
+              <div className="my-auto mr-1.5">
+                <FontAwesomeIcon icon={faSmile} className="h-4 w-4"/>
+              </div>
+              <div>
+                +
+              </div>
+            </div>}
+            open={showBottomEmojiPrompt}
+            onClose={() => setBottomEmojiPrompt(false)}
+            popoverClassName="overflow-hidden pt-0 pb-0 pl-0 pr-0"
+          >
+            <Picker
+              theme="dark"
+              skin={1}
+              showPreview={false} 
+              set="twitter"
+              title="Pick an emoji"
+              emoji="smile"
+              custom={generateEmojiMartEmojis(props.planet.customEmojis, data?.currentUser && data?.currentUser.customEmojis)}
+              onSelect={(e) => {
+                if(emojiTypeCheck(e)) {
+                  selectEmoji(e.native ?? e.id); 
+                  setBottomEmojiPrompt(false);
+                }
+              }}
+            />
+          </Popover>
+        </div>}
       </div>
     </div>
   );

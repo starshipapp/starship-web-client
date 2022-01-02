@@ -1,3 +1,4 @@
+import ICustomEmoji from "./ICustomEmoji";
 import IPlanet from "./IPlanet";
 
 /* eslint-disable semi */
@@ -6,6 +7,8 @@ export default interface IUser {
   username?: string,
   createdAt?: Date,
   profilePicture?: string,
+  profileBanner?: string,
+  profileBio?: string,
   emails?: [{address: string, verified: boolean}],
   following?: [IPlanet],
   memberOf?: [IPlanet],
@@ -13,5 +16,9 @@ export default interface IUser {
   admin?: boolean,
   usedBytes?: number,
   capWaived?: boolean,
-  tfaEnabled?: boolean
+  tfaEnabled?: boolean,
+  online?: boolean,
+  blockedUsers?: [IUser],
+  customEmojis?: [ICustomEmoji],
+  notificationSetting?: number
 }

@@ -11,6 +11,7 @@ const getBreadcrumbObjects = gql`
       id
       name
       type
+      fileType
     }
   }
 `;

@@ -32,6 +32,7 @@ const getPlanet = gql`
       featuredDescription
       members {
         id
+        username
       }
       banned {
         id
@@ -41,6 +42,11 @@ const getPlanet = gql`
       }
       css
       description
+      customEmojis {
+        id
+        name
+        url
+      }
     }
   }
 `;

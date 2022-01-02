@@ -1,15 +1,14 @@
-import React from "react";
-import "./legal.css";
+import Page from "../components/layout/Page";
+import PageContainer from "../components/layout/PageContainer";
+import PageHeader from "../components/layout/PageHeader";
 
 function Terms(): JSX.Element {
   return (
-    <div className="legal bp3-dark">
-      <div className="legal-header">
-        <div className="legal-header-text">
+    <Page>
+      <PageContainer className="text-document">
+        <PageHeader>
           Terms of Service
-        </div>
-      </div>
-      <div className="legal-container">
+        </PageHeader>
         <p>We aren't lawyers (and we don't have the money to hire one), so we're going to make this easy for you.</p>
         <p>By using Starship, you agree to the following terms:</p>
         <ul>
@@ -27,8 +26,8 @@ function Terms(): JSX.Element {
           <li>You can't sue us.</li>
           <li>We can update these terms at any time, with or without notice.</li>
         </ul>
-      </div>
-    </div>
+      </PageContainer>
+    </Page>
   );
 }
 

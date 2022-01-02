@@ -1,8 +1,6 @@
 import { useQuery } from "@apollo/client";
-import React from "react";
 import getObjectPreview, { IGetObjectPreview } from "../../../graphql/queries/components/files/getObjectPreview";
 import IFileObject from "../../../types/IFileObject";
-import MimeTypes from "../../../util/validMimes";
 import TextPreview from "./TextPreview";
 
 interface IReadmeWrapperProps {
@@ -14,7 +12,7 @@ function ReadmeWrapper(props: IReadmeWrapperProps): JSX.Element {
 
   return (
     <>
-      {data && <TextPreview isMarkdown={props.file.name?.endsWith(".md") ?? false} fileURL={data.getObjectPreview} name={props.file.name ?? ""}/>}
+      {data && <div className="mb-4"><TextPreview isMarkdown={props.file.name?.endsWith(".md") ?? false} fileURL={data.getObjectPreview} name={props.file.name ?? ""}/></div>}
     </>
   );
 }

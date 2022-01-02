@@ -14,4 +14,5 @@ export default interface IForumItem {
   reactions?: [{emoji: string, reactors: string[]}]
   createdAt?: string
   updatedAt?: string
+  mentions?: IUser[]
 }

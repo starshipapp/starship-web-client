@@ -1,45 +1,30 @@
-import React from "react";
-import { NonIdealState } from "@blueprintjs/core";
 import { useQuery } from "@apollo/client";
 import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
-import { Route, Switch, useRouteMatch } from "react-router";
+import { Route } from "react-router";
 import GAdminHome from "./GAdminHome";
-import "./css/GAdmin.css";
-import GAdminSidebar from "./GAdminSidebar";
 import GAdminReports from "./GAdminReports";
 import GAdminUsers from "./GAdminUsers";
 import GAdminPlanets from "./GAdminPlanets";
+import { Routes } from "react-router-dom";
+import NonIdealState from "../components/display/NonIdealState";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
 function GAdmin(): JSX.Element {
   const {data} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const match = useRouteMatch();
 
   return (
-    <div className="GAdmin bp3-dark">
-      <div className="GAdmin-container">
-        
-        {data?.currentUser && data.currentUser.admin && <GAdminSidebar/>}
-        {(data?.currentUser && data.currentUser.admin) ? <Switch>
-          <Route path={`${match.path}/reports`}>
-            <GAdminReports/>
-          </Route>
-          <Route path={`${match.path}/users`}>
-            <GAdminUsers/>
-          </Route>
-          <Route path={`${match.path}/planets`}>
-            <GAdminPlanets/>
-          </Route>
-          <Route path={`${match.path}`}>
-            <GAdminHome/>
-          </Route>
-        </Switch> : <div className="GAdmin-not-allowed">
+    <div className="flex w-full flex-shrink max-w-full overflow-hidden">
+        {(data?.currentUser && data.currentUser.admin) ? <Routes>
+          <Route path="/" element={<GAdminHome/>}/>
+          <Route path="/users" element={<GAdminUsers/>}/>
+          <Route path="/planets" element={<GAdminPlanets/>}/>
+          <Route path="/reports" element={<GAdminReports/>}/> 
+        </Routes> : <div className="GAdmin-not-allowed">
           <NonIdealState
-            icon="error"
-            title="403 Forbidden"
-            description="You don't have permission to view this page."
-          />
+            icon={faExclamationTriangle}
+            title="Forbidden"
+          >You don't have permission to view this page.</NonIdealState>
         </div>}
-      </div>
     </div>
   );
 }

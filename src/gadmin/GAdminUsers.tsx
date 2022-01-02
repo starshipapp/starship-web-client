@@ -1,9 +1,16 @@
 import { useQuery } from "@apollo/client";
-import { Button, ButtonGroup, Classes, Popover } from "@blueprintjs/core";
-import React, { useState } from "react";
+import { faBan, faUser } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useState } from "react";
+import Button from "../components/controls/Button";
+import Textbox from "../components/input/Textbox";
+import Page from "../components/layout/Page";
+import PageContainer from "../components/layout/PageContainer";
+import PageHeader from "../components/layout/PageHeader";
+import List from "../components/list/List";
+import ListItem from "../components/list/ListItem";
 import getAdminUsers, { IGetAdminUsersData } from "../graphql/queries/admin/getAdminUsers";
 import Profile from "../profile/Profile";
-import "./css/GAdmin-page.css";
 
 function GAdminUsers(): JSX.Element {
   const [pageNumber, setPage] = useState<number>(0);
@@ -11,54 +18,43 @@ function GAdminUsers(): JSX.Element {
   const [openUser, setUser] = useState<string>("");
 
   return (
-    <div className="GAdmin-page bp3-dark">
-      <div className="GAdmin-page-header">Users</div>
-      <ButtonGroup minimal={true} className="GAdmin-page-buttongroup">
-        <Popover>
-          <Button rightIcon="caret-down">Set Page</Button>
-          <div className="menu-form">
-            <input className={Classes.INPUT + " menu-input"} onChange={(e) => setPage(Number(e.target.value))} value={pageNumber}/>
-          </div>
-        </Popover>
-      </ButtonGroup>
-      <div className="GAdmin-page-container">
-        <table className={`${Classes.HTML_TABLE} GAdmin-page-table`}>
-          <thead>
-            <tr>
-              <td>
-                Username
-              </td>
-              <td>
-                Registration Date
-              </td>
-              <td>
-                Banned?
-              </td>
-            </tr>
-          </thead>
-          {data?.adminUsers && <tbody>
-          {data.adminUsers.map((value) => (<>
-            <Profile 
-              isOpen={openUser === value.id}
-              userId={value.id}
-              onClose={() => setUser("")}
-            />
-            <tr onClick={() => setUser(value.id)}>
-              <td>
-                {value.username}
-              </td>
-              <td>
-                {new Date(Number(value.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
-              </td>
-              <td>
-                {value.banned ? "Banned" : "Not Banned"}
-              </td>
-            </tr>
-          </>))}  
-        </tbody>}
-        </table>
-      </div>
-    </div>
+    <Page>
+      <PageContainer>
+        <PageHeader>Users</PageHeader>
+        <Profile 
+          isOpen={openUser !== ""}
+          userId={openUser}
+          onClose={() => setUser("")}
+        />
+        <List
+          name="List of users"
+          actions={<div className="space-x-1">
+            <Button small onClick={() => setPage(pageNumber - 1)}>Previous</Button>
+            <Textbox small value={pageNumber.toString()} onChange={(e) => setPage(!isNaN(parseInt(e.target.value, 10)) ? parseInt(e.target.value, 10) : 0)} />
+            <Button small onClick={() => setPage(pageNumber + 1)}>Next</Button>
+          </div>}
+        >
+          {data?.adminUsers && data?.adminUsers.map((user) => (
+            <ListItem
+              key={user.id}
+              icon={<div className="w-6 flex">
+                <FontAwesomeIcon className="mx-auto" icon={user.banned ? faBan : faUser}/>
+              </div>}
+              onClick={() => setUser(user.id)}
+              className="w-full overflow-hidden max-w-full cursor-pointer"
+              actions={<div className="flex flex-shrink-0 flex-grow">
+                <div className="whitespace-nowrap">
+                  {new Date(Number(user.createdAt)).toLocaleDateString(undefined, { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+                </div>
+              </div>}
+            >
+              <div className="overflow-ellipsis overflow-hidden whitespace-nowrap flex-shrink block w-full">{user.username}</div>
+            </ListItem>
+          ))}
+        </List>
+
+      </PageContainer>
+    </Page>
   );
 }
 

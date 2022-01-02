@@ -1,7 +1,20 @@
 import { useMutation, useQuery } from "@apollo/client";
-import { Alert, Button, Classes, ContextMenu, Intent, Menu, MenuItem, Popover, PopoverPosition, Tooltip } from "@blueprintjs/core";
-import React, { useState } from "react";
+import { faDownload, faEdit, faFolder, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { memo, useState } from "react";
 import { Link } from "react-router-dom";
+import Button from "../../../components/controls/Button";
+import ContextMenu from "../../../components/controls/ContextMenu";
+import AlertBody from "../../../components/dialog/AlertBody";
+import AlertControls from "../../../components/dialog/AlertControls";
+import Dialog from "../../../components/dialog/Dialog";
+import Toasts from "../../../components/display/Toasts";
+import Tooltip from "../../../components/display/Tooltip";
+import Textbox from "../../../components/input/Textbox";
+import Intent from "../../../components/Intent";
+import MenuItem from "../../../components/menu/MenuItem";
+import Popover from "../../../components/overlays/Popover";
+import PopperPlacement from "../../../components/PopperPlacement";
 import deleteFileObjectMutation, { IDeleteFileObjectMutationData } from "../../../graphql/mutations/components/files/deleteFileObjectMutation";
 import moveObjectMutation, { IMoveObjectMutationData } from "../../../graphql/mutations/components/files/moveObjectMutation";
 import renameObjectMutation from "../../../graphql/mutations/components/files/renameObjectMutation";
@@ -9,7 +22,7 @@ import getDownloadFileObject, { IGetDownloadFileObjectData } from "../../../grap
 import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/users/getCurrentUser";
 import IFileObject from "../../../types/IFileObject";
 import IPlanet from "../../../types/IPlanet";
-import { GlobalToaster } from "../../../util/GlobalToaster";
+import getIconFromType from "../../../util/getIconFromType";
 import permissions from "../../../util/permissions";
 
 interface IFileButtonProps {
@@ -31,129 +44,193 @@ function FileButton(props: IFileButtonProps): JSX.Element {
   const [renameText, setRenameText] = useState<string>("");
   const [rename, setRename] = useState<boolean>(false);
   const [showDelete, setDelete] = useState<boolean>(false);
+  const hasWritePermission = userData?.currentUser && permissions.checkFullWritePermission(userData.currentUser, props.planet);
 
   return (
-    <div>
-      <Alert
-        isOpen={showDelete}
-        className="bp3-dark"
-        icon="trash"
-        intent={Intent.DANGER}
-        confirmButtonText="Delete"
-        cancelButtonText="Cancel"
-        canOutsideClickCancel={true}
-        canEscapeKeyCancel={true}
-        onCancel={() => setDelete(false)}
-        onConfirm={(e) => {
-          e?.stopPropagation();
-          const deletionArray = (props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id) ? props.selections : [props.object.id];
-          deleteObject({variables: {objectIds: deletionArray}}).then(() => {
-            GlobalToaster.show({message: `Deleted ${props.object.name ?? ""}${deletionArray.length > 1 ? ` and ${deletionArray.length - 1} ${deletionArray.length > 2 ? "others" : "other file"}` : ""}.`, intent: Intent.SUCCESS});
-            props.refetch();
-            props.resetSelection && props.resetSelection();
-            void refetchUser();
-          }).catch((err: Error) => {
-            GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-          });
-        }}
-      >Are you sure you want to delete {(props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id) ? `these files?` : "this file?"}
-      <br/>
-      &apos;{props.object.name}&apos;{(props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id) && ` and ${props.selections.length - 1} other${props.selections.length > 2 ? "s" : " file"}`} will be lost forever! (A long time!)
-      </Alert>
-      <Tooltip content={props.object.name} inheritDarkTheme={true}>
-        <Link 
-          className="link-button" to={`/planet/${props.planet.id}/${props.componentId}/${props.object.id}`}
-          onDragStart={(e) => {
-            e.stopPropagation();
-            e.dataTransfer.clearData();
-            if(props.selections && props.selections.includes(props.object.id)) {
-              e.dataTransfer.setData("application/json", JSON.stringify(props.selections));
-            } else {
-              e.dataTransfer.setData("text/plain", props.object.id);
-            }
-          }}
+    <>
+      <Dialog
+        open={showDelete}
+        onClose={() => setDelete(false)}
+      >
+        <AlertBody
+          icon={faTrash}
+          intent={Intent.DANGER}
         >
+          Are you sure you want to delete {(props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id) ? `these files?` : "this file?"}
+          <br/>
+          &apos;{props.object.name}&apos;{(props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id) && ` and ${props.selections.length - 1} other${props.selections.length > 2 ? "s" : " file"}`} will be lost forever! (A long time!)
+        </AlertBody>
+        <AlertControls>
           <Button
-            draggable={true}
-            alignText="left"
-            onContextMenu={(e) => {
-              const hasWritePermission = userData?.currentUser && permissions.checkFullWritePermission(userData.currentUser, props.planet); 
-              e.preventDefault();
-              ContextMenu.show(<Menu>
-                {hasWritePermission && <MenuItem text="Delete" icon="delete" onClick={() => setDelete(true)}/>}
-                {hasWritePermission && !((props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id)) && <MenuItem text="Rename" icon="edit" onClick={() => {setRename(true); setRenameText(props.object.name ?? "");}}/>}
-                {props.object.type === "file" && !((props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id)) && <MenuItem text="Download" icon="download" onClick={() => {
-                  refetch().then((data) => {
-                    if(data.data) {
-                      window.open(data.data.downloadFileObject, "_self");
-                    }
-                  }).catch((err: Error) => {
-                    GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                  });
-                }}/>}
-              </Menu>, { left: e.clientX, top: e.clientY }, () => {
-                // menu was closed; callback optional
-              }, true);
+            onClick={() => {
+              setDelete(false);
             }}
-            onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-              if(props.onClick) {
-                props.onClick(e, props.object.id);
-              }
+            className="mr-2"
+          >Cancel</Button>
+          <Button
+            intent={Intent.DANGER}
+            onClick={(e) => {
+              e?.stopPropagation();
+              const deletionArray = (props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id) ? props.selections : [props.object.id];
+              deleteObject({variables: {objectIds: deletionArray}}).then(() => {
+                Toasts.success(`Deleted ${deletionArray.length} file${deletionArray.length > 1 ? "s" : ""}`);
+                props.refetch();
+                props.resetSelection && props.resetSelection();
+                void refetchUser();
+              }).catch((err: Error) => {
+                Toasts.danger(err.message);
+              });
             }}
-            large={true}
-            className={`FilesComponent-filebutton ${props.selections && props.selections.includes(props.object.id) ? "FilesComponent-filebutton-selected" : ""}`}
-            icon={props.object.type === "folder" ? "folder-close" : "document"}
-            text={props.object.name}
-            onDrop={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              if(e.dataTransfer.items[0] && e.dataTransfer.items[0].kind === "string") {
-                const type = e.dataTransfer.items[0].type;
-                e.dataTransfer.items[0].getAsString((stringValue) => {
-                  if(type === "text/plain") {
-                    if(stringValue !== props.object.id) {
-                      moveObject({variables: {objectIds: [stringValue], parent: props.object.id}}).then(() => {
-                        props.refetch();
-                        void client.cache.gc();
-                      }).catch((err: Error) => {
-                        GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                      });
-                    }
-                  } else if (type === "application/json") {
-                    const idArray: string[] = JSON.parse(stringValue) as string[] ?? [];
-                    if(idArray && idArray.length > 0 && !idArray.includes(props.object.id)) {
-                      moveObject({variables: {objectIds: idArray, parent: props.object.id}}).then(() => {
-                        props.refetch();
-                        void client.cache.gc();
-                      }).catch((err: Error) => {
-                        GlobalToaster.show({message: err.message, intent: Intent.DANGER});
-                      });
-                    }
-                  }
+          >Delete</Button>
+        </AlertControls>
+      </Dialog>
+      <Link 
+        className="link-button" 
+        to={`/planet/${props.planet.id}/${props.componentId}/${props.object.id}`}
+        onDragStart={(e) => {
+          e.stopPropagation();
+          e.dataTransfer.clearData();
+          if(props.selections && props.selections.includes(props.object.id)) {
+            e.dataTransfer.setData("application/json", JSON.stringify(props.selections));
+          } else {
+            e.dataTransfer.setData("text/plain", props.object.id);
+          }
+        }}
+        onClick={(e) => {
+          if(props.onClick) {
+            props.onClick(e, props.object.id);
+          }
+        }}
+        id={props.object.id}
+      >
+        <ContextMenu
+          menu={<>
+            {hasWritePermission && <MenuItem
+              icon={faTrash}
+              onClick={(e) => {
+                setDelete(true);
+              }}
+            >Delete</MenuItem>}
+            {hasWritePermission && !((props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id)) && <MenuItem
+              icon={faEdit}
+              onClick={(e) => {
+                setRename(true);
+                setRenameText(props.object.name ?? "");
+              }}
+            >Rename</MenuItem>}
+            {props.object.type === "file" && !((props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id)) && <MenuItem
+              icon={faDownload}
+              onClick={(e) => {
+                refetch().then((data) => {
+                if(data.data) {
+                  window.open(data.data.downloadFileObject, "_self");
+                }
+                }).catch((err: Error) => {
+                  Toasts.danger(err.message);
                 });
-              }
-            }}
-            id={props.object.id}
+              }}
+            >Download</MenuItem>}
+          </>}
+          fullWidth={true}
+        >
+          <Tooltip
+            content={props.object.name ?? ""}
+            fullWidth
           >
-            <Popover isOpen={rename} position={PopoverPosition.AUTO_START} onClose={() => setRename(false)}>
-              <div className="FilesComponent-dummytarget"></div>
-              <div className="menu-form" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()} onKeyPress={(e) => e.stopPropagation()} onKeyUp={(e) => e.stopPropagation()}>
-                <input className={Classes.INPUT + " menu-input"} value={renameText} onChange={(e) => setRenameText(e.target.value)}/>
-                <Button text="Rename" className="menu-button" onClick={() => {
-                  renameObject({variables: {objectId: props.object.id, name: renameText}}).then(() => {
-                    GlobalToaster.show({message: `Renamed ${props.object.name ?? ""}.`, intent: Intent.SUCCESS});
-                    setRename(false);
-                  }).catch((err: Error) => {
-                    GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+            <div
+              draggable={true}
+              onClick={(e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+                if(props.onClick) {
+                  props.onClick(e, props.object.id);
+                }
+              }}
+              className={`transition-all duration-200 flex ring-1 ring-gray-300 px-3.5 py-2.5 text-base rounded-sm m-2 overflow-hidden leading-tight outline-none focus:outline-none focus:ring-blue-300 
+              focus:ring-1 dark:focus:ring-blue-600 shadow-md active:shadow-sm ${props.selections && props.selections.includes(props.object.id) ? `
+                bg-blue-400 hover:bg-blue-300 dark:bg-blue-700 dark:ring-blue-600 dark:hover:bg-blue-600 active:bg-blue-500 dark:active:bg-blue-700
+              ` : `
+                bg-gray-200 hover:bg-gray-300 dark:bg-gray-800 dark:ring-gray-700 dark:hover:bg-gray-700 active:bg-gray-400 dark:active:bg-gray-900
+              `}`}
+              onDrop={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if(e.dataTransfer.items[0] && e.dataTransfer.items[0].kind === "string") {
+                  const type = e.dataTransfer.items[0].type;
+                  e.dataTransfer.items[0].getAsString((stringValue) => {
+                    if(type === "text/plain") {
+                      if(stringValue !== props.object.id) {
+                        moveObject({variables: {objectIds: [stringValue], parent: props.object.id}}).then(() => {
+                          props.refetch();
+                          void client.cache.gc();
+                        }).catch((err: Error) => {
+                          Toasts.danger(err.message);
+                        });
+                      }
+                    } else if (type === "application/json") {
+                      const idArray: string[] = JSON.parse(stringValue) as string[] ?? [];
+                      if(idArray && idArray.length > 0 && !idArray.includes(props.object.id)) {
+                        moveObject({variables: {objectIds: idArray, parent: props.object.id}}).then(() => {
+                          props.refetch();
+                          void client.cache.gc();
+                        }).catch((err: Error) => {
+                          Toasts.danger(err.message);
+                        });
+                      }
+                    }
                   });
-                }}/>
-              </div>
-            </Popover>
-          </Button>
-        </Link>
-      </Tooltip>
-    </div>
+                }
+              }}
+              id={props.object.id}
+            >
+              <FontAwesomeIcon className="my-auto mr-2 text-gray-600 dark:text-gray-300" icon={props.object.type === "folder" ? faFolder : getIconFromType(props.object.fileType ?? "application/octet-stream")}/>
+              <Popover
+                open={rename}
+                onClose={() => setRename(false)}
+                popoverTarget={<div className="whitespace-nowrap overflow-hidden overflow-ellipsis mr-4">
+                  {props.object.name}
+                </div>}
+                fullWidth
+                placement={PopperPlacement.bottomStart}
+              >
+                <div
+                  className="menu-form"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    e.preventDefault();
+                  }}
+                  onKeyDown={(e) => e.stopPropagation()}
+                  onKeyPress={(e) => e.stopPropagation()}
+                  onKeyUp={(e) => e.stopPropagation()}
+                >
+                  <Textbox
+                    value={renameText}
+                    onClick={(e => e.stopPropagation())} 
+                    onChange={(e) => setRenameText(e.target.value)}
+                  />
+                  <Button className="ml-2" onClick={() => {
+                    renameObject({variables: {objectId: props.object.id, name: renameText}}).then(() => {
+                      Toasts.success(`Renamed ${props.object.name ?? ""}.`);
+                      setRename(false);
+                    }).catch((err: Error) => {
+                      Toasts.danger(err.message);
+                    });
+                  }}>Rename</Button>
+                </div>
+              </Popover>
+            </div>
+          </Tooltip>
+        </ContextMenu>
+      </Link>
+    </>
   );
 }
 
-export default FileButton;
+export default memo(FileButton, (next, prev) => {
+  if(next.object !== prev.object) {
+    return false;
+  }
+  if(next.selections !== prev.selections) {
+    return false;
+  }
+
+  return true;
+});

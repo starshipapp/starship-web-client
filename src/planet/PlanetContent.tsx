@@ -1,23 +1,10 @@
-import { useMutation, useQuery } from "@apollo/client";
-import { Alignment, Button, Intent, Menu, MenuItem, Navbar, NonIdealState, Popover } from "@blueprintjs/core";
-import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import addComponentMutation, { IAddComponentMutationData } from "../graphql/mutations/planets/addComponentMutation";
-import getCurrentUser, { IGetCurrentUserData } from "../graphql/queries/users/getCurrentUser";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import NonIdealState from "../components/display/NonIdealState";
 import IPlanet from "../types/IPlanet";
-import IUser from "../types/IUser";
-import { GlobalToaster } from "../util/GlobalToaster";
-import permissions from "../util/permissions";
 import Admin from "./admin/Admin";
 import ComponentIndex from "./ComponentIndex";
-import "./css/Planet.css";
-
-interface IPlanetContentParams {
-  planet: string,
-  component?: string,
-  subId?: string,
-  page?: string
-}
 
 interface IPlanetContentProps {
   home: boolean,
@@ -25,10 +12,7 @@ interface IPlanetContentProps {
 }
 
 function PlanetContent(props: IPlanetContentProps): JSX.Element {
-  const {planet, component, subId, page} = useParams<IPlanetContentParams>();
-  const {data: userData, loading: userLoading} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const [componentName, setComponentName] = useState<string>("");
-  const [addComponent] = useMutation<IAddComponentMutationData>(addComponentMutation);
+  const { component, subId, page} = useParams();
   const [forceStyling, enableStyling] = useState<boolean>(false);
 
   useEffect(() => {
@@ -50,10 +34,9 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
   // really long component determining thing
   //
   let currentComponent = <NonIdealState
-    icon="error"
+    icon={faExclamationTriangle}
     title="404"
-    description="We couldn't find that page in this planet."
-  />;
+  >We couldn't find that page in this planet.</NonIdealState>;
 
   if(component && props.planet.components) {
     const filteredComponents = props.planet.components.filter(value => value.componentId === component);
@@ -63,17 +46,16 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
         currentComponent = thisComponent;
       } else {
         currentComponent = <NonIdealState
-          icon="error"
+          icon={faExclamationTriangle}
           title="Not Implemented"
-          description="This component has no client implementation and cannot be rendered."
-        />;
+        >This component has no client implementation and cannot be rendered.</NonIdealState>;
       }
     }
   }
 
   if(component === "admin" && props.planet) {
     if(props.planet.createdAt) {
-      currentComponent = <Admin planet={props.planet} forceStyling={forceStyling} enableStyling={enableStyling}/>;
+      currentComponent = <Admin planet={props.planet} forceStyling={forceStyling} enableStyling={enableStyling} subId={subId ?? "/"}/>;
     }
   }
 
@@ -85,10 +67,9 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
           currentComponent = thisComponent;
         } else {
           currentComponent = <NonIdealState
-            icon="error"
+            icon={faExclamationTriangle}
             title="Not Implemented"
-            description="This component has no client implementation and cannot be rendered."
-          />;
+          >This component has no client implementation and cannot be rendered.</NonIdealState>;
         }
       }
     }
@@ -97,45 +78,7 @@ function PlanetContent(props: IPlanetContentProps): JSX.Element {
   return (
     <>
       {props.planet.css && (component !== "admin" || forceStyling === true) && <style>{props.planet.css}</style>}
-      <Navbar className="Planet-navbar">
-        <div className="Planet-navbar-content">
-          <Navbar.Group align={Alignment.LEFT}>
-            <Link className="link-button" to={`/planet/${planet}`}> <Button className="bp3-minimal" outlined={props.home} icon="home" text="Home"/> </Link>
-            {props.planet.components && props.planet.components.map((value) => (<Link className="link-button" to={`/planet/${planet}/${value.componentId}`}>
-              <Button
-                className="bp3-minimal"
-                icon={ComponentIndex.ComponentDataTypes[value.type].icon}
-                text={value.name}
-                outlined={component !== undefined && component === value.componentId}
-                key={value.componentId}
-              />
-            </Link>))}
-            {!userLoading && props.planet.owner && permissions.checkFullWritePermission(userData?.currentUser as IUser, props.planet) && <Popover>
-              <Button className="bp3-minimal" icon="plus"/>
-              <div className="Planet-navbar-add-content">
-                <input className="bp3-input" placeholder="Name" value={componentName} onChange={(e) => setComponentName(e.target.value)}/>
-                <Menu>
-                  {Object.values(ComponentIndex.ComponentDataTypes).map((value) => (<MenuItem text={"Create new " + value.friendlyName} key={value.name} icon={value.icon} onClick={() => {
-                    if(componentName === "") {
-                      GlobalToaster.show({message: "Your component must have a name.", intent: Intent.DANGER});
-                      return;
-                    }
-
-                    addComponent({variables: {planetId: planet, name: componentName, type: value.name}}).then((value) => {
-                      if(value.data?.addComponent.id) {
-                        GlobalToaster.show({message: `Successfully added ${componentName}.`, intent: Intent.SUCCESS});
-                      }
-                    }).catch((error: Error) => {
-                      GlobalToaster.show({message: error.message, intent: Intent.DANGER});
-                    });
-                  }}/>))}
-                </Menu>
-              </div>
-            </Popover>}
-          </Navbar.Group>
-        </div>
-      </Navbar>
-      {props.planet.components && <div className="Planet-contentcontainer">
+      {props.planet.components && <div className={"min-h-full w-full overflow-x-hidden m-0 p-0 flex"}>
         {currentComponent}
       </div>}
     </>

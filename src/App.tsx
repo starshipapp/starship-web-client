@@ -1,7 +1,5 @@
-import { Switch, Route, Router } from 'react-router-dom';
-import React from 'react';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import './css/App.css';
-import { createBrowserHistory } from "history";
 import Home from './home/Home';
 import MainSidebar from './sidebar/MainSidebar';
 import Login from './login/Login';
@@ -15,59 +13,58 @@ import Forgot from './login/Forgot';
 import GAdmin from './gadmin/GAdmin';
 import Settings from './settings/Settings';
 import Activate from './login/Activate';
+import Messages from './messages/Messages';
+import ComponentsTesting from './components/ComponentsTesting';
+import { Toaster } from 'react-hot-toast';
+import Debug from "./debugger/Debug";
+import Landing from './home/landing/Landing';
 
-const history = createBrowserHistory();
+interface IAppProps {
+  forcefullyResetLink: () => void;
+}
 
-function App(): JSX.Element {
+function App(props: IAppProps): JSX.Element {
   return (
-    <Router history={history}>
-      <div className="App bp3-dark">
-        <Switch>
-          <Route path="/gadmin">
+    <BrowserRouter>
+      <div className="flex w-screen h-screen dark:bg-gray-900">
+        <Toaster position="bottom-right"/>
+        <Unsupported/>
+        <Debug/>
+        <Routes>
+          <Route path="/login" element={<Login forcefullyResetLink={props.forcefullyResetLink}/>}/>
+          <Route path="/forgot/:forgotdata" element={<Forgot/>}/>
+          <Route path="/verify/:activationdata" element={<Activate/>}/>
+          <Route path="/debug/components" element={<ComponentsTesting/>}/>
+          <Route path="/debug/landingtest" element={<Landing/>}/>
+          <Route path="/invite/:inviteId/*" element={<Invite/>}/>
+          <Route path="/gadmin/*" element={<>
+            <MainSidebar context="gadmin" forcefullyResetLink={props.forcefullyResetLink}/>
             <GAdmin/>
-          </Route>
-          <Route>
-            <Unsupported/>
-            <MainSidebar />
-            <Switch>
-              <Route path="/login">
-                <Login/>
-              </Route>
-              <Route path="/planet/:planet">
-                <Planet home={true}/>
-              </Route>
-              <Route path="/planet/:planet/:component">
-                <Planet home={false}/>
-              </Route>
-              <Route path="/invite/:inviteId">
-                <Invite/>
-              </Route>
-              <Route path="/terms">
-                <Terms/>
-              </Route>
-              <Route path="/privacy">
-                <Privacy/>
-              </Route>
-              <Route path="/rules">
-                <Rules/>
-              </Route>
-              <Route path="/forgot/:forgotdata">
-                <Forgot/>
-              </Route>
-              <Route path="/verify/:activationdata">
-                <Activate/>
-              </Route>
-              <Route path="/settings">
-                <Settings/>
-              </Route>
-              <Route path="/">
-                <Home/>
-              </Route>
-            </Switch>
-          </Route>
-        </Switch>
+          </>}/>
+          <Route path="/planet/:planet/*" element={<>
+            <MainSidebar context="planet" forcefullyResetLink={props.forcefullyResetLink}/>
+            <Planet/>
+          </>}/>
+          <Route path="/settings/*" element={<>
+            <MainSidebar context="settings" forcefullyResetLink={props.forcefullyResetLink}/>
+            <Settings/>
+          </>}/>
+          <Route path="/messages/*" element={<>
+            <MainSidebar context="messages" forcefullyResetLink={props.forcefullyResetLink}/>
+            <Messages/>
+          </>}/>
+          <Route path="/*" element={<>
+            <MainSidebar context="home" forcefullyResetLink={props.forcefullyResetLink}/>
+            <Routes>
+              <Route path="/" element={<Home/>}/>
+              <Route path="/terms" element={<Terms/>}/>
+              <Route path="/privacy" element={<Privacy/>}/>
+              <Route path="/rules" element={<Rules/>}/>
+            </Routes>
+          </>}/>
+        </Routes>
       </div>
-    </Router>
+    </BrowserRouter>
   );
 }
 

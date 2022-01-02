@@ -1,67 +1,28 @@
 import { useQuery } from "@apollo/client";
-import {Alignment, Button, Classes, Navbar, NonIdealState} from "@blueprintjs/core";
-import React from "react";
-import { Route, Switch, useParams, useRouteMatch } from "react-router-dom";
+import { Route, Routes, useParams } from "react-router-dom";
 import getPlanet, { IGetPlanetData } from "../graphql/queries/planets/getPlanet";
-import "./css/Planet.css";
-import InfoStrip from "./InfoStrip";
 import PlanetContent from "./PlanetContent";
+import NonIdealState from "../components/display/NonIdealState";
+import { faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
 
-interface IPlanetParams {
-  planet: string
-}
-
-interface IPlanetProps {
-  home: boolean
-}
-
-function Planet(props: IPlanetProps): JSX.Element {
-  const match = useRouteMatch();
-  const {planet} = useParams<IPlanetParams>();
-  const {loading, data} = useQuery<IGetPlanetData>(getPlanet, {variables: {planet}, errorPolicy: 'all'});
+function Planet(): JSX.Element {
+  const {planet} = useParams();
+  const {data} = useQuery<IGetPlanetData>(getPlanet, {variables: {planet}, errorPolicy: 'all'});
 
   return (
-    <div className="Planet">
-      {loading ? <>
-        <div className={"Planet-header"}>
-          <div className={`Planet-header-name-skeleton ${Classes.SKELETON}`}/>
-          <div className={`Planet-header-infostrip-skeleton ${Classes.SKELETON}`}/>
-        </div>
-        <Navbar className="Planet-navbar">
-          <div className="Planet-navbar-content">
-            <Navbar.Group align={Alignment.LEFT}>
-              <Button className={`Planet-navbar-button-skeleton ${Classes.SKELETON}`} outlined={props.home} small={true} icon="home" text="Home"/>
-              <Button className={`Planet-navbar-button-skeleton ${Classes.SKELETON}`} outlined={props.home} small={true} icon="home" text="Home"/>
-              <Button className={`Planet-navbar-button-skeleton ${Classes.SKELETON}`} outlined={props.home} small={true} icon="home" text="Home"/>
-            </Navbar.Group>
-          </div>
-        </Navbar>
-        <div className={`Planet-contentcontainer Planet-contentcontainer-skeleton ${Classes.SKELETON}`}/>
-      </> : (data?.planet ? <>
-        <div className="Planet-header">
-          <div className="Planet-header-name">{data.planet.name}</div>
-          <InfoStrip planet={data.planet}/>
-        </div>
-        <Switch>
-          <Route path={`${match.path}/:component/:subId/:page`}>
-            <PlanetContent home={false} planet={data.planet}/>
-          </Route>
-          <Route path={`${match.path}/:component/:subId`}>
-            <PlanetContent home={false} planet={data.planet}/>
-          </Route>
-          <Route path={`${match.path}/:component`}>
-            <PlanetContent home={false} planet={data.planet}/>
-          </Route>
-          <Route path={`${match.path}`}>
-            <PlanetContent home={true} planet={data.planet}/>
-          </Route>
-        </Switch>
+    <div className="h-full w-full overflow-x-hidden overflow-y-hidden flex text-black dark:text-white Planet">
+      {data?.planet ? <>
+        <Routes>
+          <Route path=":component/:subId/:page" element={<PlanetContent home={false} planet={data.planet}/>}/>
+          <Route path=":component/:subId/*" element={<PlanetContent home={false} planet={data.planet}/>}/>
+          <Route path=":component" element={<PlanetContent home={false} planet={data.planet}/>}/>
+          <Route path="/" element={<PlanetContent home={true} planet={data.planet}/>}/>
+        </Routes>
       </> : <NonIdealState
         title="404"
-        icon="warning-sign"
-        description="It looks like this planet doesn't exist."
+        icon={faExclamationTriangle}
         className="Planet-404"
-      />)}
+      >It looks like this planet doesn't exist.</NonIdealState>}
     </div>
   );
 }
