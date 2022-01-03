@@ -15,7 +15,7 @@ interface IFileViewProps {
 }
 
 function FileView(props: IFileViewProps): JSX.Element {
-  const {refetch} = useQuery<IGetDownloadFileObjectData>(getDownloadFileObject, {variables: {fileId: props.file.id}, errorPolicy: 'all', fetchPolicy: "standby"});
+  const {refetch} = useQuery<IGetDownloadFileObjectData>(getDownloadFileObject, {variables: {fileId: props.file.id}, errorPolicy: 'all', fetchPolicy: "no-cache"});
   const {data} = useQuery<IGetObjectPreview>(getObjectPreview, {variables: {fileId: props.file.id}, fetchPolicy: "no-cache"});
 
   return (
@@ -40,6 +40,7 @@ function FileView(props: IFileViewProps): JSX.Element {
               window.open(data.data.downloadFileObject, "_self");
             }
           }).catch((err: Error) => {
+            console.error(err);
             Toasts.danger(err.message);
           });
         }}>Download</Button>

@@ -4,8 +4,8 @@ import PageHeader from "../components/layout/PageHeader";
 
 function Privacy(): JSX.Element {
   return (
-    <Page className="text-document">
-      <PageContainer>
+    <Page>
+      <PageContainer className="text-document">
         <PageHeader>
           Privacy Policy
         </PageHeader>
