@@ -49,8 +49,6 @@ function Message(props: IMessageProps): JSX.Element {
       props.message.createdAt,
       props.message.owner,
     ]);
-  
-  console.count(props.message.id);
 
   return (
     <div className={`Message w-full flex relative px-4 hover:bg-gray-200 dark:hover:bg-gray-800 ${isPrevMessageRelated ? "pl-16 py-0.5" : "mt-1 -mb-1.5 py-2"}`}>
