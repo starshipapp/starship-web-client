@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 import IMessage from "../../../../types/IMessage";
 
-export interface PinMessageMutationData {
+export interface IPinMessageMutationData {
   pinMessage: IMessage
 }
 

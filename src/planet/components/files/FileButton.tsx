@@ -37,7 +37,7 @@ interface IFileButtonProps {
 
 function FileButton(props: IFileButtonProps): JSX.Element {
   const {data: userData, client, refetch: refetchUser} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const {refetch} = useQuery<IGetDownloadFileObjectData>(getDownloadFileObject, {variables: {fileId: props.object.id}, errorPolicy: 'all'});
+  const {refetch} = useQuery<IGetDownloadFileObjectData>(getDownloadFileObject, {variables: {fileId: props.object.id}, errorPolicy: 'all', fetchPolicy: 'no-cache'});
   const [moveObject] = useMutation<IMoveObjectMutationData>(moveObjectMutation);
   const [deleteObject] = useMutation<IDeleteFileObjectMutationData>(deleteFileObjectMutation);
   const [renameObject] = useMutation<IDeleteFileObjectMutationData>(renameObjectMutation);

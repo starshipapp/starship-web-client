@@ -1,4 +1,5 @@
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
+import { faSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DetailedHTMLProps } from "react";
 import Intent from "../Intent";
@@ -11,6 +12,7 @@ interface IButtonProps extends DetailedHTMLProps<React.ButtonHTMLAttributes<HTML
   large?: boolean;
   small?: boolean;
   minimal?: boolean;
+  strikethrough?: boolean;
 }
 
 function Button(props: IButtonProps): JSX.Element {
@@ -57,7 +59,12 @@ function Button(props: IButtonProps): JSX.Element {
 
   return (
     <button {...props} className={className}>
-      {props.icon && <FontAwesomeIcon className={!props.children ? "" : "mr-2"} icon={props.icon}/>}{props.children}{props.rightIcon && <FontAwesomeIcon className={!props.children ? "" : "ml-2"} icon={props.rightIcon}/>}
+      {props.icon && <span className={`fa-layers fa-fw ${!props.children ? "" : "mr-2"}`}> 
+        <FontAwesomeIcon icon={props.icon}/>
+        {props.strikethrough && <FontAwesomeIcon icon={faSlash} inverse/>}
+      </span>}
+      {props.children}
+      {props.rightIcon && <FontAwesomeIcon className={!props.children ? "" : "ml-2"} icon={props.rightIcon}/>}
     </button>
   );
 }

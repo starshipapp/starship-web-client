@@ -11,8 +11,10 @@ import editMessageMutation, { IEditMessageMutationData } from "../graphql/mutati
 import permissions from "../util/permissions";
 import Toasts from "../components/display/Toasts";
 import Button from "../components/controls/Button";
-import { faEdit, faFlag, faReply, faSmile, faThumbtack, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faEdit, faFlag, faRemoveFormat, faReply, faSmile, faThumbtack, faTrash, faUnlink } from "@fortawesome/free-solid-svg-icons";
 import deleteMessageMutation, { IDeleteMessageMutationData } from "../graphql/mutations/components/chats/deleteMessageMutation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import pinMessageMutation, { IPinMessageMutationData } from "../graphql/mutations/components/chats/pinMessageMutation";
 
 interface IMessageProps {
   message: IMessage;
@@ -20,11 +22,12 @@ interface IMessageProps {
   currentUser?: IUser;
   previousMessage?: IMessage;
   nextMessage?: IMessage;
-
+  setReply: () => void;
 }
 
 function Message(props: IMessageProps): JSX.Element {
-  const creationDate: Date = useMemo(() => (props.message.createdAt ? new Date(Number(props.message.createdAt)) : new Date("2021-09-14T21:01:30+00:00")), [props.message.createdAt]);
+  console.log(props.message.createdAt);
+  const creationDate: Date = useMemo(() => (props.message.createdAt ? new Date(props.message.createdAt.includes("T") ? props.message.createdAt: Number(props.message.createdAt)) : new Date("2021-09-14T21:01:30+00:00")), [props.message.createdAt]);
   const creationDateText: string = useMemo(() => creationDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric", hour: "numeric", minute: "numeric" }), [creationDate]);
 
   const [showProfile, setProfile] = useState<boolean>(false);
@@ -33,6 +36,7 @@ function Message(props: IMessageProps): JSX.Element {
 
   const [editMessage] = useMutation<IEditMessageMutationData>(editMessageMutation);
   const [deleteMessage] = useMutation<IDeleteMessageMutationData>(deleteMessageMutation);
+  const [pinMessage] = useMutation<IPinMessageMutationData>(pinMessageMutation);
 
   const lessThanHalfHour = function(date: Date, dateToCheck: Date): boolean {
     const halfHour = 1000 * 60 * 30;
@@ -44,7 +48,7 @@ function Message(props: IMessageProps): JSX.Element {
   const isPrevMessageRelated = useMemo(() => (props.previousMessage && 
     props.previousMessage.owner?.username && props.previousMessage.createdAt && 
     props.message.createdAt && props.previousMessage.owner === props.message.owner && 
-    lessThanHalfHour(new Date(Number(props.previousMessage.createdAt)), new Date(Number(props.message.createdAt)))), [
+    lessThanHalfHour(new Date(props.previousMessage.createdAt.includes("T") ? props.previousMessage.createdAt: Number(props.previousMessage.createdAt)), new Date(props.message.createdAt.includes("T") ? props.message.createdAt : Number(props.message.createdAt)))), [
       props.previousMessage,
       props.message.createdAt,
       props.message.owner,
@@ -73,6 +77,17 @@ function Message(props: IMessageProps): JSX.Element {
           </div>
         </div>}
         <div className="w-full flex flex-col">
+          {props.message.parent && <div className="flex">
+            <FontAwesomeIcon icon={faReply} className="text-gray-600 dark:text-gray-300 my-auto mr-2" />
+            <div className="flex overflow-hidden">
+              <div className="text-sm leading-5 font-medium text-gray-900 dark:text-gray-300">
+                {props.message.parent.owner?.username}
+              </div>
+              <div className="ml-1.5 text-sm leading-5 text-gray-500 dark:text-gray-400 overflow-hidden whitespace-nowrap overflow-ellipsis">
+                {props.message.parent.content}
+              </div>
+            </div>
+          </div>}
           {!showTextbox && <div className="flex">
             <div className="inline-block">
               <Markdown longForm planetEmojis={props.planet?.customEmojis} userEmojis={props.message.owner?.customEmojis}>{props.message.content || ""}</Markdown>
@@ -114,6 +129,9 @@ function Message(props: IMessageProps): JSX.Element {
             icon={faReply}
             small={true}
             minimal={true}
+            onClick={() => {
+              props.setReply();
+            }}
           />}
           {(!props.planet || (props.currentUser && permissions.checkPublicWritePermission(props.currentUser, props.planet))) && <Button
             icon={faSmile}
@@ -150,6 +168,14 @@ function Message(props: IMessageProps): JSX.Element {
             icon={faThumbtack}
             small={true}
             minimal={true}
+            strikethrough={props.message.pinned}
+            onClick={() => {
+              pinMessage({variables: {messageId: props.message.id}}).then(() => {
+                Toasts.success("Successfully pinned message.");
+              }).catch((e: Error) => {
+                Toasts.danger(e.message);
+              });
+            }}
           />}
         </div>
       </div>

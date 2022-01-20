@@ -22,6 +22,7 @@ function ChatComponent(props: IComponentProps): JSX.Element {
   const {data, refetch} = useQuery<IGetChatData>(getChat, {variables: {id: props.id}});
   const [isOpen, setIsOpen] = useState(false);
   const [isSwitchOpen, setIsSwitchOpen] = useState(false);
+  const [isPinsOpen, setIsPinsOpen] = useState(false);
   const [showTopicText, setShowTopicText] = useState(false);
   const [topicText, setTopicText] = useState("");
   const [setTopicM] = useMutation<ISetChannelTopicMutationData>(setChannelTopicMutation);
@@ -114,10 +115,17 @@ function ChatComponent(props: IComponentProps): JSX.Element {
           </Popover>}
         </div>
         <div>
-          <Button
-            minimal
-            icon={faThumbtack}
-          />
+          <Popover
+            open={isPinsOpen}
+            onClose={() => setIsPinsOpen(false)}
+            placement={PopperPlacement.bottomStart}
+            popoverTarget={<Button
+              minimal
+              onClick={() => setIsPinsOpen(!isPinsOpen)}
+              icon={faThumbtack}
+            />}
+          >
+          </Popover>
         </div>
       </div>
       {props.subId && <MessageView currentUser={userData?.currentUser} channelId={props.subId} planet={props.planet}/>}

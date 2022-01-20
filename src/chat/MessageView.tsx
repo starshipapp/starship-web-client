@@ -4,7 +4,7 @@ import IUser from "../types/IUser";
 import Message from "./Message";
 import MessageViewTextbox from "./MessageViewTextbox";
 import IMessage from "../types/IMessage";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import onMessageSent from "../graphql/subscriptions/components/onMessageSent";
 import onMessageRemoved from "../graphql/subscriptions/components/onMessageRemoved";
 import onMessageUpdated from "../graphql/subscriptions/components/onMessageUpdated";
@@ -25,7 +25,8 @@ let unsubscribeFromRemoved: () => any = () => null;
 let unsubscribeFromUpdated: () => any = () => null;
 
 function MessageView(props: IMessageViewProps): JSX.Element {
-  const {data, subscribeToMore} = useQuery<IGetChannelData>(getChannel, {variables: {id: props.channelId, count: 50, pinnedCount: 0}});
+  const {data, subscribeToMore} = useQuery<IGetChannelData>(getChannel, {variables: {id: props.channelId, count: 50, pinnedCount: 0}, fetchPolicy: "cache-and-network"});
+  const [reply, setReply] = useState<IMessage | null>(null);
 
   useEffect(() => {
     if(hasSubscribed !== props.channelId && data?.channel.messages) {
@@ -122,7 +123,15 @@ function MessageView(props: IMessageViewProps): JSX.Element {
       <div className="flex max-h-full h-full overflow-y-auto flex-col-reverse scrollbar scrollbar-track-white scrollbar-thumb-gray-400 dark:scrollbar-track-gray-900 dark:scrollbar-thumb-gray-600">
         <div className="flex-col-reverse flex mb-3 min-h-full">
           {data?.channel?.messages && data.channel.messages.messages.map((message: IMessage, index) => (
-            <Message key={message.id} message={message} currentUser={props.currentUser} planet={props.planet} previousMessage={data.channel.messages?.messages[index + 1]} nextMessage={data.channel.messages?.messages[index - 1]}/>
+            <Message
+              key={message.id}
+              message={message}
+              currentUser={props.currentUser}
+              planet={props.planet}
+              previousMessage={data.channel.messages?.messages[index + 1]}
+              nextMessage={data.channel.messages?.messages[index - 1]}
+              setReply={() => setReply(message)}
+            />
           ))}
           {data?.channel?.messages && data?.channel?.messages?.messages.length < 50 && <div className="ml-4 mt-auto">
             <FontAwesomeIcon icon={faCommentAlt} className="text-gray-600 dark:text-gray-300 mb-2" size="8x"/>
@@ -131,7 +140,11 @@ function MessageView(props: IMessageViewProps): JSX.Element {
           </div>}
         </div>
       </div>
-      {data?.channel && (props.planet ? (props.currentUser && permissions.checkPublicWritePermission(props.currentUser, props.planet)) : true) && <MessageViewTextbox channel={data.channel}/>}
+      {data?.channel && (props.planet ? (props.currentUser && permissions.checkPublicWritePermission(props.currentUser, props.planet)) : true) && <MessageViewTextbox
+        channel={data.channel}
+        reply={reply ?? undefined}
+        resetReply={() => setReply(null)}
+      />}
     </div>
   );
 }
