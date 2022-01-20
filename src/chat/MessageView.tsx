@@ -25,7 +25,7 @@ let unsubscribeFromRemoved: () => any = () => null;
 let unsubscribeFromUpdated: () => any = () => null;
 
 function MessageView(props: IMessageViewProps): JSX.Element {
-  const {data, subscribeToMore} = useQuery<IGetChannelData>(getChannel, {variables: {id: props.channelId, count: 50, pinnedCount: 0}});
+  const {data, subscribeToMore} = useQuery<IGetChannelData>(getChannel, {variables: {id: props.channelId, count: 50, pinnedCount: 0}, fetchPolicy: "cache-and-network"});
   const [reply, setReply] = useState<IMessage | null>(null);
 
   useEffect(() => {

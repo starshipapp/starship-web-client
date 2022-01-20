@@ -26,7 +26,8 @@ interface IMessageProps {
 }
 
 function Message(props: IMessageProps): JSX.Element {
-  const creationDate: Date = useMemo(() => (props.message.createdAt ? new Date(Number(props.message.createdAt)) : new Date("2021-09-14T21:01:30+00:00")), [props.message.createdAt]);
+  console.log(props.message.createdAt);
+  const creationDate: Date = useMemo(() => (props.message.createdAt ? new Date(props.message.createdAt.includes("T") ? props.message.createdAt: Number(props.message.createdAt)) : new Date("2021-09-14T21:01:30+00:00")), [props.message.createdAt]);
   const creationDateText: string = useMemo(() => creationDate.toLocaleDateString(undefined, { year: "numeric", month: "long", day: "numeric", hour: "numeric", minute: "numeric" }), [creationDate]);
 
   const [showProfile, setProfile] = useState<boolean>(false);
@@ -47,7 +48,7 @@ function Message(props: IMessageProps): JSX.Element {
   const isPrevMessageRelated = useMemo(() => (props.previousMessage && 
     props.previousMessage.owner?.username && props.previousMessage.createdAt && 
     props.message.createdAt && props.previousMessage.owner === props.message.owner && 
-    lessThanHalfHour(new Date(Number(props.previousMessage.createdAt)), new Date(Number(props.message.createdAt)))), [
+    lessThanHalfHour(new Date(props.previousMessage.createdAt.includes("T") ? props.previousMessage.createdAt: Number(props.previousMessage.createdAt)), new Date(props.message.createdAt.includes("T") ? props.message.createdAt : Number(props.message.createdAt)))), [
       props.previousMessage,
       props.message.createdAt,
       props.message.owner,

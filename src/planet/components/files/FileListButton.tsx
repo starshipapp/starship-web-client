@@ -38,7 +38,7 @@ interface IFileButtonProps {
 
 function FileListButton(props: IFileButtonProps): JSX.Element {
   const {data: userData, client, refetch: refetchUser} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
-  const {refetch} = useQuery<IGetDownloadFileObjectData>(getDownloadFileObject, {variables: {fileId: props.object.id}, errorPolicy: 'all', fetchPolicy: "standby"});
+  const {refetch} = useQuery<IGetDownloadFileObjectData>(getDownloadFileObject, {variables: {fileId: props.object.id}, errorPolicy: 'all', fetchPolicy: "no-cache"});
   const [moveObject] = useMutation<IMoveObjectMutationData>(moveObjectMutation);
   const [deleteObject] = useMutation<IDeleteFileObjectMutationData>(deleteFileObjectMutation);
   const [renameObject] = useMutation<IDeleteFileObjectMutationData>(renameObjectMutation);
@@ -126,9 +126,9 @@ function FileListButton(props: IFileButtonProps): JSX.Element {
               icon={faDownload}
               onClick={(e) => {
                 refetch().then((data) => {
-                if(data.data) {
-                  window.open(data.data.downloadFileObject, "_self");
-                }
+                  if(data.data) {
+                    window.open(data.data.downloadFileObject, "_self");
+                  }
                 }).catch((err: Error) => {
                   Toasts.danger(err.message);
                 });

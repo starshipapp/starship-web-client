@@ -26,7 +26,7 @@ function Home(): JSX.Element {
 
   return (
    <div className="w-full bg-gray-50 dark:bg-gray-900 flex text-black dark:text-white ">
-      <div className="w-full m-5 flex flex-col overflow-auto">
+      <div className="w-full p-5 flex flex-col overflow-auto">
         <div>
           <div className="w-full mb-3 flex">
             <img src={logo} alt="logo" className="h-8 hidden dark:block"/>  
@@ -106,7 +106,7 @@ function Home(): JSX.Element {
           </div>}
         </div>}
         {searchText !== "" && <PlanetSearch searchText={searchText}/>}
-        <div className="mt-auto">
+        <div className="mt-auto pt-2">
           <span className="font-bold">© Starship 2020 - 2022. All rights reserved.</span>
           <span className="block">
             <Link className="font-bold mr-2" to="/terms">Terms</Link>
