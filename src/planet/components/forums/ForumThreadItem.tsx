@@ -91,11 +91,11 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
   const selectEmoji = function (emoji: string): void {
     if(props.isParent) {
       forumPostReact({variables: {postId: props.post.id, emojiId: emoji}}).catch((err: Error) => {
-        // GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+        Toasts.danger(err.message);
       });
     } else {
       forumReplyReact({variables: {replyId: props.post.id, emojiId: emoji}}).catch((err: Error) => {
-        // GlobalToaster.show({message: err.message, intent: Intent.DANGER});
+        Toasts.danger(err.message);
       });
     }
   };
@@ -307,29 +307,29 @@ function ForumThreadItem(props: IForumThreadItemProps): JSX.Element {
           {props.post.reactions.map((value) => (
             <div
               key={value.emoji}
-              className={`rounded flex px-2 py-1 cursor-pointer ${value.reactors.includes(data?.currentUser.id ?? "notanida") ?
+              className={`rounded-sm flex px-2 py-1 cursor-pointer ${value.reactors.includes(data?.currentUser.id ?? "notanida") ?
                 "bg-blue-300 dark:bg-blue-800 hover:bg-blue-400 dark:hover:bg-blue-700 active:bg-blue-200 dark:active:bg-blue-900 transition-all" :
                 "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 active:bg-gray-100 dark:active:bg-gray-800 transition-all"}`}
               onClick={() => {
                 selectEmoji(value.emoji);
               }}
             >
-              <div className="my-auto mr-1.5">
+              <div className="my-auto mr-1.5 rounded-sm overflow-hidden">
                 {value.emoji.startsWith("ceid:") ? 
                   <img className="h-4 w-4" src={(sysData?.sysInfo.paths.emojiURL ?? "") + value.emoji.split(":")[1]} alt={value.emoji}/> : 
                   <Twemoji text={value.emoji} className="h-4 w-4"/>} 
               </div>
-              <div>
+              <div className="leading-none my-auto">
                 {value.reactors.length}
               </div>
             </div>
           ))}
           <Popover
             popoverTarget={<div
-              className="rounded flex px-2 py-1 cursor-pointer border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-800 transition-all"
+              className="rounded flex px-2 py-0.5 cursor-pointer border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-800 transition-all"
               onClick={() => setBottomEmojiPrompt(true)}
             >
-              <div className="my-auto mr-1.5">
+              <div className="my-auto mr-1.5 leading-none">
                 <FontAwesomeIcon icon={faSmile} className="h-4 w-4"/>
               </div>
               <div>
