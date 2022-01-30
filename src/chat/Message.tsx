@@ -6,7 +6,7 @@ import IUser from "../types/IUser";
 import TextareaAutosize from "react-textarea-autosize";
 import Markdown from "../util/Markdown";
 import "./css/Message.css";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import editMessageMutation, { IEditMessageMutationData } from "../graphql/mutations/components/chats/editMessageMutation";
 import permissions from "../util/permissions";
 import Toasts from "../components/display/Toasts";
@@ -15,6 +15,12 @@ import { faEdit, faFlag, faRemoveFormat, faReply, faSmile, faThumbtack, faTrash,
 import deleteMessageMutation, { IDeleteMessageMutationData } from "../graphql/mutations/components/chats/deleteMessageMutation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import pinMessageMutation, { IPinMessageMutationData } from "../graphql/mutations/components/chats/pinMessageMutation";
+import Popover from "../components/overlays/Popover";
+import { BaseEmoji, Picker } from "emoji-mart";
+import reactToMessageMutation, { IReactToMessageMutationData } from "../graphql/mutations/components/chats/reactToMessageMutation";
+import generateEmojiMartEmojis from "../util/generateEmojiMartEmojis";
+import { Twemoji } from "react-emoji-render";
+import getSysInfo, { IGetSysInfoData } from "../graphql/queries/misc/getSysInfo";
 
 interface IMessageProps {
   message: IMessage;
@@ -33,10 +39,31 @@ function Message(props: IMessageProps): JSX.Element {
   const [showProfile, setProfile] = useState<boolean>(false);
   const [showTextbox, setShowTextbox] = useState<boolean>(false);
   const [editTextbox, setEditTextbox] = useState<string>("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState<boolean>(false);
+  const [showBottomEmojiPicker, setBottomShowEmojiPicker] = useState<boolean>(false);
 
+  const {data: sysData} = useQuery<IGetSysInfoData>(getSysInfo);
+ 
   const [editMessage] = useMutation<IEditMessageMutationData>(editMessageMutation);
   const [deleteMessage] = useMutation<IDeleteMessageMutationData>(deleteMessageMutation);
   const [pinMessage] = useMutation<IPinMessageMutationData>(pinMessageMutation);
+  const [reactToMessage] = useMutation<IReactToMessageMutationData>(reactToMessageMutation);
+
+  const emojiTypeCheck = function (arg: any): arg is BaseEmoji {
+    // find out if we have a correct emoji
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if(arg && (arg.native || arg.custom)) {
+      return true;
+    }
+    return false;
+  };
+
+  const selectEmoji = function (emoji: string): void {
+    reactToMessage({variables: {messageId: props.message.id, emojiId: emoji}}).catch((err: Error) => {
+      Toasts.danger(err.message);
+    });
+  };
+
 
   const lessThanHalfHour = function(date: Date, dateToCheck: Date): boolean {
     const halfHour = 1000 * 60 * 30;
@@ -124,7 +151,7 @@ function Message(props: IMessageProps): JSX.Element {
             />
           </div>}
         </div>
-        <div className="Message-buttons hidden bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-600 absolute right-4 -top-3 rounded z-10 shadow">
+        <div className="Message-buttons opacity-0 pointer-events-none flex bg-gray-200 dark:bg-gray-800 border border-gray-400 dark:border-gray-600 absolute right-4 -top-3 rounded z-10 shadow">
           {(!props.planet || (props.currentUser && permissions.checkPublicWritePermission(props.currentUser, props.planet))) && <Button
             icon={faReply}
             small={true}
@@ -133,11 +160,38 @@ function Message(props: IMessageProps): JSX.Element {
               props.setReply();
             }}
           />}
-          {(!props.planet || (props.currentUser && permissions.checkPublicWritePermission(props.currentUser, props.planet))) && <Button
-            icon={faSmile}
-            small={true}
-            minimal={true}
-          />}
+          {(!props.planet || (props.currentUser && permissions.checkPublicWritePermission(props.currentUser, props.planet))) && <Popover
+            open={showEmojiPicker}
+            onClose={() => {
+              setShowEmojiPicker(false);
+            }}
+            popoverTarget={<Button
+              icon={faSmile}
+              small={true}
+              minimal={true}
+              onClick={() => {
+                setShowEmojiPicker(true);
+              }}
+            />}
+
+            popoverClassName="overflow-hidden pt-0 pb-0 pl-0 pr-0"
+          >
+            <Picker
+              theme="dark"
+              skin={1}
+              showPreview={false} 
+              set="twitter"
+              title="Pick an emoji"
+              emoji="smile"
+              custom={generateEmojiMartEmojis(props.planet?.customEmojis, props.currentUser?.customEmojis)}
+              onSelect={(e) => {
+                if(emojiTypeCheck(e)) {
+                  selectEmoji(e.native ?? e.id); 
+                  setShowEmojiPicker(false);
+                }
+              }}
+            />
+          </Popover>}
           {props.currentUser && (props.message.owner?.id === props.currentUser.id || (props.planet && permissions.checkFullWritePermission(props.currentUser, props.planet))) && <Button
             icon={faEdit}
             small={true}
@@ -178,6 +232,61 @@ function Message(props: IMessageProps): JSX.Element {
             }}
           />}
         </div>
+        {(props.message.reactions?.length ?? 0) > 0 && <div className="space-x-1 flex">
+          {props.message?.reactions?.map((value) => (
+            <div
+              key={value.emoji}
+              className={`h-6 rounded-sm flex px-2 py-1 cursor-pointer ${value.reactors.includes(props.currentUser?.id ?? "notanida") ?
+                "bg-blue-300 dark:bg-blue-800 hover:bg-blue-400 dark:hover:bg-blue-700 active:bg-blue-200 dark:active:bg-blue-900 transition-all" :
+                "bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 active:bg-gray-100 dark:active:bg-gray-800 transition-all"}`}
+              onClick={() => {
+                selectEmoji(value.emoji);
+              }}
+            >
+              <div className="my-auto mr-1.5 rounded-sm overflow-hidden leading-none">
+                {value.emoji.startsWith("ceid:") ? 
+                  <img className="h-4 w-4" src={(sysData?.sysInfo.paths.emojiURL ?? "") + value.emoji.split(":")[1]} alt={value.emoji}/> : 
+                  <Twemoji text={value.emoji} className="h-4 w-4"/>} 
+              </div>
+              <div className="leading-none my-auto">
+                {value.reactors.length}
+              </div>
+            </div>
+          ))}
+          <Popover
+            popoverTarget={<div
+              className="rounded-sm flex px-2 py-0.5 cursor-pointer border border-gray-300 dark:border-gray-700 hover:bg-gray-200 dark:hover:bg-gray-700 active:bg-gray-100 dark:active:bg-gray-800 transition-all"
+              onClick={() => setBottomShowEmojiPicker(true)}
+            >
+              <div className="my-auto mr-1.5 leading-none">
+                <FontAwesomeIcon icon={faSmile} className="h-4 w-4"/>
+              </div>
+              <div className="leading-none my-auto">
+                +
+              </div>
+            </div>}
+            open={showBottomEmojiPicker}
+            onClose={() => setBottomShowEmojiPicker(false)}
+            className="flex"
+            popoverClassName="overflow-hidden pt-0 pb-0 pl-0 pr-0"
+          >
+            <Picker
+              theme="dark"
+              skin={1}
+              showPreview={false} 
+              set="twitter"
+              title="Pick an emoji"
+              emoji="smile"
+              custom={generateEmojiMartEmojis(props.planet?.customEmojis, props.currentUser?.customEmojis)}
+              onSelect={(e) => {
+                if(emojiTypeCheck(e)) {
+                  selectEmoji(e.native ?? e.id); 
+                  setShowEmojiPicker(false);
+                }
+              }}
+            />
+          </Popover>
+        </div>}
       </div>
     </div>
   );

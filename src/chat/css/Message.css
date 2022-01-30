@@ -7,5 +7,6 @@
 }
 
 .Message:hover .Message-buttons {
-  display: block;
+  opacity: 1;
+  pointer-events: all;
 }
