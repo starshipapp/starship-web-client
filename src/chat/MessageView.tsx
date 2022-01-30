@@ -19,102 +19,95 @@ interface IMessageViewProps {
   planet?: IPlanet;
 }
 
-let hasSubscribed = "";
-let unsubscribeFromMessages: () => any = () => null;
-let unsubscribeFromRemoved: () => any = () => null;
-let unsubscribeFromUpdated: () => any = () => null;
-
 function MessageView(props: IMessageViewProps): JSX.Element {
   const {data, subscribeToMore} = useQuery<IGetChannelData>(getChannel, {variables: {id: props.channelId, count: 50, pinnedCount: 0}, fetchPolicy: "cache-and-network"});
   const [reply, setReply] = useState<IMessage | null>(null);
 
   useEffect(() => {
-    if(hasSubscribed !== props.channelId && data?.channel.messages) {
-      if(hasSubscribed !== "") {
-        unsubscribeFromMessages();
-        unsubscribeFromRemoved();
-        unsubscribeFromUpdated();
-      }
-      hasSubscribed = props.channelId;
-      unsubscribeFromMessages = subscribeToMore({
-        document: onMessageSent,
-        variables: {channelId: props.channelId},
-        updateQuery: (prev, {subscriptionData}) => {
-          if(!subscriptionData.data) return prev;
-          const data = subscriptionData.data as unknown as {messageSent: IMessage};
-          const messageWorkaround = prev.channel.messages?.messages ? prev.channel.messages?.messages : [];
-          if(!data.messageSent) return prev;
-          
-          const newMessages = [data.messageSent, ...messageWorkaround];
+    const unsubscribeFromMessages = subscribeToMore({
+      document: onMessageSent,
+      variables: {channelId: props.channelId},
+      updateQuery: (prev, {subscriptionData}) => {
+        if(!subscriptionData.data) return prev;
+        const data = subscriptionData.data as unknown as {messageSent: IMessage};
+        const messageWorkaround = prev.channel.messages?.messages ? prev.channel.messages?.messages : [];
+        if(!data.messageSent) return prev;
+        
+        const newMessages = [data.messageSent, ...messageWorkaround];
 
-          if(newMessages.length > 50) {
-            newMessages.unshift();
-          }
-
-          return Object.assign({}, prev, {
-            channel: {
-              ...prev.channel,
-              messages: {
-                cursor: prev.channel.messages?.cursor ?? "0",
-                messages: newMessages
-              }
-            }
-          });
+        if(newMessages.length > 50) {
+          newMessages.unshift();
         }
-      });
-      unsubscribeFromRemoved = subscribeToMore({
-        document: onMessageRemoved,
-        variables: {channelId: props.channelId},
-        updateQuery: (prev, {subscriptionData}) => {
-          if(!subscriptionData.data) return prev;
-          const data = subscriptionData.data as unknown as {messageRemoved: IMessage};
-          const messageWorkaround = prev.channel.messages?.messages ? prev.channel.messages?.messages : [];
-          if(!data.messageRemoved) return prev;
-          
-          const newMessages = messageWorkaround.filter(m => m.id !== data.messageRemoved.id);
-             
 
-          if(newMessages.length > 50) {
-            newMessages.unshift();
-          }
-          return Object.assign({}, prev, {
-            channel: {
-              ...prev.channel,
-              messages: {
-                cursor: prev.channel.messages?.cursor ?? "0",
-                messages: newMessages
-              }
+        return Object.assign({}, prev, {
+          channel: {
+            ...prev.channel,
+            messages: {
+              cursor: prev.channel.messages?.cursor ?? "0",
+              messages: newMessages
             }
-          });
-        } 
-      });
-      unsubscribeFromUpdated = subscribeToMore({
-        document: onMessageUpdated,
-        variables: {channelId: props.channelId},
-        updateQuery: (prev, {subscriptionData}) => { 
-          if(!subscriptionData.data) return prev;
-          const data = subscriptionData.data as unknown as {messageUpdated: IMessage};
-          const messageWorkaround = prev.channel.messages?.messages ? prev.channel.messages?.messages : [];
-          if(!data.messageUpdated) return prev;
-
-          const newMessages = messageWorkaround.map(m => m.id === data.messageUpdated.id ? data.messageUpdated : m); 
-
-          if(newMessages.length > 50) {
-            newMessages.unshift();
           }
-          return Object.assign({}, prev, {
-            channel: {
-              ...prev.channel,
-              messages: {
-                cursor: prev.channel.messages?.cursor ?? "0",
-                messages: newMessages
-              }
+        });
+      }
+    });
+    const unsubscribeFromRemoved = subscribeToMore({
+      document: onMessageRemoved,
+      variables: {channelId: props.channelId},
+      updateQuery: (prev, {subscriptionData}) => {
+        if(!subscriptionData.data) return prev;
+        const data = subscriptionData.data as unknown as {messageRemoved: IMessage};
+        const messageWorkaround = prev.channel.messages?.messages ? prev.channel.messages?.messages : [];
+        if(!data.messageRemoved) return prev;
+        
+        const newMessages = messageWorkaround.filter(m => m.id !== data.messageRemoved.id);
+           
+
+        if(newMessages.length > 50) {
+          newMessages.unshift();
+        }
+        return Object.assign({}, prev, {
+          channel: {
+            ...prev.channel,
+            messages: {
+              cursor: prev.channel.messages?.cursor ?? "0",
+              messages: newMessages
             }
-          });
-        } 
-      });
-    }
-  }, [data, subscribeToMore, props.channelId]);
+          }
+        });
+      } 
+    });
+    const unsubscribeFromUpdated = subscribeToMore({
+      document: onMessageUpdated,
+      variables: {channelId: props.channelId},
+      updateQuery: (prev, {subscriptionData}) => { 
+        if(!subscriptionData.data) return prev;
+        const data = subscriptionData.data as unknown as {messageUpdated: IMessage};
+        const messageWorkaround = prev.channel.messages?.messages ? prev.channel.messages?.messages : [];
+        if(!data.messageUpdated) return prev;
+
+        const newMessages = messageWorkaround.map(m => m.id === data.messageUpdated.id ? data.messageUpdated : m); 
+
+        if(newMessages.length > 50) {
+          newMessages.unshift();
+        }
+        return Object.assign({}, prev, {
+          channel: {
+            ...prev.channel,
+            messages: {
+              cursor: prev.channel.messages?.cursor ?? "0",
+              messages: newMessages
+            }
+          }
+        });
+      } 
+    });
+
+    return () => {
+      unsubscribeFromMessages();
+      unsubscribeFromRemoved();
+      unsubscribeFromUpdated();
+    };
+  }, [subscribeToMore, props.channelId]);
 
 
 
