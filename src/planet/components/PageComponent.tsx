@@ -16,6 +16,7 @@ import Button from "../../components/controls/Button";
 import { faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
 import Toasts from "../../components/display/Toasts";
 import PageContainer from "../../components/layout/PageContainer";
+import Editor from "../../editor/Editor";
 
 function PageComponent(props: IComponentProps): JSX.Element {
   const {data} = useQuery<IGetPageData>(getPage, {variables: {page: props.id}});
@@ -58,7 +59,8 @@ function PageComponent(props: IComponentProps): JSX.Element {
             </div>
           </PageHeader>
           {!isEditing && <Markdown planetEmojis={props.planet.customEmojis} longForm>{data.page.content}</Markdown>}
-          {isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={memoizedOptions}/>}
+          {/* isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={memoizedOptions}/> */}
+          {isEditing && <Editor initialMarkdown={editorState}/>}
         </>}
       </PageContainer>
     </Page>

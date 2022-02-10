@@ -13,7 +13,8 @@ function AppearanceSettings(): JSX.Element {
   const [isDark, setDark] = useState<boolean>(localStorage.getItem("useDarkTheme") ? yn(localStorage.getItem("useDarkTheme")) ?? true : true);
   const [isList, setList] = useState<boolean>(localStorage.getItem("files.listView") ? yn(localStorage.getItem("files.listView")) ?? false : false);
   const [useLatex, setLatex] = useState<string>(localStorage.getItem("useLatex") ?? "html");
-
+  const [editorType, setEditorType] = useState<string>(localStorage.getItem("editor.type") ?? "toolbar");
+  
   return (
     <Page>
       <PageContainer>
@@ -59,6 +60,7 @@ function AppearanceSettings(): JSX.Element {
             localStorage.setItem("files.listView", "true");
           }}
         >List View</Option>
+
         <PageSubheader>LaTeX</PageSubheader>
         <Option
           description="Use HTML and MathML. (very slow, good for accessibility and readability)"
@@ -92,6 +94,40 @@ function AppearanceSettings(): JSX.Element {
             localStorage.setItem("useLatex", "false");
           }}
         >Disable LaTeX</Option>
+
+        <PageSubheader>Editor</PageSubheader>
+        <Option
+          description="Use the toolbar-based editor, similar to most office software. (default)"
+          checked={editorType === "toolbar"}
+          onClick={() => {
+            setEditorType("toolbar");
+            localStorage.setItem("editor.type", "toolbar");
+          }}
+        >Toolbar</Option>
+        <Option
+          description="Use the inline editor, similar to some note taking apps, like Notion."
+          checked={editorType === "inline"}
+          onClick={() => {
+            setEditorType("inline");
+            localStorage.setItem("editor.type", "inline");
+          }}
+        >Inline</Option>
+        <Option
+          description="Use a plain text editor (with syntax highlighting). This allows you to have the most control over the formatting of your text."
+          checked={editorType === "plain"}
+          onClick={() => {
+            setEditorType("plain");
+            localStorage.setItem("editor.type", "plain");
+          }}
+        >Plain Text</Option>
+        <Option
+          description="Use a plain text editor, with Vim-like keybindings. If you don't know what the last part of that sentence means, you probably don't want this."
+          checked={editorType === "modal"}
+          onClick={() => {
+            setEditorType("modal");
+            localStorage.setItem("editor.type", "modal");
+          }}
+        >Modal</Option>
       </PageContainer>
     </Page>
   );

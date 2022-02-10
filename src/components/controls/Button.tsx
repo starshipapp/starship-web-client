@@ -37,6 +37,20 @@ function Button(props: IButtonProps): JSX.Element {
   }
  
   if(props.minimal) {
+    switch(props.intent) {
+      case Intent.PRIMARY:
+        className += " text-blue-400 dark:text-blue-600";
+        break;
+      case Intent.SUCCESS:
+        className += " text-green-400 dark:text-green-600";
+        break;
+      case Intent.WARNING:
+        className += " text-orange-400 dark:text-orange-600";
+        break;
+      case Intent.DANGER:
+        className += " text-red-400 dark:text-red-600";
+        break;
+    }
     className += " bg-opacity-0 bg-gray-500 hover:bg-opacity-30";
   } else {
     switch(props.intent) {

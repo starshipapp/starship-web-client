@@ -13,7 +13,7 @@ import slug from "remark-slug";
 // @ts-ignore
 import hint from "remark-hint";
 import gfm from "remark-gfm";
-
+import breaks from "remark-breaks";
 
 // rehype plugins
 import katex from "rehype-katex";
@@ -52,11 +52,13 @@ function Markdown(props: IMarkdownProps): JSX.Element {
 
 
   const useLatex = (localStorage.getItem("useLatex")) ?? "html";
-  const plugins = [emoji, hint, toc, slug, gfm, mentionPlugin, [customEmojiPlugin, {planetEmojis: props.planetEmojis, userEmojis: props.userEmojis}]];
+  const plugins = [emoji, hint, toc, slug, gfm, mentionPlugin, breaks, [customEmojiPlugin, {planetEmojis: props.planetEmojis, userEmojis: props.userEmojis}]];
 
   if(useLatex !== "false") {
     plugins.push(math);
   }
+
+  console.log(props.children);
 
   return ( 
     <ReactMarkdown
