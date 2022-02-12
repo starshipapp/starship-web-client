@@ -30,6 +30,7 @@ function boilChildren(value: MdastContent[], isChild?: boolean) {
 }
 
 function convertMdToSlate(toConvert: string) {
+  console.log(toConvert);
   return unified().use(markdown).use(gfm).use(math).use(remarkToSlate, {
     overrides: {
       "heading": (node, next) => ({
@@ -85,7 +86,17 @@ function convertMdToSlate(toConvert: string) {
       "blockquote": (node, next) => ({
         type: "blockquote",
         children: [{text: boilChildren(node.children)}]
-      })
+      }),
+      "tableRow": (node, next) => ({
+        type: "tr",
+        // eslint-disable-next-line
+        children: next(node.children)
+      }),
+      "tableCell": (node, next) => ({
+        type: "td",
+        // eslint-disable-next-line
+        children: next(node.children)
+      }),
     }
   }).processSync(toConvert).result;
 }

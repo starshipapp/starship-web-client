@@ -1,4 +1,4 @@
-import { CodeBlockElement, CodeLineElement, createBlockquotePlugin, createCodeBlockPlugin, createCodePlugin, createExitBreakPlugin, createHeadingPlugin, createLinkPlugin, createListPlugin, createParagraphPlugin,  createPlugins, createResetNodePlugin, createSoftBreakPlugin, createTodoListPlugin, createTrailingBlockPlugin, createUnderlinePlugin, ELEMENT_BLOCKQUOTE, ELEMENT_CODE_BLOCK, ELEMENT_PARAGRAPH, ELEMENT_TD, ELEMENT_TODO_LI, isBlockAboveEmpty, isSelectionAtBlockStart, KEYS_HEADING, LinkElement, StyledElement, StyledLeaf, TodoListElement, withProps } from "@udecode/plate";
+import { CodeBlockElement, CodeLineElement, createBlockquotePlugin, createCodeBlockPlugin, createCodePlugin, createExitBreakPlugin, createHeadingPlugin, createLinkPlugin, createListPlugin, createParagraphPlugin,  createPlugins, createResetNodePlugin, createSoftBreakPlugin, createTablePlugin, createTodoListPlugin, createTrailingBlockPlugin, createUnderlinePlugin, ELEMENT_BLOCKQUOTE, ELEMENT_CODE_BLOCK, ELEMENT_PARAGRAPH, ELEMENT_TD, ELEMENT_TODO_LI, isBlockAboveEmpty, isSelectionAtBlockStart, KEYS_HEADING, LinkElement, StyledElement, StyledLeaf, TodoListElement, withProps } from "@udecode/plate";
 import { createItalicPlugin } from "./marks/Italic";
 import { createBoldPlugin } from "./marks/Bold";
 import { createStrikethroughPlugin } from "./marks/Strikethrough";
@@ -13,6 +13,7 @@ function generatePlugins() {
     createListPlugin(),
     createCodeBlockPlugin(),
     createTodoListPlugin(),
+    createTablePlugin(),
 
     // Inlines
     createLinkPlugin(),
@@ -141,7 +142,19 @@ function generatePlugins() {
       "code_line": withProps(StyledElement, {
         as: "div"
       }),
-      "action_item": TodoListElement
+      "action_item": TodoListElement,
+      "table": withProps(StyledElement, {
+        as: "table"
+      }),
+      "tr": withProps(StyledElement, {
+        as: "tr"
+      }),
+      "td": withProps(StyledElement, {
+        as: "td"
+      }),
+      "th": withProps(StyledElement, {
+        as: "th"
+      })
     }
   });
 }
