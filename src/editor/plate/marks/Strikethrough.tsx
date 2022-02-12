@@ -15,18 +15,18 @@ export const createStrikethroughPlugin = createPluginFactory<ToggleMarkPlugin>({
     onKeyDown: onKeyDownToggleMark,
   },
   options: {
-    hotkey: 'mod+i',
+    hotkey: 'mod+shift+x',
   },
   deserializeHtml: {
     rules: [
-      { validNodeName: ['EM', 'I'] },
+      { validNodeName: ['S', 'DEL', 'STRIKE'] },
       {
         validStyle: {
-          fontStyle: 'delete',
+          textDecoration: 'line-through',
         },
       },
     ],
     query: (el) =>
-      !someHtmlElement(el, (node) => node.style.fontStyle === 'normal'),
+      !someHtmlElement(el, (node) => node.style.textDecoration === 'none'),
   },
 });

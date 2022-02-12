@@ -1,7 +1,8 @@
-import { createBlockquotePlugin, createExitBreakPlugin, createHeadingPlugin, createLinkPlugin, createListPlugin, createParagraphPlugin,  createPlugins, createResetNodePlugin, createSoftBreakPlugin, createTrailingBlockPlugin, ELEMENT_BLOCKQUOTE, ELEMENT_CODE_BLOCK, ELEMENT_PARAGRAPH, ELEMENT_TD, ELEMENT_TODO_LI, isBlockAboveEmpty, isSelectionAtBlockStart, KEYS_HEADING, LinkElement, StyledElement, StyledLeaf, withProps } from "@udecode/plate";
+import { CodeBlockElement, CodeLineElement, createBlockquotePlugin, createCodeBlockPlugin, createCodePlugin, createExitBreakPlugin, createHeadingPlugin, createLinkPlugin, createListPlugin, createParagraphPlugin,  createPlugins, createResetNodePlugin, createSoftBreakPlugin, createTodoListPlugin, createTrailingBlockPlugin, createUnderlinePlugin, ELEMENT_BLOCKQUOTE, ELEMENT_CODE_BLOCK, ELEMENT_PARAGRAPH, ELEMENT_TD, ELEMENT_TODO_LI, isBlockAboveEmpty, isSelectionAtBlockStart, KEYS_HEADING, LinkElement, StyledElement, StyledLeaf, TodoListElement, withProps } from "@udecode/plate";
 import { createItalicPlugin } from "./marks/Italic";
 import { createBoldPlugin } from "./marks/Bold";
 import { createStrikethroughPlugin } from "./marks/Strikethrough";
+import { createInlineCodePlugin } from "./marks/InlineCode";
 
 function generatePlugins() {
   return createPlugins([
@@ -10,6 +11,8 @@ function generatePlugins() {
     createBlockquotePlugin(),
     createHeadingPlugin(),
     createListPlugin(),
+    createCodeBlockPlugin(),
+    createTodoListPlugin(),
 
     // Inlines
     createLinkPlugin(),
@@ -18,6 +21,8 @@ function generatePlugins() {
     createItalicPlugin(),
     createBoldPlugin(),
     createStrikethroughPlugin(),
+    createInlineCodePlugin(),
+    createUnderlinePlugin(),
 
     // Utility
     createResetNodePlugin({
@@ -75,17 +80,20 @@ function generatePlugins() {
     })
   ], {
     components: {
-      "emphasis" : withProps(StyledLeaf, {
+      "emphasis": withProps(StyledLeaf, {
         as: 'i'
       }),
-      "strong" : withProps(StyledLeaf, {
+      "strong": withProps(StyledLeaf, {
         as: 'b'
       }),
-      "delete" : withProps(StyledLeaf, {
+      "delete": withProps(StyledLeaf, {
         as: 's'
       }),
-      "inlineCode" : withProps(StyledLeaf, {
+      "inlineCode": withProps(StyledLeaf, {
         as: 'code'
+      }),
+      "underline": withProps(StyledLeaf, {
+        as: 'u'
       }),
       "blockquote": withProps(StyledElement, {
         as: 'blockquote'
@@ -126,7 +134,14 @@ function generatePlugins() {
       "list": withProps(StyledElement, {
         as: 'ul'
       }),
-      "a": LinkElement 
+      "a": LinkElement,
+      "code_block": withProps(StyledElement, {
+        as: "pre"
+      }),
+      "code_line": withProps(StyledElement, {
+        as: "div"
+      }),
+      "action_item": TodoListElement
     }
   });
 }

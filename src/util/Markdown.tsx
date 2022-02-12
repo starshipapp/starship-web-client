@@ -8,7 +8,6 @@ import { memo } from "react";
 import math from "remark-math";
 import emoji from "remark-emoji";
 import toc from "remark-toc";
-// @ts-ignore
 import slug from "remark-slug";
 // @ts-ignore
 import hint from "remark-hint";

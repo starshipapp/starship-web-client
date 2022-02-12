@@ -22,11 +22,11 @@ export const createBoldPlugin = createPluginFactory<ToggleMarkPlugin>({
       { validNodeName: ['B'] },
       {
         validStyle: {
-          fontStyle: 'strong',
+          fontStyle: ['600', '700', 'bold'],
         },
       },
     ],
     query: (el) =>
-      !someHtmlElement(el, (node) => node.style.fontStyle === 'normal'),
+      !someHtmlElement(el, (node) => node.style.fontWeight === 'normal'),
   },
 });

@@ -22,7 +22,7 @@ export const createItalicPlugin = createPluginFactory<ToggleMarkPlugin>({
       { validNodeName: ['EM', 'I'] },
       {
         validStyle: {
-          fontStyle: 'emphasis',
+          fontStyle: 'italic',
         },
       },
     ],

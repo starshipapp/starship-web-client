@@ -6,14 +6,11 @@ import Intent from "../../../components/Intent";
 interface IBlockButtonProps {
   type: string
   icon: IconProp
+  updateCount: number
 }
 
 function BlockButton(props: IBlockButtonProps) {
   const editor = usePlateEditorState();
-
-  console.log((!!editor?.selection && someNode(editor, { match: { type: props.type } })));
-  console.log((!!editor?.selection && someNode(editor, { match: { type: props.type } })) ? Intent.PRIMARY : undefined);
-
 
   return (<Button
     icon={props.icon}

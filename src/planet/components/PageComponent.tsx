@@ -21,6 +21,7 @@ import Editor from "../../editor/Editor";
 function PageComponent(props: IComponentProps): JSX.Element {
   const {data} = useQuery<IGetPageData>(getPage, {variables: {page: props.id}});
   const [isEditing, setEditing] = useState<boolean>(false);
+  const [editKey, setEditKey] = useState<number>(0);
   const [editorState, setEditorState] = useState<string>("");
   const {data: userData} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const [updatePage] = useMutation<IUpdatePageMutationData>(updatePageMutation);
@@ -40,6 +41,7 @@ function PageComponent(props: IComponentProps): JSX.Element {
                 onClick={() => {
                   setEditing(true);
                   setEditorState(data?.page.content);
+                  setEditKey(editKey + 1);
                 }}
                 minimal
               >Edit</Button> : <Button
@@ -60,7 +62,7 @@ function PageComponent(props: IComponentProps): JSX.Element {
           </PageHeader>
           {!isEditing && <Markdown planetEmojis={props.planet.customEmojis} longForm>{data.page.content}</Markdown>}
           {/* isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={memoizedOptions}/> */}
-          {isEditing && <Editor initialMarkdown={editorState}/>}
+          {isEditing && <Editor initialMarkdown={editorState} key={editKey}/>}
         </>}
       </PageContainer>
     </Page>

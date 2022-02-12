@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import generatePlugins from "./generatePlugins";
-import { Plate } from "@udecode/plate";
+import { createPlateUI, Plate } from "@udecode/plate";
 import convertMdToSlate from "./conversion/convertMdToSlate";
 import { IEditorProps } from "../Editor";
 import BlockButton from "./ui/BlockButton";
@@ -8,8 +8,10 @@ import {faQuoteLeft } from "@fortawesome/free-solid-svg-icons";
 
 function PlateEditor(props: IEditorProps): JSX.Element {
   const initialValue = useMemo(() => convertMdToSlate(props.initialMarkdown), [props.initialMarkdown]);
-  
+  const [buttonUpdateCount, setButtonUpdateCount] = useState(0);
+
   console.log(initialValue);
+  console.log(createPlateUI());
 
   const plugins = generatePlugins();
 
@@ -24,13 +26,17 @@ function PlateEditor(props: IEditorProps): JSX.Element {
       <BlockButton
         icon={faQuoteLeft}
         type="blockquote"
+        updateCount={buttonUpdateCount}
       />
     </div>
     <Plate
       id="1"
       editableProps={editableProps}
       initialValue={initialValue as Node[]}
-      onChange={(data) => console.log(data)}
+      onChange={(data) => {
+        console.log(data);
+        setButtonUpdateCount(buttonUpdateCount + 1);
+      }}
       plugins={plugins}
     />
   </>);
