@@ -97,6 +97,11 @@ function convertMdToSlate(toConvert: string) {
         // eslint-disable-next-line
         children: next(node.children)
       }),
+      "thematicBreak": (node, next) => ({
+        type: "hr",
+        // eslint-disable-next-line
+        children: [{text: "---"}]
+      }),
     }
   }).processSync(toConvert).result;
 }

@@ -1,5 +1,6 @@
 import LandingHeader from "./LandingHeader";
 import LandingIntroduction from "./LandingIntroduction";
+import LandingPricing from "./LandingPricing";
 import LandingUseCases from "./LandingUseCases";
 
 function Landing(): JSX.Element {
@@ -8,6 +9,7 @@ function Landing(): JSX.Element {
       <LandingHeader/>
       <LandingIntroduction/>
       <LandingUseCases/>
+      <LandingPricing/>
     </div>
   );
 }

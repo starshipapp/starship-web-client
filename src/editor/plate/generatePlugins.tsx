@@ -1,4 +1,4 @@
-import { CodeBlockElement, CodeLineElement, createBlockquotePlugin, createCodeBlockPlugin, createCodePlugin, createExitBreakPlugin, createHeadingPlugin, createLinkPlugin, createListPlugin, createParagraphPlugin,  createPlugins, createResetNodePlugin, createSoftBreakPlugin, createTablePlugin, createTodoListPlugin, createTrailingBlockPlugin, createUnderlinePlugin, ELEMENT_BLOCKQUOTE, ELEMENT_CODE_BLOCK, ELEMENT_PARAGRAPH, ELEMENT_TD, ELEMENT_TODO_LI, isBlockAboveEmpty, isSelectionAtBlockStart, KEYS_HEADING, LinkElement, StyledElement, StyledLeaf, TodoListElement, withProps } from "@udecode/plate";
+import { createBlockquotePlugin, createCodeBlockPlugin, createCodePlugin, createExitBreakPlugin, createHeadingPlugin, createHorizontalRulePlugin, createLinkPlugin, createListPlugin, createParagraphPlugin,  createPlugins, createResetNodePlugin, createSoftBreakPlugin, createTablePlugin, createTodoListPlugin, createTrailingBlockPlugin, createUnderlinePlugin, ELEMENT_BLOCKQUOTE, ELEMENT_CODE_BLOCK, ELEMENT_PARAGRAPH, ELEMENT_TD, ELEMENT_TODO_LI, isBlockAboveEmpty, isSelectionAtBlockStart, KEYS_HEADING, LinkElement, StyledElement, StyledLeaf, TodoListElement, withProps } from "@udecode/plate";
 import { createItalicPlugin } from "./marks/Italic";
 import { createBoldPlugin } from "./marks/Bold";
 import { createStrikethroughPlugin } from "./marks/Strikethrough";
@@ -14,6 +14,7 @@ function generatePlugins() {
     createCodeBlockPlugin(),
     createTodoListPlugin(),
     createTablePlugin(),
+    createHorizontalRulePlugin(),
 
     // Inlines
     createLinkPlugin(),
@@ -154,7 +155,7 @@ function generatePlugins() {
       }),
       "th": withProps(StyledElement, {
         as: "th"
-      })
+      }),
     }
   });
 }
