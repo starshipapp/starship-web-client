@@ -17,6 +17,7 @@ import { faEdit, faSave } from "@fortawesome/free-solid-svg-icons";
 import Toasts from "../../components/display/Toasts";
 import PageContainer from "../../components/layout/PageContainer";
 import Editor from "../../editor/Editor";
+import yn from "yn";
 
 function PageComponent(props: IComponentProps): JSX.Element {
   const {data} = useQuery<IGetPageData>(getPage, {variables: {page: props.id}});
@@ -28,6 +29,8 @@ function PageComponent(props: IComponentProps): JSX.Element {
   const [uploadMarkdownImage] = useMutation<IUploadMarkdownImageMutationData>(uploadMarkdownImageMutation);
 
   const memoizedOptions = useMemo(() => assembleEditorOptions(uploadMarkdownImage), [uploadMarkdownImage]);
+
+  const useExpEditor = yn(localStorage.getItem("debug.editorExperiments"));
 
   return (
     <Page>
@@ -61,8 +64,8 @@ function PageComponent(props: IComponentProps): JSX.Element {
             </div>
           </PageHeader>
           {!isEditing && <Markdown planetEmojis={props.planet.customEmojis} longForm>{data.page.content}</Markdown>}
-          {/* isEditing && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={memoizedOptions}/> */}
-          {isEditing && <Editor initialMarkdown={editorState} key={editKey}/>}
+          {isEditing && !useExpEditor && <SimpleMDEEditor onChange={(e) => setEditorState(e)} value={editorState} options={memoizedOptions}/>}
+          {isEditing && useExpEditor && <Editor initialMarkdown={editorState} key={editKey}/>}
         </>}
       </PageContainer>
     </Page>

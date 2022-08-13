@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import yn from "yn";
 import Checkbox from "../components/controls/Checkbox";
+import Tooltip from "../components/display/Tooltip";
 import MenuCollapsed from "../components/menu/MenuCollapsed";
 import MenuItem from "../components/menu/MenuItem";
 
@@ -13,7 +14,8 @@ function Debug(): JSX.Element {
   const [show, setShow] = useState(false);
   const [showUnsupported, setShowUnsupported] = useState(localStorage.getItem("debug.showUnsupported") ? yn(localStorage.getItem("debug.showUnsupported")) ?? true : true);
   const [showChat, setShowChat] = useState(localStorage.getItem("debug.showChat") ? yn(localStorage.getItem("debug.showChat")) ?? false : false);
-
+  const [useEditorExperiments, setEditorExperiments] = useState(localStorage.getItem("debug.editorExperiments") ? yn(localStorage.getItem("debug.editorExperiments")) ?? false : false);
+  
   useEffect(() => {
     if(!hasAttached) {
       hasAttached = true;
@@ -46,6 +48,11 @@ function Debug(): JSX.Element {
     localStorage.setItem("debug.showChat", showChat ? "false" : "true");
   };
 
+  const toggleEditorExperiments = () => {
+    setEditorExperiments(!useEditorExperiments);
+    localStorage.setItem("debug.editorExperiments", useEditorExperiments ? "false" : "true");
+  };
+
   if(show) {
     return (
       <div className="absolute top-0 left-0 h-screen w-screen bg-gray-800 bg-opacity-90 z-50 text-white p-6">
@@ -64,6 +71,15 @@ function Debug(): JSX.Element {
               rightElement={<Checkbox checked={showChat} onClick={toggleShowChat}/>}
               onClick={toggleShowChat}
             >Enable Chat</MenuItem>
+            <Tooltip
+              content="Do not enable this unless you know what you're doing." 
+              fullWidth
+            >
+              <MenuItem
+                rightElement={<Checkbox checked={useEditorExperiments} onClick={toggleEditorExperiments}/>}
+                onClick={toggleEditorExperiments}
+              >Enable Experimental Editor</MenuItem>
+            </Tooltip>
           </MenuCollapsed>
           <MenuCollapsed
             title="Debug Menu"
