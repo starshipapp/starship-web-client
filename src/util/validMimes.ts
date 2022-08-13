@@ -18,8 +18,8 @@ const MimeTypes = {
     "audio/mpeg",
     "audio/flac",
     "audio/aac",
+    "audio/mp3",
     "audio/x-wav",
-    "audio/wave",
     "audio/x-flac",
     "audio/x-ogg",
     "audio/x-mpeg"
