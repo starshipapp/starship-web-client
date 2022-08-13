@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme')
+
 module.exports = {
   content: [
     "./src/**/*.{ts,tsx}",
@@ -42,6 +44,9 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(closest-side at 50% 50%, var(--tw-gradient-stops))'
+      },
+      fontFamily: {
+        sans: ['Cantarell var', ...defaultTheme.fontFamily.sans],
       }
     },
   },
