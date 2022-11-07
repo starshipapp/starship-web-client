@@ -17,10 +17,10 @@ function Settings(): JSX.Element {
   if(userData?.currentUser) {
     return (
       <Routes>
-        <Route path="security" element={<SecuritySettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+        <Route path="security" element={<SecuritySettings user={userData.currentUser} refetch={() => void refetch()}/>}/>
         <Route path="profile" element={<ProfileSettings user={userData.currentUser} refetch={() => refetch()}/>}/>
-        <Route path="emojis" element={<EmojiSettings user={userData.currentUser} refetch={() => refetch()}/>}/>
-        <Route path="notifications" element={<NotificationSettings user={userData.currentUser} refetch={() => refetch()}/>}/>
+        <Route path="emojis" element={<EmojiSettings user={userData.currentUser} refetch={() => void refetch()}/>}/>
+        <Route path="notifications" element={<NotificationSettings user={userData.currentUser} refetch={() => void refetch()}/>}/>
         <Route path="appearance" element={<AppearanceSettings/>}/>
         <Route path="about" element={<About/>}/>
         <Route path="/" element={<ProfileSettings user={userData.currentUser} refetch={() => refetch()}/>}/>

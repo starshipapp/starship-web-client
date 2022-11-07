@@ -9,7 +9,7 @@ import getCurrentUser, { IGetCurrentUserData } from "../../../graphql/queries/us
 import IFileObject from "../../../types/IFileObject";
 import IPlanet from "../../../types/IPlanet";
 import permissions from "../../../util/permissions";
-import filesize from "filesize";
+import { filesize } from "filesize";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload, faEdit, faFolder, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Divider from "../../../components/display/Divider";
@@ -209,7 +209,7 @@ function FileListButton(props: IFileButtonProps): JSX.Element {
               </Popover>
             </div>
             <div className="ml-auto flex">
-              {props.object.size && <span>{filesize(props.object.size)}</span>}
+              {props.object.size && <span>{filesize(props.object.size).toLocaleString()}</span>}
               {props.object.size && <Divider/>}
               <span>{fileDate}</span>
             </div>

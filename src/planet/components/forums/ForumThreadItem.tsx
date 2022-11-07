@@ -19,7 +19,6 @@ import lockForumPostMutation, { ILockForumPostMutationData } from "../../../grap
 import stickyForumPostMutation, { IStickyForumPostMutationData } from "../../../graphql/mutations/components/forums/stickyForumPostMutation";
 import updateForumPostMutation, { IUpdateForumPostMutationData } from "../../../graphql/mutations/components/forums/updateForumPostMutation";
 import updateForumReplyMutation, { IUpdateForumReplyMutationData } from "../../../graphql/mutations/components/forums/updateForumReplyMutation";
-import "emoji-mart/css/emoji-mart.css";
 import uploadMarkdownImageMutation, { IUploadMarkdownImageMutationData } from "../../../graphql/mutations/misc/uploadMarkdownImageMutation";
 import { assembleEditorOptions } from "../../../util/editorOptions";
 import fixPFP from "../../../util/fixPFP";

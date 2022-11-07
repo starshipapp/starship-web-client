@@ -15,14 +15,14 @@ import { reportObjectType } from "../../../util/reportTypes";
 import ReportDialog from "../../ReportDialog";
 import IComponentProps from "../IComponentProps";
 import { v4 } from "uuid";
-import axios, { AxiosRequestConfig, CancelTokenSource } from "axios";
+import axios, { AxiosProgressEvent, AxiosRequestConfig, CancelTokenSource } from "axios";
 import FileBreadcrumbs from "./FileBreadcrumbs";
 import FileButton from "./FileButton";
 import FileListButton from "./FileListButton";
 import FileView from "./FileView";
 import FileSearch from "./FileSearch";
 import ReadmeWrapper from "./ReadmeWrapper";
-import fileSize from "filesize";
+import { filesize } from "filesize";
 import cancelUploadMutation, { ICancelUploadMutationData } from "../../../graphql/mutations/components/files/cancelUploadMutation";
 import createMultiObjectDownloadTicketMutation, { ICreateMultiObjectDownloadTicketMutationData } from "../../../graphql/mutations/components/files/createMultiObjectDownloadTicketMutation";
 import Toasts from "../../../components/display/Toasts";
@@ -92,8 +92,8 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           documentId: data.data.uploadFileObject.documentId ?? "",
           cancelToken: axios.CancelToken.source()
         };
-        const options: AxiosRequestConfig = {headers: {"Content-Type": file.type}, onUploadProgress: (progressEvent: {loaded: number, total: number}) => {
-          uploading[currentIndex].progress = progressEvent.loaded / progressEvent.total;
+        const options: AxiosRequestConfig = {headers: {"Content-Type": file.type}, onUploadProgress: (progressEvent: AxiosProgressEvent) => {
+          uploading[currentIndex].progress = progressEvent.loaded / (progressEvent.total ?? 0);
           if(uploading[currentIndex].progress === 1) {
             delete uploading[currentIndex];
             setTotal(Object.keys(uploading).length);
@@ -528,7 +528,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           <span>{fileDate}</span>
           {objectData.fileObject.size && <>
             <FontAwesomeIcon icon={faFile} className="ml-2 mr-1"/>
-            <span>{fileSize(objectData.fileObject.size ?? 0)}</span>
+            <span>{filesize(objectData.fileObject.size ?? 0).toLocaleString()}</span>
           </>}
         </div>}
         <div className="flex flex-col ml-auto">

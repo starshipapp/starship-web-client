@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import generatePlugins from "./generatePlugins";
-import { createPlateUI, Plate } from "@udecode/plate";
+import { createPlateUI, Plate, TElement } from "@udecode/plate";
 import convertMdToSlate from "./conversion/convertMdToSlate";
 import { IEditorProps } from "../Editor";
 import BlockButton from "./ui/BlockButton";
@@ -32,7 +32,7 @@ function PlateEditor(props: IEditorProps): JSX.Element {
     <Plate
       id="1"
       editableProps={editableProps}
-      initialValue={initialValue as Node[]}
+      initialValue={initialValue as TElement[]}
       onChange={(data) => {
         console.log(data);
         setButtonUpdateCount(buttonUpdateCount + 1);

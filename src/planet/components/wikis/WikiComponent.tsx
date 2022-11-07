@@ -75,7 +75,7 @@ function WikiComponent(props: IComponentProps): JSX.Element {
             {wikiData?.wiki && wikiData.wiki?.pages?.length === 0 && <NonIdealState title="This Page Group is empty." icon={faExclamationTriangle}>
               <p>This page group is empty. Click the plus icon in the sidebar on the left to create a new page.</p>
             </NonIdealState>}
-            {wikiData?.wiki && wikiData?.wiki?.pages?.length !== 0 && props.subId && <WikiPage id={props.id} subId={props.subId} planet={props.planet} refetch={refetch}/>}
+            {wikiData?.wiki && wikiData?.wiki?.pages?.length !== 0 && props.subId && <WikiPage id={props.id} subId={props.subId} planet={props.planet} refetch={() => void refetch()}/>}
             {wikiData?.wiki && wikiData?.wiki?.pages?.length !== 0 && !props.subId && <NonIdealState title="No page selected." icon={faFileAlt}>
               <p>Select a page from the sidebar on the left to view it.</p>
             </NonIdealState>}

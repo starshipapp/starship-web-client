@@ -132,7 +132,7 @@ function ChannelManager(props: IChannelManagerProps): JSX.Element {
                 >
                   <Button
                     intent={Intent.DANGER}
-                    onClick={() => deleteChannelM({variables: {channelId: channel.id}}).then(() => {
+                    onClick={() => void deleteChannelM({variables: {channelId: channel.id}}).then(() => {
                       Toasts.success("Channel deleted successfully.");
                       props.refetch();
                     }).catch((e: Error) => {

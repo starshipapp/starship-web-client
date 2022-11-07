@@ -1,6 +1,6 @@
 import { useQuery } from '@apollo/client';
 import { faCog, faGripLines, faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import fileSize from 'filesize';
+import { filesize } from 'filesize';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import ProgressBar from '../components/display/ProgressBar';
@@ -67,7 +67,7 @@ function MainSidebar(props: IMainSidebarProps): JSX.Element {
           <Notifications currentUser={data.currentUser}/>
           <div className="px-3 py-1.5">
             <Label>
-              {fileSize(data.currentUser.usedBytes ?? 0)} of {getCapString(data.currentUser)} used
+              {filesize(data.currentUser.usedBytes ?? 0).toLocaleString()} of {getCapString(data.currentUser)} used
             </Label>
             <ProgressBar
               progress={(data.currentUser.usedBytes ?? 0) / getCap(data.currentUser)}

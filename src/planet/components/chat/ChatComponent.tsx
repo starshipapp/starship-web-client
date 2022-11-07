@@ -53,7 +53,7 @@ function ChatComponent(props: IComponentProps): JSX.Element {
         isOpen={isOpen}
         chatId={props.id}
         onClose={() => setIsOpen(false)}
-        refetch={refetch}
+        refetch={() => void refetch()}
         channels={data?.chat?.channels}
       />}
       <div className="w-full flex p-2 border-b border-gray-300 dark:border-gray-600">
