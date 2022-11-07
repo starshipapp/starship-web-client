@@ -95,7 +95,7 @@ function Message(props: IMessageProps): JSX.Element {
         </div>
       </div>}
       <div className="w-full">
-        {!isPrevMessageRelated && <div className="flex mb-1">
+        {!isPrevMessageRelated && <div className="flex mb-0.5">
           <div className="mr-1.5 font-bold" onClick={() => setProfile(true)}>
             {props.message.owner?.username}
           </div>

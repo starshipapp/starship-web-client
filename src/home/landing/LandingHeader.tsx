@@ -54,50 +54,21 @@ function LandingHeader(): JSX.Element {
         <div className="w-96 h-48 bg-gray-400 rounded-t-md flex">
           <div className="mt-auto mx-auto w-88 rounded-t-md h-44 bg-gray-900 overflow-hidden flex">
             <div className="h-full w-16 bg-gray-800 px-2 pt-2 flex flex-col">
-              <div className="text-transparent bg-gray-700 text-xs flex-grow-0 w-max rounded-sm">
-                Starship
-              </div>
-              <div className="text-transparent bg-gray-700 text-2xs flex-grow-0 w-max rounded-sm mt-2">
-                Wow, what
-              </div>
-              <div className="text-transparent bg-gray-700 text-2xs flex-grow-0 w-max rounded-sm mt-2">
-                a great
-              </div>
-              <div className="text-transparent bg-gray-700 text-2xs flex-grow-0 w-max rounded-sm mt-2">
-                website!
-              </div>
-              <div className="text-transparent bg-gray-700 text-2xs flex-grow-0 w-max rounded-sm mt-2">
-                You should
-              </div>
-              <div className="text-transparent bg-gray-700 text-2xs flex-grow-0 w-max rounded-sm mt-2">
-                use it!
-              </div>
-              <div className="text-transparent bg-gray-700 text-2xs flex-grow-0 w-max rounded-sm mt-auto mb-2">
-                You, I hope
-              </div>
+              <div className="text-transparent bg-gray-700 h-3 flex-grow-0 w-10 rounded-full"/>
+              <div className="text-transparent bg-gray-700 h-2 flex-grow-0 w-12 rounded-full mt-2"/>
+              <div className="text-transparent bg-gray-700 h-2 flex-grow-0 w-8 rounded-full mt-2"/>
+              <div className="text-transparent bg-gray-700 h-2 flex-grow-0 w-10 rounded-full mt-2"/>
+              <div className="text-transparent bg-gray-700 h-2 flex-grow-0 w-6 rounded-full mt-2"/>
+              <div className="text-transparent bg-gray-700 h-2 flex-grow-0 w-10 rounded-full mt-auto mb-2"/>
             </div> 
             <div className="h-full mx-auto w-8/12 mt-6">
-              <div className="text-transparent bg-gray-700 rounded-sm w-max text-document">
-                Welcome!
-              </div>
-              <div className="text-transparent bg-gray-700 mt-3 text-xs rounded-sm w-max">
-                This is some crazy text, but you can't see it.
-              </div>
-              <div className="text-transparent bg-gray-700 text-xs rounded-sm w-max mt-2">
-                What a sad story.
-              </div>
-              <div className="text-transparent bg-gray-700 text-xs rounded-sm w-max mt-2">
-                If only there was some way you could make
-              </div>
-              <div className="text-transparent bg-gray-700 text-xs rounded-sm w-max mt-2">
-                the text more visible. Something like a
-              </div>
-              <div className="text-transparent bg-gray-700 text-xs rounded-sm w-max mt-2">
-                text shadow. Oh, I got it! A HIGHLIGHT
-              </div>
-              <div className="text-transparent bg-gray-700 text-xs rounded-sm w-max mt-2">
-                function. That'd be just genius!
-              </div>
+              <div className="text-transparent bg-gray-700 h-4 rounded-full w-14 text-document"/>
+              <div className="text-transparent bg-gray-700 mt-3 h-3 rounded-full w-48"/>
+              <div className="text-transparent bg-gray-700 h-3 rounded-full w-52 mt-2"/>
+              <div className="text-transparent bg-gray-700 h-3 rounded-full w-32 mt-2"/>
+              <div className="text-transparent bg-gray-700 h-3 rounded-full w-56 mt-2"/>
+              <div className="text-transparent bg-gray-700 h-3 rounded-full w-52 mt-2"/>
+              <div className="text-transparent bg-gray-700 h-3 rounded-full w-48 mt-2"/>
             </div>
           </div>
         </div>
