@@ -46,7 +46,7 @@ module.exports = {
         'gradient-radial': 'radial-gradient(closest-side at 50% 50%, var(--tw-gradient-stops))'
       },
       fontFamily: {
-        sans: ['Cantarell var', ...defaultTheme.fontFamily.sans],
+       // sans: ['Cantarell var', ...defaultTheme.fontFamily.sans],
       }
     },
   },
