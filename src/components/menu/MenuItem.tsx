@@ -37,7 +37,7 @@ function MenuItem(props: IMenuItemProps): JSX.Element {
   }
 
   return (
-    <div className="px-3 py-1.5 w-full flex flex-row justify-between cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700" {...props}>
+    <div  {...props} className={`px-3 py-2.5 w-full flex flex-row justify-between cursor-pointer hover:bg-gray-300 dark:hover:bg-gray-700 md:py-1.5 ${props.className ?? ""}`}>
       <div className="flex w-full">
         {props.icon && (
           <div className="mr-1.5 w-6 flex-shrink-0 flex mx-auto">

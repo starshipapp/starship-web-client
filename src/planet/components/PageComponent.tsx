@@ -38,7 +38,7 @@ function PageComponent(props: IComponentProps): JSX.Element {
         {data?.page && <>
           <PageHeader>
             <span>{props.name}</span>
-            <div className="inline-block text-sm mt-auto ml-1 mb-0.5">
+            <div className="text-sm mt-auto ml-1 mb-0.5 hidden md:inline-block">
               {(userData?.currentUser && permissions.checkFullWritePermission(userData?.currentUser, props.planet)) && (!isEditing ? <Button
                 icon={faEdit}
                 onClick={() => {

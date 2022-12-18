@@ -45,6 +45,7 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
   const [showTools, setTools] = useState<boolean>(false);
   const [showAddComponent, setAddComponent] = useState<boolean>(false);
   const [component, setComponent] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
 
   if(loading) {
     return (<></>);
@@ -66,6 +67,8 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
         <MenuCollapsed
           icon={data.planet.verified ? faCheckCircle : (data.planet.partnered ? faLink : (data.planet.featured ? faStar : faGlobe))} 
           title={data.planet.name ?? ""}
+          open={open}
+          onOpen={() => setOpen(!open)}
         >
           {userData?.currentUser && <div>
             {<MenuItem
@@ -78,7 +81,10 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
               icon={faWrench}
               onClick={() => setTools(true)}
             >Mod Tools</MenuItem>}
-            <PlanetSwitcher toggleHidden={props.toggleHidden}/>
+            <PlanetSwitcher toggleHidden={() => {
+              props.toggleHidden();
+              setOpen(false);
+            }}/>
           </div>}
         </MenuCollapsed>
         {userData?.currentUser && <MenuItem

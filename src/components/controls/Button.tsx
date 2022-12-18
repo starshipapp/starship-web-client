@@ -13,6 +13,7 @@ interface IButtonProps extends DetailedHTMLProps<React.ButtonHTMLAttributes<HTML
   small?: boolean;
   minimal?: boolean;
   strikethrough?: boolean;
+  collapsable?: boolean;
 }
 
 function Button(props: IButtonProps): JSX.Element {

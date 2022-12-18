@@ -324,7 +324,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         <FontAwesomeIcon icon={faCloudUploadAlt} size="10x" className="text-black dark:text-green-600"/>
         <h2>Drop file to upload.</h2>
       </div>}
-      <div className="w-full flex p-2 border-b border-gray-300 dark:border-gray-600 sticky top-0 bg-gray-50 dark:bg-gray-900">
+      <div className="w-full flex p-2 border-b border-gray-300 dark:border-gray-600 sticky top-0 bg-gray-50 dark:bg-gray-900 h-13">
         <input
           type="file"
           ref={fileInput}
@@ -553,7 +553,12 @@ function FilesComponent(props: IComponentProps): JSX.Element {
                         setTotal(Object.keys(uploading).length);
                         setUploadUpdateCounter(Math.random() * 300000000);
                       }).catch((err: Error) => {
-                        Toasts.danger(err.message);
+                        // i have no idea where this comes from, so we're just going to ignore it
+                        // it's from the server at least so
+                        // TODO: remove this in 1.0
+                        if (err.message !== "canceled") {
+                          Toasts.danger(err.message);
+                        }
                       });
                     }}/>
                   </div>

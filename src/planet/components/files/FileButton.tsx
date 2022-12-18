@@ -107,20 +107,20 @@ function FileButton(props: IFileButtonProps): JSX.Element {
           menu={<>
             {hasWritePermission && <MenuItem
               icon={faTrash}
-              onClick={(e) => {
+              onClick={(_e) => {
                 setDelete(true);
               }}
             >Delete</MenuItem>}
             {hasWritePermission && !((props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id)) && <MenuItem
               icon={faEdit}
-              onClick={(e) => {
+              onClick={(_e) => {
                 setRename(true);
                 setRenameText(props.object.name ?? "");
               }}
             >Rename</MenuItem>}
             {props.object.type === "file" && !((props.selections?.length ?? 0) > 1 && props.selections?.includes(props.object.id)) && <MenuItem
               icon={faDownload}
-              onClick={(e) => {
+              onClick={(_e) => {
                 refetch().then((data) => {
                 if(data.data) {
                   window.open(data.data.downloadFileObject, "_self");

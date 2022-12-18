@@ -8,10 +8,16 @@ interface IMenuItemProps extends HTMLProps<HTMLDivElement> {
   icon?: IconProp;
   description?: string;
   title: string;
+  open?: boolean;
+  onOpen?: () => void;
 }
 
 function MenuCollapsed(props: IMenuItemProps): JSX.Element {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(props.open ?? false);
+  
+  if((props.open === true || props.open === false) && props.open !== open) {
+    setOpen(props.open);
+  }
 
   return (
     <>
@@ -19,7 +25,12 @@ function MenuCollapsed(props: IMenuItemProps): JSX.Element {
         icon={props.icon} 
         rightElement={<FontAwesomeIcon icon={open ? faCaretDown : faCaretRight}/>} 
         description={props.description}
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          setOpen(!open);
+          if(props.onOpen) {
+            props.onOpen();
+          }
+        }}
       >
         {props.title}
       </MenuItem>

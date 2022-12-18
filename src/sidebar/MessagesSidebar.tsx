@@ -1,5 +1,6 @@
 import { useQuery } from "@apollo/client";
 import { faBell, faCommentDots } from "@fortawesome/free-solid-svg-icons";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import yn from "yn";
 import MenuCollapsed from "../components/menu/MenuCollapsed";
@@ -14,15 +15,22 @@ interface IMessagesSidebarProps {
 }
 
 function MessagesSidebar(props: IMessagesSidebarProps): JSX.Element {
-  const { data: userData } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });  
+  const { data: userData } = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
+  const [open, setOpen] = useState(false);
+  
   return (<>
     <MenuCollapsed
       title="Messages"
       icon={faCommentDots}
+      open={open}
+      onOpen={() => setOpen(!open)}
     >
       {userData?.currentUser && permissions.checkAdminPermission(userData.currentUser) && <MenuHeader>Admin Tools</MenuHeader>}
       {userData?.currentUser && <div>
-        <PlanetSwitcher toggleHidden={props.toggleHidden}/>
+        <PlanetSwitcher toggleHidden={() => {
+          props.toggleHidden();
+          setOpen(false);
+        }}/>
       </div>}
     </MenuCollapsed>
     <Link className="link-button" to="/messages"><MenuItem icon={faBell}>Notifications</MenuItem></Link>
