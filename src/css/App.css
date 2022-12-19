@@ -204,3 +204,8 @@ hr {
 .task-list-item {
   @apply leading-6
 }
+
+#root {
+  /* i love safari so much */
+  max-height: -webkit-fill-available;
+}

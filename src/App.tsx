@@ -35,8 +35,8 @@ function App(props: IAppProps): JSX.Element {
   
   return (
     <BrowserRouter>
-      <div className="flex w-screen h-screen min-h-screen max-h-screen overflow-hidden flex-col">
-        <div className="flex w-screen h-screen flex-shrink overflow-hidden dark:bg-gray-900">
+      <div className="flex w-screen h-screen overflow-hidden flex-col" id="root">
+        <div className="flex w-screen h-full flex-shrink overflow-hidden dark:bg-gray-900">
           <Toaster position="bottom-right"/>
           <Unsupported/>
           <Debug/>
