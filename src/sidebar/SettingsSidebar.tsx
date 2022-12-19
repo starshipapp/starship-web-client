@@ -32,13 +32,13 @@ function SettingsSidebar(props: ISettingsSidebarProps): JSX.Element {
       }}/>
     </MenuCollapsed>
     <Divider/>
-    <Link className="link-button" to="/settings"><MenuItem icon={faUser}>Profile</MenuItem></Link>
-    <Link className="link-button" to="/settings/security"><MenuItem icon={faLock}>Security</MenuItem></Link>
-    <Link className="link-button" to="/settings/emojis"><MenuItem icon={faSmile}>Emojis</MenuItem></Link>
-    <Link className="link-button" to="/settings/notifications"><MenuItem icon={faBell}>Notifications</MenuItem></Link>
-    <Link className="link-button" to="/settings/appearance"><MenuItem icon={faPalette}>Appearance</MenuItem></Link>
+    <Link className="link-button" onClick={props.toggleHidden} to="/settings"><MenuItem icon={faUser}>Profile</MenuItem></Link>
+    <Link className="link-button" onClick={props.toggleHidden} to="/settings/security"><MenuItem icon={faLock}>Security</MenuItem></Link>
+    <Link className="link-button" onClick={props.toggleHidden} to="/settings/emojis"><MenuItem icon={faSmile}>Emojis</MenuItem></Link>
+    <Link className="link-button" onClick={props.toggleHidden} to="/settings/notifications"><MenuItem icon={faBell}>Notifications</MenuItem></Link>
+    <Link className="link-button" onClick={props.toggleHidden} to="/settings/appearance"><MenuItem icon={faPalette}>Appearance</MenuItem></Link>
     <Divider/>
-    <Link className="link-button" to="/settings/about"><MenuItem icon={faInfoCircle}>About Starship</MenuItem></Link>
+    <Link className="link-button" onClick={props.toggleHidden} to="/settings/about"><MenuItem icon={faInfoCircle}>About Starship</MenuItem></Link>
   </>);
 }
 

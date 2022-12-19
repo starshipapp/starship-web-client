@@ -33,7 +33,7 @@ function MessagesSidebar(props: IMessagesSidebarProps): JSX.Element {
         }}/>
       </div>}
     </MenuCollapsed>
-    <Link className="link-button" to="/messages"><MenuItem icon={faBell}>Notifications</MenuItem></Link>
+    <Link  onClick={props.toggleHidden} className="link-button" to="/messages"><MenuItem icon={faBell}>Notifications</MenuItem></Link>
     {yn(localStorage.getItem("debug.showChat")) && <MenuHeader>Direct Messages</MenuHeader>}
   </>);
 }

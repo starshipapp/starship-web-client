@@ -74,7 +74,10 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
             {<MenuItem
               icon={faFlag}
               intent={Intent.DANGER}
-              onClick={() => setReport(true)}
+              onClick={() => {
+                props.toggleHidden();
+                setReport(true);
+              }}
             >Report {data.planet.name ?? "unknown"}</MenuItem>}
             {permissions.checkAdminPermission(userData.currentUser) && <MenuHeader>Admin Tools</MenuHeader>}
             {permissions.checkAdminPermission(userData.currentUser) && <MenuItem
@@ -91,6 +94,7 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
           icon={(userData?.currentUser.following && userData?.currentUser.following.some(e => e.id === props.planet) ) ? faMinus : faPlus}
           rightElement={<Tag>{data.planet.followerCount}</Tag>}
           onClick={() => {
+            props.toggleHidden();
             follow({variables: {planetId: props.planet}}).then(() => {
               void userRefetch();
             }).catch((error: Error) => {
@@ -98,7 +102,7 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
             });
           }}
         >{(userData?.currentUser.following && userData?.currentUser.following.some(e => e.id === props.planet) ) ? "Unfollow" : "Follow"}</MenuItem>}
-        {userData?.currentUser && permissions.checkFullWritePermission(userData.currentUser, data.planet) && <Link className="link-button" to={`/planet/${props.planet}/admin`}><MenuItem
+        {userData?.currentUser && permissions.checkFullWritePermission(userData.currentUser, data.planet) && <Link className="link-button" onClick={() => props.toggleHidden()} to={`/planet/${props.planet}/admin`}><MenuItem
           intent={Intent.DANGER}
           icon={faWrench}
         >Admin</MenuItem></Link>}
@@ -112,7 +116,13 @@ function PlanetSidebar(props: IPlanetSidebarProps): JSX.Element {
           >{value.name}</MenuItem>
         </Link>))}
         {userData?.currentUser && permissions.checkFullWritePermission(userData.currentUser, data.planet) && <>
-          <MenuItem icon={faPlus} onClick={() => setAddComponent(true)}>Add Component</MenuItem>
+          <MenuItem
+            icon={faPlus}
+            onClick={() => {
+              props.toggleHidden();
+              setAddComponent(true);
+            }}
+          >Add Component</MenuItem>
           <Dialog
             open={showAddComponent}
             onClose={() => {
