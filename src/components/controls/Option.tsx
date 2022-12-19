@@ -12,7 +12,7 @@ interface IOptionProps extends HTMLProps<HTMLDivElement> {
 }
 
 function Option(props: IOptionProps): JSX.Element {
-  let className = `transition-all duration-200 w-full p-3 mb-2.5 rounded shadow-md active:shadow-sm flex text-black dark:text-white cursor-pointer ${props.className ?? ""}`;
+  let className = `transition-all duration-200 w-full p-2 mb-1.5 rounded shadow-md active:shadow-sm flex text-black dark:text-white cursor-pointer md:mb-2.5 md:p-3 ${props.className ?? ""}`;
 
   switch (props.intent) {
     case Intent.SUCCESS:

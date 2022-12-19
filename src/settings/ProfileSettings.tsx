@@ -115,11 +115,11 @@ function ProfileSettings(props: IProfileSettingsProps): JSX.Element {
           <FontAwesomeIcon icon={faUpload} className="ProfileSettings-profilepic-icon opacity-0 transtion absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"/>
         </div>
         <PageSubheader>Banner</PageSubheader>
-        <div className={`ProfileSettings-banner h-36 w-xl shadow ${!props.user.profileBanner ? "bg-gray-200 dark:bg-gray-700" : ""} rounded-lg relative`} onClick={() => {
+        <div className={`ProfileSettings-banner max-h-36 w-xl shadow ${!props.user.profileBanner ? "bg-gray-200 dark:bg-gray-700" : ""} rounded-lg relative max-w-full aspect-[4/1]`} onClick={() => {
           setAction("banner");
           fileInput.current?.click();
         }}>
-          {props.user && props.user.profileBanner && <img alt="Change profile banner" className="object-cover h-36 w-xl rounded-lg" src={fixPFP(props.user.profileBanner) + "?t=" + String(Number(Date.now()))} ref={bannerImage}/>}
+          {props.user && props.user.profileBanner && <img alt="Change profile banner" className="object-cover max-h-36 w-xl max-w-full aspect-[4/1] rounded-lg" src={fixPFP(props.user.profileBanner) + "?t=" + String(Number(Date.now()))} ref={bannerImage}/>}
           <FontAwesomeIcon icon={faUpload} className="ProfileSettings-profilepic-icontransition opacity-0 absolute transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2 hover:opacity-100"/>
         </div>
         <PageSubheader>Bio</PageSubheader>
