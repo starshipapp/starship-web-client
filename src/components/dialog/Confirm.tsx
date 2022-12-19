@@ -18,7 +18,7 @@ function Confirm(props: IConfirmProps): JSX.Element {
       open={props.open}
       onClose={props.onClose}
     >
-      <div className="p-4 w-96">
+      <div className="p-4 w-screen md:w-96">
         <Callout icon={faExclamationTriangle} intent={Intent.WARNING}>{props.children}</Callout>
         <div className="mt-3 flex flex-col">
           <div className="mx-auto text-center">Please type <b>"{props.confirmString}"</b> to confirm.</div>
