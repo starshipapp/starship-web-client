@@ -22,11 +22,11 @@ function Button(props: IButtonProps): JSX.Element {
   dark:text-white ${props.className ?? ""}`;
 
   if(props.large) {
-    className += " px-4 py-2 text-lg rounded";
+    className += " px-2 md:px-4 py-2 text-lg rounded";
   } else if(props.small) {
-    className += " px-1.5 py-1 rounded-sm";
+    className += " px-1 md:px-1.5 py-1 rounded-sm";
   } else {
-    className += " px-3 py-1.5 rounded-sm";
+    className += " px-2 md:px-3 py-1.5 rounded-sm";
   }
 
   if(props.disabled) {
@@ -74,11 +74,11 @@ function Button(props: IButtonProps): JSX.Element {
 
   return (
     <button {...props} className={className}>
-      {props.icon && <span className={`fa-layers fa-fw ${!props.children ? "" : "mr-2"}`}> 
+      {props.icon && <span className={`fa-layers fa-fw ${!props.children ? "" : props.collapsable ? "md:mr-2" : "mr-2"}`}> 
         <FontAwesomeIcon icon={props.icon}/>
         {props.strikethrough && <FontAwesomeIcon icon={faSlash} inverse/>}
       </span>}
-      {props.children}
+      {props.collapsable ? <span className="hidden md:inline">{props.children}</span> : props.children}
       {props.rightIcon && <FontAwesomeIcon className={!props.children ? "" : "ml-2"} icon={props.rightIcon}/>}
     </button>
   );

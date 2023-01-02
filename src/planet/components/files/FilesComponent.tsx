@@ -365,6 +365,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           <Button
             icon={faDownload}
             minimal
+            collapsable
             onClick={() => {
               refetch().then((data) => {
                 if(data.data) {
@@ -380,6 +381,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         {objectData?.fileObject && objectData?.fileObject.type === "folder" && filesData?.files && <Button
           icon={faDownload}
           minimal
+          collapsable
           onClick={() => {
             const files: string[] = filesData.files.map((value) => value.id);
 
@@ -396,6 +398,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           <Button 
             icon={faUpload}
             minimal
+            collapsable
             onClick={() => {
               if(fileInput) {
                 fileInput.current?.click();
@@ -406,7 +409,12 @@ function FilesComponent(props: IComponentProps): JSX.Element {
             open={createFolderPrompt}
             onClose={() => setCreateFolderPrompt(false)}
             className="h-full" 
-            popoverTarget={<Button icon={faFolderPlus} minimal onClick={() => setCreateFolderPrompt(true)}>Create Folder</Button>}
+            popoverTarget={<Button
+              icon={faFolderPlus}
+              minimal
+              collapsable
+              onClick={() => setCreateFolderPrompt(true)}
+            >Create Folder</Button>}
           >
             <div className="flex">
               <Textbox

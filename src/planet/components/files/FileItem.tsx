@@ -208,7 +208,7 @@ function FileItem(props: IFileItemProps): JSX.Element {
                 </div>
               </Popover>
             </div>
-            <div className="ml-auto flex">
+            <div className="ml-auto flex hidden md:block">
               {props.object.size && <span>{filesize(props.object.size).toLocaleString()}</span>}
               {props.object.size && <Divider/>}
               <span>{fileDate}</span>
