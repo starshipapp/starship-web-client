@@ -26,7 +26,7 @@ import MenuItem from "../../../components/menu/MenuItem";
 import Textbox from "../../../components/input/Textbox";
 import getIconFromType from "../../../util/getIconFromType";
 
-interface IFileButtonProps {
+interface IFileItemProps {
   planet: IPlanet
   object: IFileObject
   componentId: string
@@ -36,7 +36,7 @@ interface IFileButtonProps {
   resetSelection?: () => void
 }
 
-function FileListButton(props: IFileButtonProps): JSX.Element {
+function FileItem(props: IFileItemProps): JSX.Element {
   const {data: userData, client, refetch: refetchUser} = useQuery<IGetCurrentUserData>(getCurrentUser, { errorPolicy: 'all' });
   const {refetch} = useQuery<IGetDownloadFileObjectData>(getDownloadFileObject, {variables: {fileId: props.object.id}, errorPolicy: 'all', fetchPolicy: "no-cache"});
   const [moveObject] = useMutation<IMoveObjectMutationData>(moveObjectMutation);
@@ -220,4 +220,4 @@ function FileListButton(props: IFileButtonProps): JSX.Element {
   );
 }
 
-export default FileListButton;
+export default FileItem;

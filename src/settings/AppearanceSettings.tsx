@@ -45,24 +45,6 @@ function AppearanceSettings(): JSX.Element {
             document.body.classList.remove("dark");
           }}
         >Light</Option>
-        <PageSubheader>Files</PageSubheader>
-        <Option
-          description="Use the button-based view for files. (default)"
-          checked={!isList}
-          onClick={() => {
-            setList(false);
-            localStorage.setItem("files.listView", "false");
-          }}
-        >Button View</Option>
-        <Option
-          description="Use the list-based view for files."
-          checked={isList}
-          onClick={() => {
-            setList(true);
-            localStorage.setItem("files.listView", "true");
-          }}
-        >List View</Option>
-
         <PageSubheader>LaTeX</PageSubheader>
         <Option
           description="Use HTML and MathML. (very slow, good for accessibility and readability)"

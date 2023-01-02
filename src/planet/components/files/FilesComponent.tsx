@@ -17,8 +17,7 @@ import IComponentProps from "../IComponentProps";
 import { v4 } from "uuid";
 import axios, { AxiosProgressEvent, AxiosRequestConfig, CancelTokenSource } from "axios";
 import FileBreadcrumbs from "./FileBreadcrumbs";
-import FileButton from "./FileButton";
-import FileListButton from "./FileListButton";
+import FileItem from "./FileItem";
 import FileView from "./FileView";
 import FileSearch from "./FileSearch";
 import ReadmeWrapper from "./ReadmeWrapper";
@@ -65,7 +64,6 @@ function FilesComponent(props: IComponentProps): JSX.Element {
   const [newFolderTextbox, setNewFolderTextbox] = useState<string>("");
   const [, setUploadUpdateCounter] = useState<number>(0); // Used to force a re-render when uploading
   const [createFolderPrompt, setCreateFolderPrompt] = useState<boolean>(false);
-  const [listView] = useState<boolean>(window.localStorage.getItem("files.listView") === "true" ? true : false);
   const [isDragging, setDragging] = useState<boolean>(false);
   const [searchTextbox, setSearchTextbox] = useState<string>("");
   const [searchText, setSearchText] = useState<string>("");
@@ -432,42 +430,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           </Popover>
         </>}
       </div>
-      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && !listView && <div
-        className="grid grid-cols-auto-sm w-full p-2"
-      >
-        {props.subId && objectData && <Link className="link-button" to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
-          <div
-            className={`transition-all duration-200 flex bg-gray-200 ring-1 ring-gray-300 hover:bg-gray-300 dark:bg-gray-800 dark:ring-gray-700 dark:hover:bg-gray-700 
-            active:bg-gray-400 dark:active:bg-gray-900 px-3.5 py-2.5 text-base rounded-sm m-2 overflow-hidden leading-tight outline-none focus:outline-none focus:ring-blue-300 
-            focus:ring-1 dark:focus:ring-blue-600 shadow-md active:shadow-sm`}
-            onDrop={(e) => onDrop(e, true)}
-          >
-            <FontAwesomeIcon className="my-auto mr-2 text-gray-600 dark:text-gray-300" icon={faArrowUp}/>
-            <div className="whitespace-nowrap overflow-hidden overflow-ellipsis">../</div>
-          </div>
-        </Link>}
-        {foldersData?.folders.map((value) => (<FileButton
-          planet={props.planet}
-          key={value.id}
-          object={value}
-          componentId={props.id}
-          refetch={() => {void filesRefetch(); void foldersRefetch();}}
-          onClick={clickHandler}
-          selections={selected}
-          resetSelection={resetSelection}
-        />))}
-        {filesData?.files.map((value) => (<FileButton
-          planet={props.planet}
-          key={value.id}
-          object={value}
-          componentId={props.id}
-          refetch={() => {void filesRefetch(); void foldersRefetch();}}
-          onClick={clickHandler}
-          selections={selected}
-          resetSelection={resetSelection}
-        />))}
-      </div>}
-      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && listView && <div>
+      {((objectData && objectData.fileObject.type === "folder") || !props.subId) && searchText === "" && <div>
         {props.subId && objectData && <Link className="link-button" to={`/planet/${props.planet.id}/${props.id}/${objectData.fileObject.parent?.id ?? ""}`}>
           <div className="flex px-4 py-2.5 border-b hover:bg-gray-200 dark:hover:bg-gray-800 border-gray-300 dark:border-gray-600" onDrop={(e) => onDrop(e, true)}>
             <div className="flex">
@@ -480,7 +443,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
             </div>
           </div>
         </Link>}
-        {foldersData?.folders.map((value) => (<FileListButton 
+        {foldersData?.folders.map((value) => (<FileItem
           planet={props.planet}
           key={value.id}
           object={value}
@@ -490,7 +453,7 @@ function FilesComponent(props: IComponentProps): JSX.Element {
           selections={selected}
           resetSelection={resetSelection}
         />))}
-        {filesData?.files.map((value) => (<FileListButton 
+        {filesData?.files.map((value) => (<FileItem
           planet={props.planet} 
           key={value.id}
           object={value}
@@ -509,10 +472,9 @@ function FilesComponent(props: IComponentProps): JSX.Element {
         onClick={() => {
           resetSearch();
         }}
-        useLists={listView}
       />}
       {objectData && objectData.fileObject.type === "file" && <FileView file={objectData.fileObject}/>}
-      <div className={`mx-4 ${listView ? "mt-1" : "-mt-2"}`}>
+      <div className={`mx-4 mt-1`}>
         {((objectData && objectData.fileObject.type === "folder") || !props.subId) && determineReadmeComponent()}
       </div>
       {('netscape' in window) && objectData && objectData.fileObject.type === "folder" && <div id="firefox-sticky-spacer" className="p-5"/>}

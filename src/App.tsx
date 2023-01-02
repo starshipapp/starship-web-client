@@ -74,8 +74,8 @@ function App(props: IAppProps): JSX.Element {
             </>}/>
           </Routes>
         </div>
-        <div className="flex flex-shrink-0 h-13 p-2.5 border-t z-20 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 w-full z-10 text-white font-extrabold md:hidden">
-          <Button icon={faBars} className="mr-2" small minimal onClick={() => setShowSidebar(true)}/>
+        <div className="flex flex-shrink-0 h-13 p-2.5 border-t z-50 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 w-full z-10 text-white font-extrabold md:hidden">
+          <Button icon={faBars} className="mr-2" small minimal onClick={() => setShowSidebar(!showSidebar)}/>
           <div className="mt-1">
             Starship
           </div>
