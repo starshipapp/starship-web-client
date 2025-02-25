@@ -1,3 +1,6 @@
+> [!WARNING]  
+> Starship shut down Febuary 16th, 2025. See [the related blog post](https://blogs.mailliw.org/william341/the-end-of-starship) for more information.
+
 # Starship (web client)
 This is the React-based web client for [Starship](starshipapp.xyz). The server can be found in another repository in this organization.
 
